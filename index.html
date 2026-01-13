@@ -8,9 +8,7 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
         
-        :root {
-            --app-height: 100%;
-        }
+        :root { --app-height: 100%; }
 
         body { 
             font-family: 'Inter', sans-serif; 
@@ -19,7 +17,6 @@
             background-position: center;
             background-attachment: fixed;
             min-height: 100vh;
-            min-height: -webkit-fill-available;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -34,16 +31,14 @@
             border: 1px solid rgba(255, 255, 255, 0.4);
         }
 
-        .choice-btn {
-            touch-action: manipulation;
-            -webkit-tap-highlight-color: transparent;
-        }
+        .choice-btn { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
 
         .correct { 
             background-color: #10b981 !important; 
             color: white !important; 
             border-color: #059669 !important;
             box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+            animation: pulse-green 0.3s ease-in-out;
         }
 
         .incorrect { 
@@ -51,6 +46,19 @@
             color: white !important; 
             border-color: #dc2626 !important;
             box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+            animation: shake 0.3s ease-in-out;
+        }
+
+        @keyframes pulse-green {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
         }
 
         @keyframes fadeIn {
@@ -60,28 +68,27 @@
 
         .animate-fadeIn { animation: fadeIn 0.4s ease-out forwards; }
 
-        #leaderboard-list::-webkit-scrollbar {
-            width: 4px;
-        }
-        #leaderboard-list::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 10px;
-        }
+        #leaderboard-list::-webkit-scrollbar { width: 4px; }
+        #leaderboard-list::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
 
-        /* Input auto-uppercase visual feedback */
-        .uppercase-input {
-            text-transform: uppercase;
-        }
+        .uppercase-input { text-transform: uppercase; }
 
         @media (max-width: 480px) {
             h1 { font-size: 1.5rem !important; }
             h2#word-display { font-size: 2rem !important; }
             #options-grid { grid-template-columns: 1fr !important; }
-            .p-8 { padding: 1.5rem !important; }
         }
     </style>
 </head>
 <body class="p-3 sm:p-6 md:p-8">
+
+    <!-- Audio Elements -->
+    <audio id="audio-correct" preload="auto">
+        <source src="https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="audio-incorrect" preload="auto">
+        <source src="https://assets.mixkit.co/active_storage/sfx/2003/2003-preview.mp3" type="audio/mpeg">
+    </audio>
 
     <div class="w-full max-w-xl mx-auto flex flex-col items-center">
         
@@ -107,8 +114,8 @@
                 </ul>
             </div>
             
-            <button onclick="startGame()" class="w-full bg-indigo-600 text-white py-4 sm:py-5 rounded-2xl font-black text-lg sm:text-xl hover:bg-indigo-700 transition transform active:scale-[0.98] shadow-xl shadow-indigo-200 uppercase tracking-widest">
-                BẮT ĐẦU HỌC
+            <button id="btn-start" disabled onclick="startGame()" class="w-full bg-slate-400 text-white py-4 sm:py-5 rounded-2xl font-black text-lg sm:text-xl transition transform active:scale-[0.98] shadow-xl uppercase tracking-widest">
+                ĐANG KẾT NỐI...
             </button>
         </div>
 
@@ -165,9 +172,9 @@
                 </div>
 
                 <div id="leaderboard-prompt" class="space-y-3">
-                    <p class="text-slate-500 text-sm">Bạn muốn lưu điểm vào Bảng xếp hạng?</p>
+                    <p class="text-slate-500 text-sm">Bạn muốn lưu điểm vào Bảng xếp hạng thế giới?</p>
                     <div class="flex flex-col sm:flex-row gap-2">
-                        <button onclick="toggleSaveSection(true)" class="flex-1 bg-indigo-600 text-white py-4 rounded-xl font-bold hover:bg-indigo-700 shadow-lg shadow-indigo-100 transition active:scale-95">Xem BXH</button>
+                        <button onclick="toggleSaveSection(true)" class="flex-1 bg-indigo-600 text-white py-4 rounded-xl font-bold hover:bg-indigo-700 shadow-lg shadow-indigo-100 transition active:scale-95">Lưu điểm & Xem BXH</button>
                         <button onclick="location.reload()" class="flex-1 bg-slate-200 text-slate-700 py-4 rounded-xl font-bold hover:bg-slate-300 transition active:scale-95">Chơi lại</button>
                     </div>
                 </div>
@@ -178,28 +185,76 @@
                             <label class="text-[10px] font-bold text-indigo-400 uppercase ml-1">Họ và tên</label>
                             <input type="text" id="studentName" placeholder="NHẬP TÊN..." 
                                 oninput="this.value = this.value.toUpperCase()"
-                                class="w-full px-4 py-3 rounded-xl border border-indigo-200 focus:ring-2 focus:ring-indigo-500 outline-none mt-1 uppercase-input font-bold">
+                                class="w-full px-4 py-3 rounded-xl border border-indigo-200 focus:ring-2 focus:ring-indigo-500 outline-none mt-1 font-bold uppercase">
                         </div>
                         <div>
                             <label class="text-[10px] font-bold text-indigo-400 uppercase ml-1">Lớp học</label>
                             <input type="text" id="studentClass" placeholder="VÍ DỤ: 12A1..." 
                                 oninput="this.value = this.value.toUpperCase()"
-                                class="w-full px-4 py-3 rounded-xl border border-indigo-200 focus:ring-2 focus:ring-indigo-500 outline-none mt-1 uppercase-input font-bold">
+                                class="w-full px-4 py-3 rounded-xl border border-indigo-200 focus:ring-2 focus:ring-indigo-500 outline-none mt-1 font-bold uppercase">
                         </div>
-                        <button onclick="saveResult()" class="w-full bg-indigo-600 text-white py-4 rounded-xl font-bold hover:bg-indigo-700 shadow-lg shadow-indigo-200 mt-2">LƯU & HIỂN THỊ</button>
+                        <button onclick="saveResult()" class="w-full bg-indigo-600 text-white py-4 rounded-xl font-bold hover:bg-indigo-700 shadow-lg shadow-indigo-200 mt-2">GỬI ĐIỂM LÊN HỆ THỐNG</button>
                     </div>
                 </div>
 
                 <div id="leaderboard" class="hidden mt-8 text-left animate-fadeIn">
-                    <h3 class="font-black text-slate-800 mb-4 flex items-center gap-2 uppercase tracking-wider text-sm">🏆 TOP 10 CAO THỦ</h3>
-                    <div id="leaderboard-list" class="space-y-2 max-h-[30vh] overflow-y-auto pr-1"></div>
+                    <h3 class="font-black text-slate-800 mb-4 flex items-center gap-2 uppercase tracking-wider text-sm">🏆 BXH TOÀN TRƯỜNG (TOP 15)</h3>
+                    <div id="leaderboard-list" class="space-y-2 max-h-[40vh] overflow-y-auto pr-1"></div>
                     <button onclick="location.reload()" class="w-full mt-6 bg-slate-800 text-white py-4 rounded-2xl font-bold hover:bg-black transition active:scale-95">VỀ MÀN HÌNH CHÍNH</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <script>
+    <!-- Firebase SDKs -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, query, onSnapshot, limit, doc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        const firebaseConfig = JSON.parse(__firebase_config);
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+
+        let currentUser = null;
+
+        // Audio Helper
+        const playSound = (id) => {
+            const audio = document.getElementById(id);
+            if (audio) {
+                audio.currentTime = 0; // Reset to start
+                audio.play().catch(e => console.log("Audio play blocked by browser. Interact with page first."));
+            }
+        };
+
+        // Auth initialization
+        const initAuth = async () => {
+            try {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+            } catch (err) {
+                console.error("Auth error:", err);
+            }
+        };
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                currentUser = user;
+                const startBtn = document.getElementById('btn-start');
+                startBtn.disabled = false;
+                startBtn.innerText = "BẮT ĐẦU HỌC";
+                startBtn.className = "w-full bg-indigo-600 text-white py-4 sm:py-5 rounded-2xl font-black text-lg sm:text-xl hover:bg-indigo-700 transition transform active:scale-[0.98] shadow-xl shadow-indigo-200 uppercase tracking-widest";
+            }
+        });
+
+        initAuth();
+
+        // Game Logic & Data
         const wordBank = [
             { word: "ban... ", prep: "from", meaning: "cấm làm điều gì đó" },
             { word: "benefit ", prep: "from", meaning: "có lợi từ thứ gì đó" },
@@ -272,32 +327,32 @@
         let canAnswer = true;
         let mistakeTracker = {};
 
-        function startGame() {
+        window.startGame = () => {
             document.getElementById('start-screen').classList.add('hidden');
             document.getElementById('stats-panel').classList.remove('hidden');
             document.getElementById('game-container').classList.remove('hidden');
             gameActive = true;
             initGame();
-        }
+        };
 
-        function initGame() {
+        const initGame = () => {
             let shuffled = [...wordBank].sort(() => 0.5 - Math.random());
             activeWords = shuffled.slice(0, 20).map(item => ({...item, count: 0}));
             updateScoreDisplay();
             nextQuestion();
             startTimer();
-        }
+        };
 
-        function nextQuestion() {
+        const nextQuestion = () => {
             if (!gameActive) return;
             canAnswer = true;
             currentWord = activeWords[Math.floor(Math.random() * activeWords.length)];
             document.getElementById('word-display').innerText = currentWord.word;
             document.getElementById('meaning-display').innerText = `(${currentWord.meaning})`;
             generateOptions(currentWord.prep);
-        }
+        };
 
-        function generateOptions(correctPrep) {
+        const generateOptions = (correctPrep) => {
             const grid = document.getElementById('options-grid');
             grid.innerHTML = '';
             let choices = [...prepositions.filter(p => p !== correctPrep).sort(() => 0.5 - Math.random()).slice(0, 3), correctPrep].sort(() => 0.5 - Math.random());
@@ -309,19 +364,21 @@
                 btn.onclick = () => checkAnswer(choice, btn);
                 grid.appendChild(btn);
             });
-        }
+        };
 
-        function checkAnswer(choice, btn) {
+        const checkAnswer = (choice, btn) => {
             if (!gameActive || !canAnswer) return;
             canAnswer = false;
 
             if (choice === currentWord.prep) {
+                playSound('audio-correct');
                 score += 2;
                 correctCount++;
                 currentWord.count += 1;
                 btn.classList.add('correct');
                 if (currentWord.count >= 3) replaceWord(currentWord);
             } else {
+                playSound('audio-incorrect');
                 score = Math.max(0, score - 1);
                 incorrectCount++;
                 currentWord.count = 0; 
@@ -336,9 +393,9 @@
             }
             updateScoreDisplay();
             setTimeout(nextQuestion, 700);
-        }
+        };
 
-        function replaceWord(wordToReplace) {
+        const replaceWord = (wordToReplace) => {
             const index = activeWords.indexOf(wordToReplace);
             const currentActiveWordsText = activeWords.map(w => w.word);
             const availableWords = wordBank.filter(w => !currentActiveWordsText.includes(w.word));
@@ -346,15 +403,15 @@
                 const newWord = availableWords[Math.floor(Math.random() * availableWords.length)];
                 activeWords[index] = {...newWord, count: 0};
             }
-        }
+        };
 
-        function updateScoreDisplay() {
+        const updateScoreDisplay = () => {
             document.getElementById('score').innerText = score;
             let totalProgress = activeWords.reduce((sum, w) => sum + w.count, 0);
             document.getElementById('progress').style.width = Math.min((totalProgress / 60) * 100, 100) + "%";
-        }
+        };
 
-        function startTimer() {
+        const startTimer = () => {
             const interval = setInterval(() => {
                 if (!gameActive) { clearInterval(interval); return; }
                 let mins = Math.floor(timeLeft / 60);
@@ -363,9 +420,9 @@
                 if (timeLeft <= 0) { clearInterval(interval); endGame(); }
                 timeLeft--;
             }, 1000);
-        }
+        };
 
-        function endGame() {
+        const endGame = () => {
             gameActive = false;
             document.getElementById('stats-panel').classList.add('hidden');
             document.getElementById('game-container').classList.add('hidden');
@@ -387,48 +444,84 @@
                     </li>
                 `).join('');
             }
-        }
+        };
 
-        function toggleSaveSection(show) {
+        window.toggleSaveSection = (show) => {
             document.getElementById('leaderboard-prompt').classList.add('hidden');
             if (show) document.getElementById('save-score-section').classList.remove('hidden');
-        }
+        };
 
-        function saveResult() {
-            const nameInput = document.getElementById('studentName');
-            const classInput = document.getElementById('studentClass');
-            
-            const name = nameInput.value.trim().toUpperCase();
-            const sClass = classInput.value.trim().toUpperCase();
+        // FIRESTORE OPERATIONS
+        window.saveResult = async () => {
+            if (!currentUser) {
+                alert("Lỗi kết nối máy chủ. Vui lòng tải lại trang.");
+                return;
+            }
+
+            const name = document.getElementById('studentName').value.trim().toUpperCase();
+            const sClass = document.getElementById('studentClass').value.trim().toUpperCase();
             
             if (!name || !sClass) { alert("Bạn chưa nhập đủ thông tin!"); return; }
-            
-            const history = JSON.parse(localStorage.getItem('prep_bxh_12')) || [];
-            history.push({ name, class: sClass, score, date: new Date().toLocaleDateString() });
-            history.sort((a, b) => b.score - a.score);
-            localStorage.setItem('prep_bxh_12', JSON.stringify(history.slice(0, 10)));
-            
-            document.getElementById('save-score-section').classList.add('hidden');
-            showLeaderboard();
-        }
 
-        function showLeaderboard() {
-            const history = JSON.parse(localStorage.getItem('prep_bxh_12')) || [];
+            const submitBtn = document.querySelector('#save-score-section button');
+            submitBtn.disabled = true;
+            submitBtn.innerText = "ĐANG GỬI...";
+
+            try {
+                const publicCollection = collection(db, 'artifacts', appId, 'public', 'data', 'leaderboard');
+                await addDoc(publicCollection, {
+                    uid: currentUser.uid,
+                    name: name,
+                    class: sClass,
+                    score: score,
+                    timestamp: new Date().getTime()
+                });
+
+                document.getElementById('save-score-section').classList.add('hidden');
+                showLeaderboard();
+            } catch (err) {
+                console.error("Save error:", err);
+                alert("Không thể lưu điểm. Thử lại sau!");
+                submitBtn.disabled = false;
+                submitBtn.innerText = "GỬI ĐIỂM LÊN HỆ THỐNG";
+            }
+        };
+
+        const showLeaderboard = () => {
+            if (!currentUser) return;
+
+            document.getElementById('leaderboard').classList.remove('hidden');
             const list = document.getElementById('leaderboard-list');
-            list.innerHTML = history.length ? history.map((entry, i) => `
-                <div class="flex justify-between items-center p-4 bg-white rounded-2xl border border-indigo-50 shadow-sm">
-                    <div class="flex items-center gap-3">
-                        <span class="w-8 h-8 flex items-center justify-center ${i < 3 ? 'bg-yellow-400 text-white' : 'bg-indigo-50 text-indigo-400'} rounded-xl text-sm font-black">${i + 1}</span>
-                        <div>
-                            <p class="font-black text-slate-800 leading-tight">${entry.name}</p>
-                            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-tighter">${entry.class}</p>
+            list.innerHTML = '<p class="text-center py-4 text-slate-400 animate-pulse">Đang tải bảng xếp hạng...</p>';
+
+            const q = query(collection(db, 'artifacts', appId, 'public', 'data', 'leaderboard'));
+            
+            onSnapshot(q, (snapshot) => {
+                let data = [];
+                snapshot.forEach(doc => data.push(doc.data()));
+                data.sort((a, b) => b.score - a.score);
+                const top15 = data.slice(0, 15);
+
+                list.innerHTML = top15.length ? top15.map((entry, i) => `
+                    <div class="flex justify-between items-center p-4 ${entry.uid === currentUser.uid ? 'bg-indigo-600 text-white shadow-indigo-200' : 'bg-white text-slate-800'} rounded-2xl border border-indigo-50 shadow-sm animate-fadeIn">
+                        <div class="flex items-center gap-3">
+                            <span class="w-8 h-8 flex items-center justify-center ${i < 3 && entry.uid !== currentUser.uid ? 'bg-yellow-400 text-white' : (entry.uid === currentUser.uid ? 'bg-white/20' : 'bg-indigo-50 text-indigo-400')} rounded-xl text-sm font-black">${i + 1}</span>
+                            <div>
+                                <p class="font-black leading-tight">${entry.name}</p>
+                                <p class="text-[10px] ${entry.uid === currentUser.uid ? 'text-indigo-200' : 'text-slate-400'} font-bold uppercase tracking-tighter">${entry.class}</p>
+                            </div>
+                        </div>
+                        <div class="flex flex-col items-end">
+                            <span class="text-xl font-black">${entry.score}</span>
+                            <span class="text-[8px] opacity-60">${entry.uid}</span>
                         </div>
                     </div>
-                    <span class="text-xl font-black text-indigo-600">${entry.score}</span>
-                </div>
-            `).join('') : '<p class="text-center py-4 text-slate-400 italic">Chưa có thành tích nào.</p>';
-            document.getElementById('leaderboard').classList.remove('hidden');
-        }
+                `).join('') : '<p class="text-center py-4 text-slate-400 italic">Chưa có ai ghi danh.</p>';
+            }, (error) => {
+                console.error("Snapshot error:", error);
+                list.innerHTML = '<p class="text-center text-red-500 p-4">Lỗi tải dữ liệu!</p>';
+            });
+        };
     </script>
 </body>
 </html>
