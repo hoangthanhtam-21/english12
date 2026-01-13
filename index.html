@@ -34,7 +34,6 @@
             border: 1px solid rgba(255, 255, 255, 0.4);
         }
 
-        /* Tối ưu cho nút bấm trên cảm ứng */
         .choice-btn {
             touch-action: manipulation;
             -webkit-tap-highlight-color: transparent;
@@ -61,7 +60,6 @@
 
         .animate-fadeIn { animation: fadeIn 0.4s ease-out forwards; }
 
-        /* Scrollbar tàng hình nhưng vẫn hoạt động */
         #leaderboard-list::-webkit-scrollbar {
             width: 4px;
         }
@@ -70,7 +68,11 @@
             border-radius: 10px;
         }
 
-        /* Responsive adjustments */
+        /* Input auto-uppercase visual feedback */
+        .uppercase-input {
+            text-transform: uppercase;
+        }
+
         @media (max-width: 480px) {
             h1 { font-size: 1.5rem !important; }
             h2#word-display { font-size: 2rem !important; }
@@ -88,9 +90,7 @@
             <h1 class="text-2xl sm:text-3xl font-black text-indigo-800 mb-6 uppercase tracking-tighter leading-tight">Luyện Tập Giới Từ<br><span class="text-indigo-600 text-lg uppercase">Unit 5: Urbanization</span></h1>
             
             <div class="space-y-4 mb-8 text-left bg-white/60 p-5 rounded-2xl border border-indigo-100 shadow-inner">
-                <h3 class="font-bold text-slate-800 border-b border-indigo-100 pb-2 flex items-center gap-2">
-                    Cách tính điểm:
-                </h3>
+                <h3 class="font-bold text-slate-800 border-b border-indigo-100 pb-2 flex items-center gap-2">Cách tính điểm:</h3>
                 <ul class="space-y-3 text-slate-700 text-sm sm:text-base">
                     <li class="flex items-center gap-3">
                         <span class="w-6 h-6 flex-shrink-0 bg-green-100 text-green-600 rounded-full flex items-center justify-center font-bold">✓</span> 
@@ -135,7 +135,6 @@
                 <p class="text-indigo-400 text-[10px] sm:text-xs font-bold uppercase tracking-widest mb-3">Chọn giới từ phù hợp</p>
                 <h2 id="word-display" class="text-3xl sm:text-4xl font-black mb-2 text-slate-800 break-words leading-tight">...</h2>
                 <p id="meaning-display" class="text-lg sm:text-xl text-indigo-500 italic mb-8 font-medium px-2">...</p>
-                
                 <div id="options-grid" class="grid grid-cols-2 gap-3 sm:gap-4"></div>
             </div>
         </div>
@@ -177,11 +176,15 @@
                     <div class="flex flex-col gap-4">
                         <div>
                             <label class="text-[10px] font-bold text-indigo-400 uppercase ml-1">Họ và tên</label>
-                            <input type="text" id="studentName" placeholder="Nhập tên..." class="w-full px-4 py-3 rounded-xl border border-indigo-200 focus:ring-2 focus:ring-indigo-500 outline-none mt-1">
+                            <input type="text" id="studentName" placeholder="NHẬP TÊN..." 
+                                oninput="this.value = this.value.toUpperCase()"
+                                class="w-full px-4 py-3 rounded-xl border border-indigo-200 focus:ring-2 focus:ring-indigo-500 outline-none mt-1 uppercase-input font-bold">
                         </div>
                         <div>
                             <label class="text-[10px] font-bold text-indigo-400 uppercase ml-1">Lớp học</label>
-                            <input type="text" id="studentClass" placeholder="Ví dụ: 12A1..." class="w-full px-4 py-3 rounded-xl border border-indigo-200 focus:ring-2 focus:ring-indigo-500 outline-none mt-1">
+                            <input type="text" id="studentClass" placeholder="VÍ DỤ: 12A1..." 
+                                oninput="this.value = this.value.toUpperCase()"
+                                class="w-full px-4 py-3 rounded-xl border border-indigo-200 focus:ring-2 focus:ring-indigo-500 outline-none mt-1 uppercase-input font-bold">
                         </div>
                         <button onclick="saveResult()" class="w-full bg-indigo-600 text-white py-4 rounded-xl font-bold hover:bg-indigo-700 shadow-lg shadow-indigo-200 mt-2">LƯU & HIỂN THỊ</button>
                     </div>
@@ -262,29 +265,12 @@
         let score = 0;
         let correctCount = 0;
         let incorrectCount = 0;
-        let timeLeft = 420; // 7 phút
+        let timeLeft = 420; 
         let activeWords = []; 
         let currentWord = null;
         let gameActive = false;
         let canAnswer = true;
         let mistakeTracker = {};
-
-        function playErrorSound() {
-            try {
-                const context = new (window.AudioContext || window.webkitAudioContext)();
-                const oscillator = context.createOscillator();
-                const gainNode = context.createGain();
-                oscillator.type = 'sawtooth';
-                oscillator.frequency.setValueAtTime(150, context.currentTime);
-                oscillator.frequency.exponentialRampToValueAtTime(40, context.currentTime + 0.3);
-                gainNode.gain.setValueAtTime(0.05, context.currentTime);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, context.currentTime + 0.3);
-                oscillator.connect(gainNode);
-                gainNode.connect(context.destination);
-                oscillator.start();
-                oscillator.stop(context.currentTime + 0.3);
-            } catch(e) { console.log("Audio not supported"); }
-        }
 
         function startGame() {
             document.getElementById('start-screen').classList.add('hidden');
@@ -340,7 +326,6 @@
                 incorrectCount++;
                 currentWord.count = 0; 
                 btn.classList.add('incorrect');
-                playErrorSound();
                 
                 const wordKey = `${currentWord.word} [${currentWord.prep}]`;
                 mistakeTracker[wordKey] = (mistakeTracker[wordKey] || 0) + 1;
@@ -410,8 +395,12 @@
         }
 
         function saveResult() {
-            const name = document.getElementById('studentName').value.trim();
-            const sClass = document.getElementById('studentClass').value.trim();
+            const nameInput = document.getElementById('studentName');
+            const classInput = document.getElementById('studentClass');
+            
+            const name = nameInput.value.trim().toUpperCase();
+            const sClass = classInput.value.trim().toUpperCase();
+            
             if (!name || !sClass) { alert("Bạn chưa nhập đủ thông tin!"); return; }
             
             const history = JSON.parse(localStorage.getItem('prep_bxh_12')) || [];
