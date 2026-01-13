@@ -1,527 +1,638 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Học Tiếng Anh Lớp 12 - Unit 5: Urbanization</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
-        
-        :root { --app-height: 100%; }
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { initializeApp } from 'firebase/app';
+import { 
+  getFirestore, collection, doc, setDoc, onSnapshot, 
+  updateDoc, deleteDoc
+} from 'firebase/firestore';
+import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from 'firebase/auth';
+import { Trophy, Users, User, Timer, Star, Gift, X, Play, CheckCircle, AlertCircle } from 'lucide-react';
 
-        body { 
-            font-family: 'Inter', sans-serif; 
-            background-image: url('https://img.freepik.com/free-vector/flat-design-english-school-background_23-2149487419.jpg?w=2000');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0;
-            overflow-x: hidden;
-        }
+// --- Firebase Setup ---
+const firebaseConfig = JSON.parse(__firebase_config);
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const appId = typeof __app_id !== 'undefined' ? __app_id : 'preposition-master-v2';
 
-        .glass-morphism {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.4);
-        }
+// --- Data & Constants ---
+const SOLOTIME = 420; 
+const GROUPTIME = 600;
 
-        .choice-btn { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+// Ngân hàng từ vựng mở rộng từ hình ảnh (Unit 5 + Common Prepositions)
+const INITIAL_WORD_BANK = [
+  { id: 1, word: "ban... ", prep: "from", meaning: "cấm làm điều gì đó" },
+  { id: 2, word: "benefit ", prep: "from", meaning: "có lợi từ thứ gì đó" },
+  { id: 3, word: "believe ", prep: "in", meaning: "tin vào" },
+  { id: 4, word: "specialize ", prep: "in", meaning: "chuyên về" },
+  { id: 5, word: "accuse... ", prep: "of", meaning: "buộc tội vì điều gì" },
+  { id: 6, word: "remind... ", prep: "of", meaning: "nhắc nhở về điều gì" },
+  { id: 7, word: "agree ", prep: "on", meaning: "đồng ý về điều gì" },
+  { id: 8, word: "rely ", prep: "on", meaning: "dựa vào" },
+  { id: 9, word: "belong ", prep: "to", meaning: "thuộc về" },
+  { id: 10, word: "object ", prep: "to", meaning: "phản đối" },
+  { id: 11, word: "satisfied ", prep: "with", meaning: "hài lòng với" },
+  { id: 12, word: "famous ", prep: "for", meaning: "nổi tiếng về" },
+  { id: 13, word: "proud ", prep: "of", meaning: "tự hào về" },
+  { id: 14, word: "anxious ", prep: "about", meaning: "lo lắng về" },
+  { id: 15, word: "succeed ", prep: "in", meaning: "thành công về điều gì" },
+  { id: 16, word: "invest ", prep: "in", meaning: "đầu tư vào" },
+  { id: 17, word: "result ", prep: "in", meaning: "dẫn đến kết quả" },
+  { id: 18, word: "result ", prep: "from", meaning: "do bởi (nguyên nhân)" },
+  { id: 19, word: "recover ", prep: "from", meaning: "hồi phục từ" },
+  { id: 20, word: "prepare ", prep: "for", meaning: "chuẩn bị cho" },
+  { id: 21, word: "wait ", prep: "for", meaning: "chờ đợi" },
+  { id: 22, word: "concentrate ", prep: "on", meaning: "tập trung vào" },
+  { id: 23, word: "insist ", prep: "on", meaning: "khăng khăng làm gì" },
+  { id: 24, word: "congratulate sb... ", prep: "on", meaning: "chúc mừng ai vì điều gì" },
+  { id: 25, word: "apologize to sb... ", prep: "for", meaning: "xin lỗi về điều gì" },
+  { id: 41, word: "absent ", prep: "from", meaning: "vắng mặt khỏi" },
+  { id: 42, word: "addicted ", prep: "to", meaning: "nghiện thứ gì" },
+  { id: 43, word: "crowded ", prep: "with", meaning: "đông đúc với" },
+  { id: 44, word: "engaged ", prep: "in", meaning: "tham gia vào / bận rộn" },
+  { id: 45, word: "opposed ", prep: "to", meaning: "phản đối" },
+];
 
-        .correct { 
-            background-color: #10b981 !important; 
-            color: white !important; 
-            border-color: #059669 !important;
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
-            animation: pulse-green 0.3s ease-in-out;
-        }
+const EXTRA_WORD_BANK = [
+  { id: 26, word: "capable ", prep: "of", meaning: "có khả năng làm gì" },
+  { id: 27, word: "keen ", prep: "on", meaning: "say mê điều gì" },
+  { id: 28, word: "accustomed ", prep: "to", meaning: "quen với" },
+  { id: 29, word: "provide... ", prep: "with", meaning: "cung cấp cái gì cho ai" },
+  { id: 30, word: "depend ", prep: "on", meaning: "phụ thuộc vào" },
+  { id: 31, word: "base... ", prep: "on", meaning: "dựa trên" },
+  { id: 32, word: "suffer ", prep: "from", meaning: "chịu đựng (bệnh tật)" },
+  { id: 33, word: "translate... ", prep: "into", meaning: "dịch sang" },
+  { id: 34, word: "divide... ", prep: "into", meaning: "chia thành" },
+  { id: 35, word: "compare... ", prep: "with", meaning: "so sánh với" },
+  { id: 36, word: "afraid ", prep: "of", meaning: "sợ hãi điều gì" },
+  { id: 37, word: "interested ", prep: "in", meaning: "quan tâm đến" },
+  { id: 38, word: "tired ", prep: "of", meaning: "mệt mỏi vì" },
+  { id: 39, word: "worried ", prep: "about", meaning: "lo lắng về" },
+  { id: 40, word: "similar ", prep: "to", meaning: "tương tự với" },
+  { id: 46, word: "aware ", prep: "of", meaning: "nhận thức về" },
+  { id: 47, word: "full ", prep: "of", meaning: "đầy rẫy" },
+  { id: 48, word: "good ", prep: "at", meaning: "giỏi về" },
+  { id: 49, word: "bad ", prep: "at", meaning: "dở về" },
+  { id: 50, word: "different ", prep: "from", meaning: "khác biệt với" },
+  { id: 51, word: "excited ", prep: "about", meaning: "hào hứng về" },
+  { id: 52, word: "ashamed ", prep: "of", meaning: "hổ thẹn về" },
+  { id: 53, word: "bored ", prep: "with", meaning: "chán nản với" },
+  { id: 54, word: "married ", prep: "to", meaning: "kết hôn với" },
+  { id: 55, word: "responsible ", prep: "for", meaning: "chịu trách nhiệm cho" },
+  { id: 56, word: "late ", prep: "for", meaning: "trễ giờ làm gì" },
+  { id: 57, word: "safe ", prep: "from", meaning: "an toàn khỏi" },
+  { id: 58, word: "terrified ", prep: "of", meaning: "khiếp sợ" },
+  { id: 59, word: "useful ", prep: "for", meaning: "hữu ích cho" },
+  { id: 60, word: "perfect ", prep: "for", meaning: "hoàn hảo cho" },
+];
 
-        .incorrect { 
-            background-color: #ef4444 !important; 
-            color: white !important; 
-            border-color: #dc2626 !important;
-            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
-            animation: shake 0.3s ease-in-out;
-        }
+const PREPOSITIONS = ["from", "in", "of", "on", "to", "with", "for", "about", "at", "into"];
 
-        @keyframes pulse-green {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
+const NORMAL_REWARDS = [
+  { type: 'add', val: 5, label: '+5 điểm' },
+  { type: 'add', val: 10, label: '+10 điểm' },
+  { type: 'percent_add', val: 0.5, label: '+50% tổng điểm' },
+  { type: 'multiply', val: 2, label: 'Gấp đôi điểm!' },
+  { type: 'percent_sub', val: 0.25, label: '-25% tổng điểm' },
+  { type: 'sub', val: 20, label: '-20 điểm' },
+  { type: 'percent_sub', val: 0.5, label: '-50% tổng điểm' },
+];
 
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            75% { transform: translateX(5px); }
-        }
+const SWAP_REWARD = { type: 'swap', label: 'Đổi điểm với Top 1' };
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(15px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+const SOUNDS = {
+  correct: 'https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3',
+  wrong: 'https://assets.mixkit.co/active_storage/sfx/2955/2955-preview.mp3',
+  chest: 'https://assets.mixkit.co/active_storage/sfx/2017/2017-preview.mp3'
+};
 
-        .animate-fadeIn { animation: fadeIn 0.4s ease-out forwards; }
+const ProfileForm = ({ onConfirm, onCancel, isSaving, mode, initialName, initialClass }) => {
+  const nameRef = useRef(null);
+  const classRef = useRef(null);
 
-        #leaderboard-list::-webkit-scrollbar { width: 4px; }
-        #leaderboard-list::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+  const handleSubmit = () => {
+    const name = nameRef.current?.value || '';
+    const className = classRef.current?.value || '';
+    if (name && className) {
+      onConfirm(name.trim(), className.trim());
+    }
+  };
 
-        .uppercase-input { text-transform: uppercase; }
-
-        @media (max-width: 480px) {
-            h1 { font-size: 1.5rem !important; }
-            h2#word-display { font-size: 2rem !important; }
-            #options-grid { grid-template-columns: 1fr !important; }
-        }
-    </style>
-</head>
-<body class="p-3 sm:p-6 md:p-8">
-
-    <!-- Audio Elements -->
-    <audio id="audio-correct" preload="auto">
-        <source src="https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3" type="audio/mpeg">
-    </audio>
-    <audio id="audio-incorrect" preload="auto">
-        <source src="https://assets.mixkit.co/active_storage/sfx/2003/2003-preview.mp3" type="audio/mpeg">
-    </audio>
-
-    <div class="w-full max-w-xl mx-auto flex flex-col items-center">
-        
-        <!-- Màn hình Giới thiệu -->
-        <div id="start-screen" class="w-full glass-morphism rounded-[2rem] shadow-2xl p-6 sm:p-10 text-center animate-fadeIn">
-            <h1 class="text-2xl sm:text-3xl font-black text-indigo-800 mb-6 uppercase tracking-tighter leading-tight">Luyện Tập Giới Từ<br><span class="text-indigo-600 text-lg uppercase">Unit 5: Urbanization</span></h1>
-            
-            <div class="space-y-4 mb-8 text-left bg-white/60 p-5 rounded-2xl border border-indigo-100 shadow-inner">
-                <h3 class="font-bold text-slate-800 border-b border-indigo-100 pb-2 flex items-center gap-2">Cách tính điểm:</h3>
-                <ul class="space-y-3 text-slate-700 text-sm sm:text-base">
-                    <li class="flex items-center gap-3">
-                        <span class="w-6 h-6 flex-shrink-0 bg-green-100 text-green-600 rounded-full flex items-center justify-center font-bold">✓</span> 
-                        <span>Đúng: <strong class="text-green-600">+2 điểm</strong></span>
-                    </li>
-                    <li class="flex items-center gap-3">
-                        <span class="w-6 h-6 flex-shrink-0 bg-red-100 text-red-600 rounded-full flex items-center justify-center font-bold">✕</span> 
-                        <span>Sai: <strong class="text-red-600">-1 điểm</strong></span>
-                    </li>
-                    <li class="flex items-center gap-3">
-                        <span class="w-6 h-6 flex-shrink-0 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-bold">🕒</span> 
-                        <span>Thời gian: <strong>7 phút</strong></span>
-                    </li>
-                </ul>
-            </div>
-            
-            <button id="btn-start" disabled onclick="startGame()" class="w-full bg-slate-400 text-white py-4 sm:py-5 rounded-2xl font-black text-lg sm:text-xl transition transform active:scale-[0.98] shadow-xl uppercase tracking-widest">
-                ĐANG KẾT NỐI...
-            </button>
+  return (
+    <div className="bg-slate-900/80 backdrop-blur-2xl border border-white/20 w-full max-w-sm rounded-[3rem] p-10 shadow-2xl">
+      <h2 className="text-2xl font-black mb-8 text-center tracking-tight text-white uppercase">
+        {mode === 'solo' ? 'Lưu kết quả' : 'Nhập thông tin'}
+      </h2>
+      <div className="space-y-5">
+        <div>
+          <label className="text-[10px] font-black text-indigo-300 uppercase ml-2 tracking-widest">Họ và Tên</label>
+          <input 
+            type="text"
+            ref={nameRef}
+            defaultValue={initialName}
+            autoComplete="off"
+            className="w-full bg-black/40 border border-white/10 p-4 rounded-2xl mt-2 outline-none focus:border-indigo-400 transition font-bold text-white placeholder:text-slate-600 uppercase"
+            placeholder="NGUYỄN VĂN A"
+          />
         </div>
-
-        <!-- Dashboard Thông tin -->
-        <div id="stats-panel" class="hidden w-full glass-morphism rounded-3xl shadow-xl p-4 sm:p-6 mb-4 animate-fadeIn">
-            <div class="flex justify-between items-center">
-                <div class="flex flex-col">
-                    <span class="text-[10px] uppercase font-bold text-slate-400">Thời gian</span>
-                    <span id="timer" class="text-xl sm:text-2xl font-black text-red-600 tabular-nums">07:00</span>
-                </div>
-                <div class="flex flex-col items-end">
-                    <span class="text-[10px] uppercase font-bold text-slate-400">Điểm số</span>
-                    <span id="score" class="text-xl sm:text-2xl font-black text-indigo-700 tabular-nums">0</span>
-                </div>
-            </div>
-            <div class="w-full bg-slate-200 rounded-full h-2 sm:h-3 mt-4 overflow-hidden shadow-inner">
-                <div id="progress" class="bg-indigo-600 h-full transition-all duration-700 ease-out" style="width: 0%"></div>
-            </div>
+        <div>
+          <label className="text-[10px] font-black text-indigo-300 uppercase ml-2 tracking-widest">Lớp học</label>
+          <input 
+            type="text"
+            ref={classRef}
+            defaultValue={initialClass}
+            autoComplete="off"
+            className="w-full bg-black/40 border border-white/10 p-4 rounded-2xl mt-2 outline-none focus:border-indigo-400 transition font-bold text-white placeholder:text-slate-600 uppercase"
+            placeholder="12A1"
+          />
         </div>
-
-        <!-- Vùng Câu Hỏi -->
-        <div id="game-container" class="hidden w-full glass-morphism rounded-[2rem] shadow-2xl p-6 sm:p-10 border border-white/50 animate-fadeIn">
-            <div id="question-box" class="text-center">
-                <p class="text-indigo-400 text-[10px] sm:text-xs font-bold uppercase tracking-widest mb-3">Chọn giới từ phù hợp</p>
-                <h2 id="word-display" class="text-3xl sm:text-4xl font-black mb-2 text-slate-800 break-words leading-tight">...</h2>
-                <p id="meaning-display" class="text-lg sm:text-xl text-indigo-500 italic mb-8 font-medium px-2">...</p>
-                <div id="options-grid" class="grid grid-cols-2 gap-3 sm:gap-4"></div>
-            </div>
-        </div>
-
-        <!-- Màn hình kết thúc -->
-        <div id="result-screen" class="hidden w-full glass-morphism rounded-[2rem] shadow-2xl p-6 sm:p-10 animate-fadeIn">
-            <div class="text-center">
-                <div class="inline-block p-4 bg-indigo-50 rounded-full mb-4">
-                    <span class="text-4xl">🎓</span>
-                </div>
-                <h2 class="text-2xl sm:text-3xl font-black text-slate-800 mb-1">Kết quả luyện tập</h2>
-                <p class="text-indigo-600 font-black text-5xl sm:text-6xl my-6" id="final-score-display">0</p>
-                
-                <div class="grid grid-cols-2 gap-3 sm:gap-4 mb-8">
-                    <div class="bg-emerald-50 p-4 rounded-2xl border border-emerald-100">
-                        <p class="text-[10px] text-emerald-600 font-bold uppercase mb-1">Đúng</p>
-                        <p class="text-2xl font-black text-emerald-700" id="correct-count">0</p>
-                    </div>
-                    <div class="bg-rose-50 p-4 rounded-2xl border border-rose-100">
-                        <p class="text-[10px] text-rose-600 font-bold uppercase mb-1">Sai</p>
-                        <p class="text-2xl font-black text-rose-700" id="incorrect-count">0</p>
-                    </div>
-                </div>
-
-                <div id="mistakes-container" class="hidden text-left bg-orange-50 p-5 rounded-2xl border border-orange-100 mb-8">
-                    <p class="text-orange-700 font-bold text-sm mb-3 flex items-center gap-2">⚠️ Cần ôn tập lại:</p>
-                    <ul id="mistakes-list" class="text-sm text-slate-700 space-y-2"></ul>
-                </div>
-
-                <div id="leaderboard-prompt" class="space-y-3">
-                    <p class="text-slate-500 text-sm">Bạn muốn lưu điểm vào Bảng xếp hạng thế giới?</p>
-                    <div class="flex flex-col sm:flex-row gap-2">
-                        <button onclick="toggleSaveSection(true)" class="flex-1 bg-indigo-600 text-white py-4 rounded-xl font-bold hover:bg-indigo-700 shadow-lg shadow-indigo-100 transition active:scale-95">Lưu điểm & Xem BXH</button>
-                        <button onclick="location.reload()" class="flex-1 bg-slate-200 text-slate-700 py-4 rounded-xl font-bold hover:bg-slate-300 transition active:scale-95">Chơi lại</button>
-                    </div>
-                </div>
-
-                <div id="save-score-section" class="hidden text-left bg-indigo-50 p-6 rounded-2xl border border-indigo-100">
-                    <div class="flex flex-col gap-4">
-                        <div>
-                            <label class="text-[10px] font-bold text-indigo-400 uppercase ml-1">Họ và tên</label>
-                            <input type="text" id="studentName" placeholder="NHẬP TÊN..." 
-                                oninput="this.value = this.value.toUpperCase()"
-                                class="w-full px-4 py-3 rounded-xl border border-indigo-200 focus:ring-2 focus:ring-indigo-500 outline-none mt-1 font-bold uppercase">
-                        </div>
-                        <div>
-                            <label class="text-[10px] font-bold text-indigo-400 uppercase ml-1">Lớp học</label>
-                            <input type="text" id="studentClass" placeholder="VÍ DỤ: 12A1..." 
-                                oninput="this.value = this.value.toUpperCase()"
-                                class="w-full px-4 py-3 rounded-xl border border-indigo-200 focus:ring-2 focus:ring-indigo-500 outline-none mt-1 font-bold uppercase">
-                        </div>
-                        <button onclick="saveResult()" class="w-full bg-indigo-600 text-white py-4 rounded-xl font-bold hover:bg-indigo-700 shadow-lg shadow-indigo-200 mt-2">GỬI ĐIỂM LÊN HỆ THỐNG</button>
-                    </div>
-                </div>
-
-                <div id="leaderboard" class="hidden mt-8 text-left animate-fadeIn">
-                    <h3 class="font-black text-slate-800 mb-4 flex items-center gap-2 uppercase tracking-wider text-sm">🏆 BXH TOÀN TRƯỜNG (TOP 15)</h3>
-                    <div id="leaderboard-list" class="space-y-2 max-h-[40vh] overflow-y-auto pr-1"></div>
-                    <button onclick="location.reload()" class="w-full mt-6 bg-slate-800 text-white py-4 rounded-2xl font-bold hover:bg-black transition active:scale-95">VỀ MÀN HÌNH CHÍNH</button>
-                </div>
-            </div>
-        </div>
+        <button 
+          disabled={isSaving}
+          onClick={handleSubmit}
+          className="w-full bg-indigo-600 text-white py-5 rounded-2xl font-black mt-6 disabled:opacity-30 hover:bg-white hover:text-black transition-all shadow-xl flex items-center justify-center gap-2 uppercase"
+        >
+          {isSaving ? 'Đang lưu...' : 'Xác nhận'}
+        </button>
+        {mode === 'solo' && (
+           <button onClick={onCancel} className="w-full text-slate-400 text-xs font-bold uppercase tracking-widest mt-2 hover:text-white transition-colors">Bỏ qua</button>
+        )}
+      </div>
     </div>
+  );
+};
 
-    <!-- Firebase SDKs -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, query, onSnapshot, limit, doc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+export default function App() {
+  const [user, setUser] = useState(null);
+  const [view, setView] = useState('landing'); 
+  const [mode, setMode] = useState(null); 
+  const [userName, setUserName] = useState('');
+  const [userClass, setUserClass] = useState('');
+  const [score, setScore] = useState(0);
+  const [timeLeft, setTimeLeft] = useState(SOLOTIME);
+  const [lobbyUsers, setLobbyUsers] = useState([]);
+  
+  // Game Logic State
+  const [activeList, setActiveList] = useState([...INITIAL_WORD_BANK]);
+  const [extraList, setExtraList] = useState([...EXTRA_WORD_BANK]);
+  const [currentQuestion, setCurrentQuestion] = useState(null);
+  const [lastWordId, setLastWordId] = useState(null);
+  
+  // Stats tracking
+  const [masteredIds, setMasteredIds] = useState(new Set());
+  const [consecutiveCorrect, setConsecutiveCorrect] = useState({}); 
+  const [errorCounts, setErrorCounts] = useState({}); 
+  
+  const [showChests, setShowChests] = useState(false);
+  const [chestMessage, setChestMessage] = useState(null);
+  const [groupLeaderboard, setGroupLeaderboard] = useState([]);
+  const [isSavingScore, setIsSavingScore] = useState(false);
+  const [showRankAfterSolo, setShowRankAfterSolo] = useState(false);
 
-        const firebaseConfig = JSON.parse(__firebase_config);
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+  const playSound = (type) => {
+    const audio = new Audio(SOUNDS[type]);
+    audio.play().catch(() => {});
+  };
 
-        let currentUser = null;
+  useEffect(() => {
+    const initAuth = async () => {
+      try {
+        if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+          await signInWithCustomToken(auth, __initial_auth_token);
+        } else {
+          await signInAnonymously(auth);
+        }
+      } catch (err) { console.error("Auth error:", err); }
+    };
+    initAuth();
+    const unsubscribe = onAuthStateChanged(auth, setUser);
+    return () => unsubscribe();
+  }, []);
 
-        // Audio Helper
-        const playSound = (id) => {
-            const audio = document.getElementById(id);
-            if (audio) {
-                audio.currentTime = 0; // Reset to start
-                audio.play().catch(e => console.log("Audio play blocked by browser. Interact with page first."));
-            }
-        };
+  useEffect(() => {
+    if (!user) return;
+    const playersRef = collection(db, 'artifacts', appId, 'public', 'data', 'online_players');
+    const unsubscribe = onSnapshot(playersRef, (snapshot) => {
+      const users = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      setLobbyUsers(users);
+      setGroupLeaderboard([...users].sort((a, b) => (b.score || 0) - (a.score || 0)));
+    }, (err) => console.error(err));
+    return () => unsubscribe();
+  }, [user]);
 
-        // Auth initialization
-        const initAuth = async () => {
-            try {
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    await signInWithCustomToken(auth, __initial_auth_token);
-                } else {
-                    await signInAnonymously(auth);
-                }
-            } catch (err) {
-                console.error("Auth error:", err);
-            }
-        };
+  useEffect(() => {
+    let timer;
+    if (view === 'game' && timeLeft > 0) {
+      timer = setInterval(() => setTimeLeft(prev => prev - 1), 1000);
+    } else if (timeLeft === 0 && view === 'game') {
+      setView('result');
+      if (mode === 'group') cleanupUser();
+    }
+    return () => clearInterval(timer);
+  }, [view, timeLeft, mode]);
 
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                currentUser = user;
-                const startBtn = document.getElementById('btn-start');
-                startBtn.disabled = false;
-                startBtn.innerText = "BẮT ĐẦU HỌC";
-                startBtn.className = "w-full bg-indigo-600 text-white py-4 sm:py-5 rounded-2xl font-black text-lg sm:text-xl hover:bg-indigo-700 transition transform active:scale-[0.98] shadow-xl shadow-indigo-200 uppercase tracking-widest";
-            }
+  const cleanupUser = async () => {
+    if (user && mode === 'group') {
+      try {
+        await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'online_players', user.uid));
+      } catch (e) {}
+    }
+  };
+
+  const generateQuestion = useCallback(() => {
+    if (activeList.length === 0) return;
+
+    let available = activeList.filter(w => w.id !== lastWordId);
+    if (available.length === 0) available = activeList; 
+
+    const q = available[Math.floor(Math.random() * available.length)];
+    const options = [q.prep, ...PREPOSITIONS.filter(p => p !== q.prep).sort(() => 0.5 - Math.random()).slice(0, 3)].sort(() => 0.5 - Math.random());
+    
+    setCurrentQuestion({ ...q, options });
+    setLastWordId(q.id);
+    setShowChests(false);
+    setChestMessage(null);
+  }, [activeList, lastWordId]);
+
+  const handleAnswer = (choice) => {
+    const isCorrect = choice === currentQuestion.prep;
+    const wordId = currentQuestion.id;
+
+    if (isCorrect) {
+      playSound('correct');
+      const newStreak = (consecutiveCorrect[wordId] || 0) + 1;
+      setConsecutiveCorrect(prev => ({ ...prev, [wordId]: newStreak }));
+
+      if (newStreak >= 3) {
+        setMasteredIds(prev => new Set(prev).add(wordId));
+        setActiveList(prev => {
+          const filtered = prev.filter(w => w.id !== wordId);
+          if (extraList.length > 0) {
+            const [nextWord, ...remainingExtra] = extraList;
+            setExtraList(remainingExtra);
+            return [...filtered, nextWord];
+          }
+          return filtered;
         });
+      }
 
-        initAuth();
+      if (mode === 'group') {
+        setShowChests(true);
+      } else {
+        setScore(s => s + 2);
+        generateQuestion();
+      }
+    } else {
+      playSound('wrong');
+      setConsecutiveCorrect(prev => ({ ...prev, [wordId]: 0 }));
+      setErrorCounts(prev => ({ ...prev, [wordId]: (prev[wordId] || 0) + 1 }));
 
-        // Game Logic & Data
-        const wordBank = [
-            { word: "ban... ", prep: "from", meaning: "cấm làm điều gì đó" },
-            { word: "benefit ", prep: "from", meaning: "có lợi từ thứ gì đó" },
-            { word: "believe ", prep: "in", meaning: "tin vào" },
-            { word: "specialize ", prep: "in", meaning: "chuyên về" },
-            { word: "accuse... ", prep: "of", meaning: "buộc tội vì điều gì" },
-            { word: "remind... ", prep: "of", meaning: "nhắc nhở về điều gì" },
-            { word: "agree ", prep: "on", meaning: "đồng ý về điều gì" },
-            { word: "rely ", prep: "on", meaning: "dựa vào" },
-            { word: "belong ", prep: "to", meaning: "thuộc về" },
-            { word: "object ", prep: "to", meaning: "phản đối" },
-            { word: "angry ", prep: "with", meaning: "tức giận với ai" },
-            { word: "satisfied ", prep: "with", meaning: "hài lòng với" },
-            { word: "famous ", prep: "for", meaning: "nổi tiếng về" },
-            { word: "apply ", prep: "for", meaning: "nộp đơn xin (việc...)" },
-            { word: "proud ", prep: "of", meaning: "tự hào về" },
-            { word: "anxious ", prep: "about", meaning: "lo lắng về" },
-            { word: "succeed ", prep: "in", meaning: "thành công về điều gì" },
-            { word: "protect... ", prep: "against", meaning: "bảo vệ khỏi điều gì" },
-            { word: "good ", prep: "at", meaning: "giỏi về việc gì" },
-            { word: "by ", prep: "accident", meaning: "tình cờ, ngẫu nhiên" },
-            { word: "at ", prep: "once", meaning: "ngay lập tức" },
-            { word: "solution ", prep: "to", meaning: "giải pháp cho" },
-            { word: "independent ", prep: "of", meaning: "độc lập, không lệ thuộc" },
-            { word: "look forward ", prep: "to", meaning: "mong đợi điều gì đó" },
-            { word: "prevent... ", prep: "from", meaning: "ngăn cản khỏi điều gì" },
-            { word: "interested ", prep: "in", meaning: "quan tâm đến" },
-            { word: "participate ", prep: "in", meaning: "tham gia vào" },
-            { word: "aware ", prep: "of", meaning: "nhận thức về" },
-            { word: "capable ", prep: "of", meaning: "có khả năng làm gì" },
-            { word: "similar ", prep: "to", meaning: "tương tự với" },
-            { word: "accustomed ", prep: "to", meaning: "quen với việc gì" },
-            { word: "responsible ", prep: "for", meaning: "chịu trách nhiệm cho" },
-            { word: "reason ", prep: "for", meaning: "lý do cho" },
-            { word: "concentrate ", prep: "on", meaning: "tập trung vào" },
-            { word: "insist ", prep: "on", meaning: "khăng khăng làm gì" },
-            { word: "graduate ", prep: "from", meaning: "tốt nghiệp từ" },
-            { word: "suffer ", prep: "from", meaning: "chịu đựng điều gì" },
-            { word: "result ", prep: "in", meaning: "dẫn đến kết quả" },
-            { word: "persist ", prep: "in", meaning: "kiên trì làm gì" },
-            { word: "confide... ", prep: "in", meaning: "tin tưởng kể cho ai" },
-            { word: "tired ", prep: "of", meaning: "mệt mỏi vì việc gì" },
-            { word: "afraid ", prep: "of", meaning: "sợ hãi điều gì" },
-            { word: "approve... ", prep: "of", meaning: "tán thành điều gì" },
-            { word: "depend ", prep: "on", meaning: "phụ thuộc vào" },
-            { word: "congratulate... ", prep: "on", meaning: "chúc mừng vì điều gì" },
-            { word: "addicted ", prep: "to", meaning: "nghiện điều gì" },
-            { word: "dedicated ", prep: "to", meaning: "tận tụy với" },
-            { word: "react... ", prep: "to", meaning: "phản ứng với" },
-            { word: "bored ", prep: "with", meaning: "chán nản với" },
-            { word: "familiar ", prep: "with", meaning: "quen thuộc với" },
-            { word: "ready ", prep: "for", meaning: "sẵn sàng cho" },
-            { word: "known ", prep: "for", meaning: "được biết đến vì" },
-            { word: "care ", prep: "about", meaning: "quan tâm về" },
-            { word: "complain ", prep: "about", meaning: "phàn nàn về" },
-            { word: "amazed ", prep: "at", meaning: "kinh ngạc về" },
-            { word: "aim ", prep: "at", meaning: "nhắm vào" },
-            { word: "warn... ", prep: "against", meaning: "cảnh báo chống lại" }
-        ];
+      const newScore = Math.max(0, score - 1);
+      setScore(newScore);
+      if (mode === 'group') syncScore(newScore);
+      generateQuestion();
+    }
+  };
 
-        const prepositions = ["from", "in", "of", "on", "to", "with", "for", "about", "at", "against"];
-        
-        let score = 0;
-        let correctCount = 0;
-        let incorrectCount = 0;
-        let timeLeft = 420; 
-        let activeWords = []; 
-        let currentWord = null;
-        let gameActive = false;
-        let canAnswer = true;
-        let mistakeTracker = {};
+  const syncScore = async (newScore) => {
+    if (!user || (!userName && mode === 'solo')) return;
+    try {
+      await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'online_players', user.uid), {
+        score: newScore
+      });
+    } catch (e) {
+      await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'online_players', user.uid), {
+        uid: user.uid, name: userName.toUpperCase(), class: userClass.toUpperCase(), score: newScore
+      });
+    }
+  };
 
-        window.startGame = () => {
-            document.getElementById('start-screen').classList.add('hidden');
-            document.getElementById('stats-panel').classList.remove('hidden');
-            document.getElementById('game-container').classList.remove('hidden');
-            gameActive = true;
-            initGame();
-        };
+  const openChest = async () => {
+    playSound('chest');
+    let reward;
+    const isSwap = Math.random() < 0.3;
+    if (isSwap) {
+      reward = SWAP_REWARD;
+    } else {
+      reward = NORMAL_REWARDS[Math.floor(Math.random() * NORMAL_REWARDS.length)];
+    }
 
-        const initGame = () => {
-            let shuffled = [...wordBank].sort(() => 0.5 - Math.random());
-            activeWords = shuffled.slice(0, 20).map(item => ({...item, count: 0}));
-            updateScoreDisplay();
-            nextQuestion();
-            startTimer();
-        };
+    let finalScore = score;
+    switch (reward.type) {
+      case 'add': finalScore += reward.val; break;
+      case 'percent_add': finalScore += Math.floor(finalScore * reward.val); break;
+      case 'multiply': finalScore *= reward.val; break;
+      case 'percent_sub': finalScore = Math.max(0, finalScore - Math.floor(finalScore * reward.val)); break;
+      case 'sub': finalScore = Math.max(0, finalScore - reward.val); break;
+      case 'swap':
+        const topPlayer = groupLeaderboard[0];
+        if (topPlayer && topPlayer.uid !== user.uid) {
+          finalScore = topPlayer.score || 0;
+        } else {
+          finalScore += 10;
+          reward = { ...reward, label: 'Nhận +10đ' };
+        }
+        break;
+      default: break;
+    }
 
-        const nextQuestion = () => {
-            if (!gameActive) return;
-            canAnswer = true;
-            currentWord = activeWords[Math.floor(Math.random() * activeWords.length)];
-            document.getElementById('word-display').innerText = currentWord.word;
-            document.getElementById('meaning-display').innerText = `(${currentWord.meaning})`;
-            generateOptions(currentWord.prep);
-        };
+    setScore(finalScore);
+    setChestMessage(reward.label);
+    if (mode === 'group' || (mode === 'solo' && userName)) await syncScore(finalScore);
+    setTimeout(() => generateQuestion(), 1500);
+  };
 
-        const generateOptions = (correctPrep) => {
-            const grid = document.getElementById('options-grid');
-            grid.innerHTML = '';
-            let choices = [...prepositions.filter(p => p !== correctPrep).sort(() => 0.5 - Math.random()).slice(0, 3), correctPrep].sort(() => 0.5 - Math.random());
-            
-            choices.forEach(choice => {
-                const btn = document.createElement('button');
-                btn.className = "choice-btn py-4 sm:py-5 px-2 text-lg sm:text-xl font-black border-2 border-indigo-50 rounded-2xl transition-all active:scale-95 bg-white text-slate-700 shadow-sm hover:border-indigo-200 hover:bg-indigo-50/50";
-                btn.innerText = choice;
-                btn.onclick = () => checkAnswer(choice, btn);
-                grid.appendChild(btn);
-            });
-        };
+  const startSolo = () => {
+    setMode('solo');
+    setScore(0);
+    setTimeLeft(SOLOTIME);
+    setShowRankAfterSolo(false);
+    setMasteredIds(new Set());
+    setConsecutiveCorrect({});
+    setErrorCounts({});
+    setActiveList([...INITIAL_WORD_BANK]);
+    setExtraList([...EXTRA_WORD_BANK]);
+    setLastWordId(null);
+  };
 
-        const checkAnswer = (choice, btn) => {
-            if (!gameActive || !canAnswer) return;
-            canAnswer = false;
+  useEffect(() => {
+    if (view === 'game' && !currentQuestion) {
+      generateQuestion();
+    }
+  }, [view, currentQuestion, generateQuestion]);
 
-            if (choice === currentWord.prep) {
-                playSound('audio-correct');
-                score += 2;
-                correctCount++;
-                currentWord.count += 1;
-                btn.classList.add('correct');
-                if (currentWord.count >= 3) replaceWord(currentWord);
-            } else {
-                playSound('audio-incorrect');
-                score = Math.max(0, score - 1);
-                incorrectCount++;
-                currentWord.count = 0; 
-                btn.classList.add('incorrect');
-                
-                const wordKey = `${currentWord.word} [${currentWord.prep}]`;
-                mistakeTracker[wordKey] = (mistakeTracker[wordKey] || 0) + 1;
+  const handleConfirmProfile = async (name, className) => {
+    setUserName(name);
+    setUserClass(className);
+    
+    if (mode === 'group') {
+      if (!user) return;
+      setScore(0);
+      setTimeLeft(GROUPTIME);
+      try {
+        await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'online_players', user.uid), {
+          uid: user.uid, name: name.toUpperCase(), class: className.toUpperCase(), score: 0
+        });
+        setView('lobby');
+      } catch (e) { console.error(e); }
+    } else {
+      setIsSavingScore(true);
+      try {
+        await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'online_players', user.uid), {
+          uid: user.uid, name: name.toUpperCase(), class: className.toUpperCase(), score: score
+        });
+        setShowRankAfterSolo(true);
+      } catch (e) { console.error(e); }
+      setIsSavingScore(false);
+    }
+  };
 
-                Array.from(document.querySelectorAll('#options-grid button')).forEach(b => {
-                    if (b.innerText === currentWord.prep) b.classList.add('correct');
-                });
-            }
-            updateScoreDisplay();
-            setTimeout(nextQuestion, 700);
-        };
+  const MainContainer = ({ children }) => (
+    <div className="min-h-screen relative text-white overflow-hidden font-sans">
+      <div 
+        className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat transition-all duration-700"
+        style={{ backgroundImage: `url('https://img.freepik.com/free-vector/flat-design-english-school-background_23-2149487419.jpg?w=2000')` }}
+      >
+        <div className="absolute inset-0 bg-slate-950/75 backdrop-blur-[2px]" />
+      </div>
+      <div className="relative z-10 min-h-screen flex flex-col items-center justify-center p-6 w-full">
+        {children}
+      </div>
+    </div>
+  );
 
-        const replaceWord = (wordToReplace) => {
-            const index = activeWords.indexOf(wordToReplace);
-            const currentActiveWordsText = activeWords.map(w => w.word);
-            const availableWords = wordBank.filter(w => !currentActiveWordsText.includes(w.word));
-            if (availableWords.length > 0) {
-                const newWord = availableWords[Math.floor(Math.random() * availableWords.length)];
-                activeWords[index] = {...newWord, count: 0};
-            }
-        };
+  if (view === 'landing') return (
+    <MainContainer>
+      <div className="w-24 h-24 bg-indigo-600 rounded-[2.5rem] flex items-center justify-center mb-8 shadow-2xl shadow-indigo-500/40 animate-bounce">
+        <Trophy size={48} className="text-white" />
+      </div>
+      <h1 className="text-5xl font-black mb-2 uppercase tracking-tighter text-white drop-shadow-lg text-center">Preposition Master</h1>
+      <p className="text-indigo-200 mb-12 tracking-widest text-sm uppercase font-bold drop-shadow-md">Advanced Prep Training • Unit 5 & Beyond</p>
+      <div className="grid gap-5 w-full max-w-sm">
+        <button onClick={() => { startSolo(); setView('game'); }} className="group relative bg-white/95 text-slate-950 p-6 rounded-3xl font-bold flex items-center justify-between hover:scale-105 transition-all shadow-2xl">
+          <div className="flex items-center gap-4">
+            <div className="p-3 bg-indigo-50 rounded-2xl group-hover:bg-indigo-100 transition-colors">
+              <User className="text-indigo-600" />
+            </div>
+            <div className="text-left">
+              <p className="font-black text-lg text-slate-900">TỰ HỌC</p>
+              <p className="text-xs text-slate-500 font-normal">Vào học ngay • 7 phút</p>
+            </div>
+          </div>
+          <Play size={20} className="fill-current text-indigo-600" />
+        </button>
+        <button disabled={!user} onClick={() => { setMode('group'); setView('profile'); }} className="group relative bg-indigo-600 text-white p-6 rounded-3xl font-bold flex items-center justify-between hover:scale-105 transition-all shadow-2xl shadow-indigo-900/40 disabled:opacity-50">
+          <div className="flex items-center gap-4">
+            <div className="p-3 bg-indigo-500 rounded-2xl"><Users /></div>
+            <div className="text-left">
+              <p className="font-black text-lg">HỌC NHÓM</p>
+              <p className="text-xs text-indigo-100 font-normal">{user ? 'Đua top trực tuyến' : 'Đang kết nối...'}</p>
+            </div>
+          </div>
+          <Play size={20} className="fill-current" />
+        </button>
+      </div>
+    </MainContainer>
+  );
 
-        const updateScoreDisplay = () => {
-            document.getElementById('score').innerText = score;
-            let totalProgress = activeWords.reduce((sum, w) => sum + w.count, 0);
-            document.getElementById('progress').style.width = Math.min((totalProgress / 60) * 100, 100) + "%";
-        };
+  // ... (Phần UI Profile, Lobby, Game, Result giữ nguyên như bản trước) ...
+  // Lưu ý: Tôi vẫn giữ toàn bộ logic xử lý dữ liệu để đảm bảo game chạy mượt với 60 từ.
+  
+  if (view === 'profile') return (
+    <MainContainer>
+      <ProfileForm 
+        mode={mode}
+        initialName={userName}
+        initialClass={userClass}
+        isSaving={isSavingScore}
+        onConfirm={handleConfirmProfile}
+        onCancel={() => setView('landing')}
+      />
+    </MainContainer>
+  );
 
-        const startTimer = () => {
-            const interval = setInterval(() => {
-                if (!gameActive) { clearInterval(interval); return; }
-                let mins = Math.floor(timeLeft / 60);
-                let secs = timeLeft % 60;
-                document.getElementById('timer').innerText = `${mins < 10 ? '0' : ''}${mins}:${secs < 10 ? '0' : ''}${secs}`;
-                if (timeLeft <= 0) { clearInterval(interval); endGame(); }
-                timeLeft--;
-            }, 1000);
-        };
+  if (view === 'lobby') return (
+    <MainContainer>
+      <div className="w-full max-w-xl">
+        <div className="flex justify-between items-center mb-10">
+          <button onClick={() => { cleanupUser(); setView('landing'); }} className="p-3 bg-white/10 rounded-2xl hover:bg-white/20 transition"><X /></button>
+          <div className="bg-indigo-600 px-6 py-2 rounded-full text-xs font-black uppercase tracking-tighter text-white shadow-lg">Phòng Chờ Online</div>
+          <div className="w-10" />
+        </div>
+        <div className="bg-slate-900/80 backdrop-blur-xl border border-white/10 rounded-[2.5rem] p-8 mb-8 shadow-2xl">
+          <h2 className="text-xl font-black mb-6 flex items-center gap-3"><Users className="text-indigo-400" /> DANH SÁCH ĐỢI ({lobbyUsers.length}/10)</h2>
+          <div className="grid gap-3 max-h-[40vh] overflow-y-auto pr-2">
+            {lobbyUsers.map(u => (
+              <div key={u.uid} className={`flex justify-between items-center p-5 rounded-2xl transition-all ${u.uid === user?.uid ? 'bg-indigo-600 shadow-xl' : 'bg-white/5 border border-white/5'}`}>
+                <div className="flex items-center gap-4">
+                  <div className="w-2.5 h-2.5 rounded-full bg-green-400 animate-pulse shadow-[0_0_10px_#4ade80]" />
+                  <div>
+                    <p className="font-black text-base uppercase">{u.name}</p>
+                    <p className="text-[10px] opacity-70 font-bold uppercase tracking-widest">{u.class}</p>
+                  </div>
+                </div>
+                <div className="text-[10px] font-black opacity-50 uppercase">Sẵn sàng</div>
+              </div>
+            ))}
+          </div>
+        </div>
+        <button onClick={() => { generateQuestion(); setView('game'); }} className="w-full bg-white text-black py-7 rounded-[2rem] font-black text-xl shadow-2xl hover:bg-indigo-500 hover:text-white transition-all transform active:scale-95">
+          BẮT ĐẦU NGAY
+        </button>
+      </div>
+    </MainContainer>
+  );
 
-        const endGame = () => {
-            gameActive = false;
-            document.getElementById('stats-panel').classList.add('hidden');
-            document.getElementById('game-container').classList.add('hidden');
-            document.getElementById('result-screen').classList.remove('hidden');
-            
-            document.getElementById('final-score-display').innerText = score;
-            document.getElementById('correct-count').innerText = correctCount;
-            document.getElementById('incorrect-count').innerText = incorrectCount;
+  if (view === 'game') return (
+    <MainContainer>
+      <div className="w-full max-w-xl flex flex-col gap-5">
+        <div className="flex gap-3">
+           <div className="flex-1 bg-slate-900/80 backdrop-blur-xl border border-white/10 p-5 rounded-3xl flex items-center justify-between shadow-xl">
+              <div>
+                <p className="text-[10px] text-indigo-300 font-black uppercase tracking-widest">Thời gian</p>
+                <div className={`flex items-center gap-2 text-2xl font-black ${timeLeft < 30 ? 'text-red-500 animate-pulse' : 'text-white'}`}>
+                  <span>{Math.floor(timeLeft/60)}:{(timeLeft%60).toString().padStart(2, '0')}</span>
+                </div>
+              </div>
+              <div className="text-center px-2">
+                <p className="text-[10px] text-indigo-300 font-black uppercase tracking-widest">Thành thạo</p>
+                <p className="text-2xl font-black text-green-400">{masteredIds.size}</p>
+              </div>
+              <div className="text-right">
+                <p className="text-[10px] text-indigo-300 font-black uppercase tracking-widest">Điểm</p>
+                <p className="text-3xl font-black text-yellow-400">{score}</p>
+              </div>
+           </div>
+           {mode === 'group' && (
+             <div className="bg-indigo-600 p-5 rounded-3xl flex flex-col items-center justify-center min-w-[90px] shadow-xl">
+                <p className="text-[10px] opacity-80 font-black uppercase">Hạng</p>
+                <p className="text-2xl font-black">#{groupLeaderboard.findIndex(u => u.uid === user?.uid) + 1 || '-'}</p>
+             </div>
+           )}
+        </div>
+        <div className="bg-slate-900/80 backdrop-blur-3xl border border-white/20 rounded-[3rem] p-10 sm:p-16 relative overflow-hidden shadow-2xl min-h-[400px] flex items-center justify-center">
+          {!showChests ? (
+            <div className="text-center relative z-10 w-full">
+              <div className="flex justify-center gap-1 mb-4">
+                 {[...Array(3)].map((_, i) => (
+                   <div key={i} className={`h-1.5 w-8 rounded-full transition-all duration-500 ${i < (consecutiveCorrect[currentQuestion?.id] || 0) ? 'bg-green-400 shadow-[0_0_10px_#4ade80]' : 'bg-white/10'}`} />
+                 ))}
+              </div>
+              <p className="text-indigo-400 text-[10px] font-black uppercase tracking-[0.3em] mb-6">Chọn giới từ phù hợp</p>
+              <h2 className="text-4xl sm:text-5xl font-black mb-4 tracking-tighter leading-tight text-white drop-shadow-md">{currentQuestion?.word}</h2>
+              <p className="text-indigo-200/70 italic mb-12 text-sm font-medium">({currentQuestion?.meaning})</p>
+              <div className="grid grid-cols-2 gap-4">
+                {currentQuestion?.options.map(opt => (
+                  <button key={opt} onClick={() => handleAnswer(opt)} className="bg-white/10 border border-white/10 py-6 rounded-2xl font-black text-xl hover:bg-white hover:text-black transition-all transform active:scale-95 shadow-lg backdrop-blur-sm">
+                    {opt}
+                  </button>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <div className="text-center animate-bounce-in py-5 w-full">
+              <h3 className="text-2xl font-black mb-10 text-yellow-400 uppercase tracking-widest">RƯƠNG MAY MẮN!</h3>
+              {chestMessage ? (
+                <div className="p-12 bg-indigo-600 rounded-[2.5rem] shadow-2xl border border-white/20 scale-110">
+                  <p className="text-[10px] font-black text-indigo-200 mb-2 uppercase tracking-widest">KẾT QUẢ</p>
+                  <p className="text-4xl font-black text-white">{chestMessage}</p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-3 gap-5">
+                  {[1, 2, 3].map(i => (
+                    <button key={i} onClick={openChest} className="aspect-square bg-indigo-500/40 border border-white/10 rounded-3xl flex items-center justify-center hover:bg-yellow-500 hover:text-black transition-all group active:scale-90 shadow-2xl backdrop-blur-sm">
+                      <Gift size={48} className="group-hover:scale-110 transition-transform" />
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+    </MainContainer>
+  );
 
-            const mistakesList = document.getElementById('mistakes-list');
-            const sortedMistakes = Object.entries(mistakeTracker).sort((a, b) => b[1] - a[1]).slice(0, 5);
+  if (view === 'result') {
+    const allWords = [...INITIAL_WORD_BANK, ...EXTRA_WORD_BANK];
+    const sortedErrors = Object.entries(errorCounts)
+      .map(([id, count]) => ({ ...allWords.find(w => w.id === parseInt(id)), count }))
+      .sort((a, b) => b.count - a.count)
+      .filter(w => w.count > 0)
+      .slice(0, 5);
 
-            if (sortedMistakes.length > 0) {
-                document.getElementById('mistakes-container').classList.remove('hidden');
-                mistakesList.innerHTML = sortedMistakes.map(([word, count]) => `
-                    <li class="flex justify-between items-center border-b border-orange-100 pb-1">
-                        <span class="font-medium">${word}</span>
-                        <span class="bg-orange-200 text-orange-800 px-2 py-0.5 rounded-lg font-black text-[10px]">${count} sai</span>
-                    </li>
-                `).join('');
-            }
-        };
+    return (
+      <MainContainer>
+        <div className="w-full max-w-2xl text-center">
+          {!showRankAfterSolo && mode === 'solo' && !userName ? (
+            <div className="space-y-6">
+              <div className="bg-slate-900/90 backdrop-blur-2xl border border-white/10 p-10 rounded-[3rem] shadow-2xl">
+                <div className="flex justify-center mb-6">
+                  <div className="w-20 h-20 bg-indigo-600 rounded-3xl flex items-center justify-center shadow-2xl rotate-3">
+                    <Trophy size={40} />
+                  </div>
+                </div>
+                <h2 className="text-4xl font-black mb-1 text-white uppercase tracking-tighter">KẾT QUẢ CỦA BẠN</h2>
+                <div className="grid grid-cols-2 gap-4 my-8">
+                   <div className="bg-white/5 p-6 rounded-3xl border border-white/5">
+                      <p className="text-[10px] font-black text-indigo-300 uppercase mb-1">Tổng điểm</p>
+                      <p className="text-4xl font-black text-yellow-400">{score}</p>
+                   </div>
+                   <div className="bg-white/5 p-6 rounded-3xl border border-white/5">
+                      <p className="text-[10px] font-black text-indigo-300 uppercase mb-1">Thành thạo</p>
+                      <p className="text-4xl font-black text-green-400">{masteredIds.size}</p>
+                   </div>
+                </div>
 
-        window.toggleSaveSection = (show) => {
-            document.getElementById('leaderboard-prompt').classList.add('hidden');
-            if (show) document.getElementById('save-score-section').classList.remove('hidden');
-        };
-
-        // FIRESTORE OPERATIONS
-        window.saveResult = async () => {
-            if (!currentUser) {
-                alert("Lỗi kết nối máy chủ. Vui lòng tải lại trang.");
-                return;
-            }
-
-            const name = document.getElementById('studentName').value.trim().toUpperCase();
-            const sClass = document.getElementById('studentClass').value.trim().toUpperCase();
-            
-            if (!name || !sClass) { alert("Bạn chưa nhập đủ thông tin!"); return; }
-
-            const submitBtn = document.querySelector('#save-score-section button');
-            submitBtn.disabled = true;
-            submitBtn.innerText = "ĐANG GỬI...";
-
-            try {
-                const publicCollection = collection(db, 'artifacts', appId, 'public', 'data', 'leaderboard');
-                await addDoc(publicCollection, {
-                    uid: currentUser.uid,
-                    name: name,
-                    class: sClass,
-                    score: score,
-                    timestamp: new Date().getTime()
-                });
-
-                document.getElementById('save-score-section').classList.add('hidden');
-                showLeaderboard();
-            } catch (err) {
-                console.error("Save error:", err);
-                alert("Không thể lưu điểm. Thử lại sau!");
-                submitBtn.disabled = false;
-                submitBtn.innerText = "GỬI ĐIỂM LÊN HỆ THỐNG";
-            }
-        };
-
-        const showLeaderboard = () => {
-            if (!currentUser) return;
-
-            document.getElementById('leaderboard').classList.remove('hidden');
-            const list = document.getElementById('leaderboard-list');
-            list.innerHTML = '<p class="text-center py-4 text-slate-400 animate-pulse">Đang tải bảng xếp hạng...</p>';
-
-            const q = query(collection(db, 'artifacts', appId, 'public', 'data', 'leaderboard'));
-            
-            onSnapshot(q, (snapshot) => {
-                let data = [];
-                snapshot.forEach(doc => data.push(doc.data()));
-                data.sort((a, b) => b.score - a.score);
-                const top15 = data.slice(0, 15);
-
-                list.innerHTML = top15.length ? top15.map((entry, i) => `
-                    <div class="flex justify-between items-center p-4 ${entry.uid === currentUser.uid ? 'bg-indigo-600 text-white shadow-indigo-200' : 'bg-white text-slate-800'} rounded-2xl border border-indigo-50 shadow-sm animate-fadeIn">
-                        <div class="flex items-center gap-3">
-                            <span class="w-8 h-8 flex items-center justify-center ${i < 3 && entry.uid !== currentUser.uid ? 'bg-yellow-400 text-white' : (entry.uid === currentUser.uid ? 'bg-white/20' : 'bg-indigo-50 text-indigo-400')} rounded-xl text-sm font-black">${i + 1}</span>
-                            <div>
-                                <p class="font-black leading-tight">${entry.name}</p>
-                                <p class="text-[10px] ${entry.uid === currentUser.uid ? 'text-indigo-200' : 'text-slate-400'} font-bold uppercase tracking-tighter">${entry.class}</p>
-                            </div>
+                {sortedErrors.length > 0 && (
+                  <div className="text-left mb-8">
+                    <h3 className="text-xs font-black text-red-400 uppercase tracking-widest mb-4 flex items-center gap-2">
+                      <AlertCircle size={14} /> 5 từ cần lưu ý (Sai nhiều)
+                    </h3>
+                    <div className="space-y-2">
+                      {sortedErrors.map(w => (
+                        <div key={w.id} className="flex justify-between items-center bg-white/5 p-4 rounded-2xl">
+                           <span className="font-bold text-sm uppercase">{w.word} {w.prep}</span>
+                           <span className="text-xs text-red-400 font-black">Lỗi: {w.count}</span>
                         </div>
-                        <div class="flex flex-col items-end">
-                            <span class="text-xl font-black">${entry.score}</span>
-                            <span class="text-[8px] opacity-60">${entry.uid}</span>
-                        </div>
+                      ))}
                     </div>
-                `).join('') : '<p class="text-center py-4 text-slate-400 italic">Chưa có ai ghi danh.</p>';
-            }, (error) => {
-                console.error("Snapshot error:", error);
-                list.innerHTML = '<p class="text-center text-red-500 p-4">Lỗi tải dữ liệu!</p>';
-            });
-        };
-    </script>
-</body>
-</html>
+                  </div>
+                )}
+
+                <div className="grid gap-4">
+                  <button onClick={() => setView('profile')} className="w-full bg-indigo-600 text-white py-6 rounded-2xl font-black text-lg shadow-xl uppercase tracking-tighter hover:bg-white hover:text-black transition-all flex items-center justify-center gap-3">
+                    <Trophy size={20} /> Lưu & Xem Bảng Xếp Hạng
+                  </button>
+                  <button onClick={() => window.location.reload()} className="w-full bg-white/10 text-white py-5 rounded-2xl font-bold hover:bg-white/20 transition-all uppercase">Trang chủ</button>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="w-full">
+              <div className="bg-slate-900/90 backdrop-blur-2xl border border-white/10 p-10 rounded-[3rem] mb-10 shadow-2xl">
+                <h2 className="text-3xl font-black mb-6 text-yellow-400 uppercase">Bảng vàng cao thủ</h2>
+                <div className="space-y-3 mb-8 max-h-[40vh] overflow-y-auto pr-2">
+                  {groupLeaderboard.slice(0, 10).map((u, i) => (
+                    <div key={u.id} className={`flex justify-between items-center p-4 rounded-2xl transition-colors ${u.uid === user?.uid ? 'bg-indigo-600 shadow-md border border-white/20' : 'bg-white/5'}`}>
+                      <div className="flex items-center gap-4">
+                        <span className={`text-sm font-black ${i === 0 ? 'text-yellow-400' : 'text-slate-400'}`}>{i+1 === 1 ? '🥇' : i+1 === 2 ? '🥈' : i+1 === 3 ? '🥉' : i+1}</span>
+                        <div className="text-left">
+                          <p className="text-sm font-black uppercase">{u.name}</p>
+                          <p className="text-[10px] opacity-60 font-bold uppercase">{u.class}</p>
+                        </div>
+                      </div>
+                      <span className="text-lg font-black text-yellow-400">{u.score || 0}</span>
+                    </div>
+                  ))}
+                </div>
+                <p className="text-indigo-300 text-xs font-bold mb-6">Bạn đang xếp hạng: #{groupLeaderboard.findIndex(u => u.uid === user?.uid) + 1 || '-'}</p>
+                <button onClick={() => window.location.reload()} className="w-full bg-white text-black py-6 rounded-2xl font-black text-lg shadow-2xl uppercase hover:bg-indigo-600 hover:text-white transition-all">Chơi lại</button>
+              </div>
+            </div>
+          )}
+        </div>
+      </MainContainer>
+    );
+  }
+
+  return null;
+}
