@@ -1,638 +1,304 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { initializeApp } from 'firebase/app';
-import { 
-  getFirestore, collection, doc, setDoc, onSnapshot, 
-  updateDoc, deleteDoc
-} from 'firebase/firestore';
-import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from 'firebase/auth';
-import { Trophy, Users, User, Timer, Star, Gift, X, Play, CheckCircle, AlertCircle } from 'lucide-react';
-
-// --- Firebase Setup ---
-const firebaseConfig = JSON.parse(__firebase_config);
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-const appId = typeof __app_id !== 'undefined' ? __app_id : 'preposition-master-v2';
-
-// --- Data & Constants ---
-const SOLOTIME = 420; 
-const GROUPTIME = 600;
-
-// Ngân hàng từ vựng mở rộng từ hình ảnh (Unit 5 + Common Prepositions)
-const INITIAL_WORD_BANK = [
-  { id: 1, word: "ban... ", prep: "from", meaning: "cấm làm điều gì đó" },
-  { id: 2, word: "benefit ", prep: "from", meaning: "có lợi từ thứ gì đó" },
-  { id: 3, word: "believe ", prep: "in", meaning: "tin vào" },
-  { id: 4, word: "specialize ", prep: "in", meaning: "chuyên về" },
-  { id: 5, word: "accuse... ", prep: "of", meaning: "buộc tội vì điều gì" },
-  { id: 6, word: "remind... ", prep: "of", meaning: "nhắc nhở về điều gì" },
-  { id: 7, word: "agree ", prep: "on", meaning: "đồng ý về điều gì" },
-  { id: 8, word: "rely ", prep: "on", meaning: "dựa vào" },
-  { id: 9, word: "belong ", prep: "to", meaning: "thuộc về" },
-  { id: 10, word: "object ", prep: "to", meaning: "phản đối" },
-  { id: 11, word: "satisfied ", prep: "with", meaning: "hài lòng với" },
-  { id: 12, word: "famous ", prep: "for", meaning: "nổi tiếng về" },
-  { id: 13, word: "proud ", prep: "of", meaning: "tự hào về" },
-  { id: 14, word: "anxious ", prep: "about", meaning: "lo lắng về" },
-  { id: 15, word: "succeed ", prep: "in", meaning: "thành công về điều gì" },
-  { id: 16, word: "invest ", prep: "in", meaning: "đầu tư vào" },
-  { id: 17, word: "result ", prep: "in", meaning: "dẫn đến kết quả" },
-  { id: 18, word: "result ", prep: "from", meaning: "do bởi (nguyên nhân)" },
-  { id: 19, word: "recover ", prep: "from", meaning: "hồi phục từ" },
-  { id: 20, word: "prepare ", prep: "for", meaning: "chuẩn bị cho" },
-  { id: 21, word: "wait ", prep: "for", meaning: "chờ đợi" },
-  { id: 22, word: "concentrate ", prep: "on", meaning: "tập trung vào" },
-  { id: 23, word: "insist ", prep: "on", meaning: "khăng khăng làm gì" },
-  { id: 24, word: "congratulate sb... ", prep: "on", meaning: "chúc mừng ai vì điều gì" },
-  { id: 25, word: "apologize to sb... ", prep: "for", meaning: "xin lỗi về điều gì" },
-  { id: 41, word: "absent ", prep: "from", meaning: "vắng mặt khỏi" },
-  { id: 42, word: "addicted ", prep: "to", meaning: "nghiện thứ gì" },
-  { id: 43, word: "crowded ", prep: "with", meaning: "đông đúc với" },
-  { id: 44, word: "engaged ", prep: "in", meaning: "tham gia vào / bận rộn" },
-  { id: 45, word: "opposed ", prep: "to", meaning: "phản đối" },
-];
-
-const EXTRA_WORD_BANK = [
-  { id: 26, word: "capable ", prep: "of", meaning: "có khả năng làm gì" },
-  { id: 27, word: "keen ", prep: "on", meaning: "say mê điều gì" },
-  { id: 28, word: "accustomed ", prep: "to", meaning: "quen với" },
-  { id: 29, word: "provide... ", prep: "with", meaning: "cung cấp cái gì cho ai" },
-  { id: 30, word: "depend ", prep: "on", meaning: "phụ thuộc vào" },
-  { id: 31, word: "base... ", prep: "on", meaning: "dựa trên" },
-  { id: 32, word: "suffer ", prep: "from", meaning: "chịu đựng (bệnh tật)" },
-  { id: 33, word: "translate... ", prep: "into", meaning: "dịch sang" },
-  { id: 34, word: "divide... ", prep: "into", meaning: "chia thành" },
-  { id: 35, word: "compare... ", prep: "with", meaning: "so sánh với" },
-  { id: 36, word: "afraid ", prep: "of", meaning: "sợ hãi điều gì" },
-  { id: 37, word: "interested ", prep: "in", meaning: "quan tâm đến" },
-  { id: 38, word: "tired ", prep: "of", meaning: "mệt mỏi vì" },
-  { id: 39, word: "worried ", prep: "about", meaning: "lo lắng về" },
-  { id: 40, word: "similar ", prep: "to", meaning: "tương tự với" },
-  { id: 46, word: "aware ", prep: "of", meaning: "nhận thức về" },
-  { id: 47, word: "full ", prep: "of", meaning: "đầy rẫy" },
-  { id: 48, word: "good ", prep: "at", meaning: "giỏi về" },
-  { id: 49, word: "bad ", prep: "at", meaning: "dở về" },
-  { id: 50, word: "different ", prep: "from", meaning: "khác biệt với" },
-  { id: 51, word: "excited ", prep: "about", meaning: "hào hứng về" },
-  { id: 52, word: "ashamed ", prep: "of", meaning: "hổ thẹn về" },
-  { id: 53, word: "bored ", prep: "with", meaning: "chán nản với" },
-  { id: 54, word: "married ", prep: "to", meaning: "kết hôn với" },
-  { id: 55, word: "responsible ", prep: "for", meaning: "chịu trách nhiệm cho" },
-  { id: 56, word: "late ", prep: "for", meaning: "trễ giờ làm gì" },
-  { id: 57, word: "safe ", prep: "from", meaning: "an toàn khỏi" },
-  { id: 58, word: "terrified ", prep: "of", meaning: "khiếp sợ" },
-  { id: 59, word: "useful ", prep: "for", meaning: "hữu ích cho" },
-  { id: 60, word: "perfect ", prep: "for", meaning: "hoàn hảo cho" },
-];
-
-const PREPOSITIONS = ["from", "in", "of", "on", "to", "with", "for", "about", "at", "into"];
-
-const NORMAL_REWARDS = [
-  { type: 'add', val: 5, label: '+5 điểm' },
-  { type: 'add', val: 10, label: '+10 điểm' },
-  { type: 'percent_add', val: 0.5, label: '+50% tổng điểm' },
-  { type: 'multiply', val: 2, label: 'Gấp đôi điểm!' },
-  { type: 'percent_sub', val: 0.25, label: '-25% tổng điểm' },
-  { type: 'sub', val: 20, label: '-20 điểm' },
-  { type: 'percent_sub', val: 0.5, label: '-50% tổng điểm' },
-];
-
-const SWAP_REWARD = { type: 'swap', label: 'Đổi điểm với Top 1' };
-
-const SOUNDS = {
-  correct: 'https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3',
-  wrong: 'https://assets.mixkit.co/active_storage/sfx/2955/2955-preview.mp3',
-  chest: 'https://assets.mixkit.co/active_storage/sfx/2017/2017-preview.mp3'
-};
-
-const ProfileForm = ({ onConfirm, onCancel, isSaving, mode, initialName, initialClass }) => {
-  const nameRef = useRef(null);
-  const classRef = useRef(null);
-
-  const handleSubmit = () => {
-    const name = nameRef.current?.value || '';
-    const className = classRef.current?.value || '';
-    if (name && className) {
-      onConfirm(name.trim(), className.trim());
-    }
-  };
-
-  return (
-    <div className="bg-slate-900/80 backdrop-blur-2xl border border-white/20 w-full max-w-sm rounded-[3rem] p-10 shadow-2xl">
-      <h2 className="text-2xl font-black mb-8 text-center tracking-tight text-white uppercase">
-        {mode === 'solo' ? 'Lưu kết quả' : 'Nhập thông tin'}
-      </h2>
-      <div className="space-y-5">
-        <div>
-          <label className="text-[10px] font-black text-indigo-300 uppercase ml-2 tracking-widest">Họ và Tên</label>
-          <input 
-            type="text"
-            ref={nameRef}
-            defaultValue={initialName}
-            autoComplete="off"
-            className="w-full bg-black/40 border border-white/10 p-4 rounded-2xl mt-2 outline-none focus:border-indigo-400 transition font-bold text-white placeholder:text-slate-600 uppercase"
-            placeholder="NGUYỄN VĂN A"
-          />
-        </div>
-        <div>
-          <label className="text-[10px] font-black text-indigo-300 uppercase ml-2 tracking-widest">Lớp học</label>
-          <input 
-            type="text"
-            ref={classRef}
-            defaultValue={initialClass}
-            autoComplete="off"
-            className="w-full bg-black/40 border border-white/10 p-4 rounded-2xl mt-2 outline-none focus:border-indigo-400 transition font-bold text-white placeholder:text-slate-600 uppercase"
-            placeholder="12A1"
-          />
-        </div>
-        <button 
-          disabled={isSaving}
-          onClick={handleSubmit}
-          className="w-full bg-indigo-600 text-white py-5 rounded-2xl font-black mt-6 disabled:opacity-30 hover:bg-white hover:text-black transition-all shadow-xl flex items-center justify-center gap-2 uppercase"
-        >
-          {isSaving ? 'Đang lưu...' : 'Xác nhận'}
-        </button>
-        {mode === 'solo' && (
-           <button onClick={onCancel} className="w-full text-slate-400 text-xs font-bold uppercase tracking-widest mt-2 hover:text-white transition-colors">Bỏ qua</button>
-        )}
-      </div>
-    </div>
-  );
-};
-
-export default function App() {
-  const [user, setUser] = useState(null);
-  const [view, setView] = useState('landing'); 
-  const [mode, setMode] = useState(null); 
-  const [userName, setUserName] = useState('');
-  const [userClass, setUserClass] = useState('');
-  const [score, setScore] = useState(0);
-  const [timeLeft, setTimeLeft] = useState(SOLOTIME);
-  const [lobbyUsers, setLobbyUsers] = useState([]);
-  
-  // Game Logic State
-  const [activeList, setActiveList] = useState([...INITIAL_WORD_BANK]);
-  const [extraList, setExtraList] = useState([...EXTRA_WORD_BANK]);
-  const [currentQuestion, setCurrentQuestion] = useState(null);
-  const [lastWordId, setLastWordId] = useState(null);
-  
-  // Stats tracking
-  const [masteredIds, setMasteredIds] = useState(new Set());
-  const [consecutiveCorrect, setConsecutiveCorrect] = useState({}); 
-  const [errorCounts, setErrorCounts] = useState({}); 
-  
-  const [showChests, setShowChests] = useState(false);
-  const [chestMessage, setChestMessage] = useState(null);
-  const [groupLeaderboard, setGroupLeaderboard] = useState([]);
-  const [isSavingScore, setIsSavingScore] = useState(false);
-  const [showRankAfterSolo, setShowRankAfterSolo] = useState(false);
-
-  const playSound = (type) => {
-    const audio = new Audio(SOUNDS[type]);
-    audio.play().catch(() => {});
-  };
-
-  useEffect(() => {
-    const initAuth = async () => {
-      try {
-        if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-          await signInWithCustomToken(auth, __initial_auth_token);
-        } else {
-          await signInAnonymously(auth);
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preposition Master - Lite Version</title>
+    <!-- Tailwind CSS qua CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { 
+            font-family: 'Inter', sans-serif; 
+            margin: 0; 
+            overflow-x: hidden;
+            background-image: url('https://img.freepik.com/free-vector/flat-design-english-school-background_23-2149487419.jpg?w=2000');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: white;
         }
-      } catch (err) { console.error("Auth error:", err); }
-    };
-    initAuth();
-    const unsubscribe = onAuthStateChanged(auth, setUser);
-    return () => unsubscribe();
-  }, []);
-
-  useEffect(() => {
-    if (!user) return;
-    const playersRef = collection(db, 'artifacts', appId, 'public', 'data', 'online_players');
-    const unsubscribe = onSnapshot(playersRef, (snapshot) => {
-      const users = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      setLobbyUsers(users);
-      setGroupLeaderboard([...users].sort((a, b) => (b.score || 0) - (a.score || 0)));
-    }, (err) => console.error(err));
-    return () => unsubscribe();
-  }, [user]);
-
-  useEffect(() => {
-    let timer;
-    if (view === 'game' && timeLeft > 0) {
-      timer = setInterval(() => setTimeLeft(prev => prev - 1), 1000);
-    } else if (timeLeft === 0 && view === 'game') {
-      setView('result');
-      if (mode === 'group') cleanupUser();
-    }
-    return () => clearInterval(timer);
-  }, [view, timeLeft, mode]);
-
-  const cleanupUser = async () => {
-    if (user && mode === 'group') {
-      try {
-        await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'online_players', user.uid));
-      } catch (e) {}
-    }
-  };
-
-  const generateQuestion = useCallback(() => {
-    if (activeList.length === 0) return;
-
-    let available = activeList.filter(w => w.id !== lastWordId);
-    if (available.length === 0) available = activeList; 
-
-    const q = available[Math.floor(Math.random() * available.length)];
-    const options = [q.prep, ...PREPOSITIONS.filter(p => p !== q.prep).sort(() => 0.5 - Math.random()).slice(0, 3)].sort(() => 0.5 - Math.random());
-    
-    setCurrentQuestion({ ...q, options });
-    setLastWordId(q.id);
-    setShowChests(false);
-    setChestMessage(null);
-  }, [activeList, lastWordId]);
-
-  const handleAnswer = (choice) => {
-    const isCorrect = choice === currentQuestion.prep;
-    const wordId = currentQuestion.id;
-
-    if (isCorrect) {
-      playSound('correct');
-      const newStreak = (consecutiveCorrect[wordId] || 0) + 1;
-      setConsecutiveCorrect(prev => ({ ...prev, [wordId]: newStreak }));
-
-      if (newStreak >= 3) {
-        setMasteredIds(prev => new Set(prev).add(wordId));
-        setActiveList(prev => {
-          const filtered = prev.filter(w => w.id !== wordId);
-          if (extraList.length > 0) {
-            const [nextWord, ...remainingExtra] = extraList;
-            setExtraList(remainingExtra);
-            return [...filtered, nextWord];
-          }
-          return filtered;
-        });
-      }
-
-      if (mode === 'group') {
-        setShowChests(true);
-      } else {
-        setScore(s => s + 2);
-        generateQuestion();
-      }
-    } else {
-      playSound('wrong');
-      setConsecutiveCorrect(prev => ({ ...prev, [wordId]: 0 }));
-      setErrorCounts(prev => ({ ...prev, [wordId]: (prev[wordId] || 0) + 1 }));
-
-      const newScore = Math.max(0, score - 1);
-      setScore(newScore);
-      if (mode === 'group') syncScore(newScore);
-      generateQuestion();
-    }
-  };
-
-  const syncScore = async (newScore) => {
-    if (!user || (!userName && mode === 'solo')) return;
-    try {
-      await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'online_players', user.uid), {
-        score: newScore
-      });
-    } catch (e) {
-      await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'online_players', user.uid), {
-        uid: user.uid, name: userName.toUpperCase(), class: userClass.toUpperCase(), score: newScore
-      });
-    }
-  };
-
-  const openChest = async () => {
-    playSound('chest');
-    let reward;
-    const isSwap = Math.random() < 0.3;
-    if (isSwap) {
-      reward = SWAP_REWARD;
-    } else {
-      reward = NORMAL_REWARDS[Math.floor(Math.random() * NORMAL_REWARDS.length)];
-    }
-
-    let finalScore = score;
-    switch (reward.type) {
-      case 'add': finalScore += reward.val; break;
-      case 'percent_add': finalScore += Math.floor(finalScore * reward.val); break;
-      case 'multiply': finalScore *= reward.val; break;
-      case 'percent_sub': finalScore = Math.max(0, finalScore - Math.floor(finalScore * reward.val)); break;
-      case 'sub': finalScore = Math.max(0, finalScore - reward.val); break;
-      case 'swap':
-        const topPlayer = groupLeaderboard[0];
-        if (topPlayer && topPlayer.uid !== user.uid) {
-          finalScore = topPlayer.score || 0;
-        } else {
-          finalScore += 10;
-          reward = { ...reward, label: 'Nhận +10đ' };
+        .hidden { display: none !important; }
+        
+        /* Lớp phủ để làm mờ hình nền và giúp nội dung nổi bật */
+        #app {
+            background: rgba(2, 6, 23, 0.75);
+            backdrop-filter: blur(2px);
+            min-height: 100vh;
         }
-        break;
-      default: break;
-    }
 
-    setScore(finalScore);
-    setChestMessage(reward.label);
-    if (mode === 'group' || (mode === 'solo' && userName)) await syncScore(finalScore);
-    setTimeout(() => generateQuestion(), 1500);
-  };
+        .glow { box-shadow: 0 0 25px rgba(79, 70, 229, 0.5); }
+        .card { 
+            background: rgba(15, 23, 42, 0.9); 
+            backdrop-filter: blur(12px); 
+            border: 1px solid rgba(255,255,255,0.15); 
+            border-radius: 2rem; 
+        }
+        .btn-opt { 
+            background: rgba(255,255,255,0.08); 
+            border: 1px solid rgba(255,255,255,0.15); 
+            padding: 1.25rem; 
+            border-radius: 1rem; 
+            transition: all 0.2s; 
+            font-weight: 800; 
+            font-size: 1.1rem; 
+        }
+        .btn-opt:hover { 
+            background: white; 
+            color: #4f46e5; 
+            transform: scale(1.02); 
+            border-color: white;
+        }
+        .animate-pop { animation: pop 0.3s ease-out; }
+        @keyframes pop { 
+            0% { transform: scale(0.8); opacity: 0; } 
+            100% { transform: scale(1); opacity: 1; } 
+        }
+    </style>
+</head>
+<body>
+    <div id="app" class="flex flex-col items-center justify-center p-6 relative">
+        <!-- MÀN HÌNH CHÀO -->
+        <div id="view-landing" class="relative z-10 text-center w-full max-w-md animate-pop">
+            <div class="w-20 h-20 bg-indigo-600 rounded-[2rem] flex items-center justify-center mx-auto mb-8 glow">
+                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path><path d="M4 22h16"></path><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path></svg>
+            </div>
+            <h1 class="text-4xl font-black mb-2 tracking-tighter uppercase italic drop-shadow-lg">Preposition Master</h1>
+            <p class="text-indigo-300 text-[10px] font-black tracking-[0.3em] uppercase mb-12 drop-shadow">Unit 5 Urbanization • Lite Edition</p>
+            <div class="space-y-4">
+                <button onclick="startGame()" class="w-full bg-white text-indigo-700 py-5 rounded-2xl font-black text-lg hover:bg-indigo-500 hover:text-white transition-all shadow-2xl">CHƠI NGAY (7 PHÚT)</button>
+            </div>
+        </div>
 
-  const startSolo = () => {
-    setMode('solo');
-    setScore(0);
-    setTimeLeft(SOLOTIME);
-    setShowRankAfterSolo(false);
-    setMasteredIds(new Set());
-    setConsecutiveCorrect({});
-    setErrorCounts({});
-    setActiveList([...INITIAL_WORD_BANK]);
-    setExtraList([...EXTRA_WORD_BANK]);
-    setLastWordId(null);
-  };
+        <!-- MÀN HÌNH CHƠI GAME -->
+        <div id="view-game" class="relative z-10 w-full max-w-md hidden">
+            <div class="flex justify-between items-center mb-6 bg-slate-900/90 p-5 rounded-2xl border border-white/10 shadow-xl">
+                <div>
+                    <p class="text-[10px] font-black text-indigo-400 uppercase tracking-widest">Thời gian</p>
+                    <p id="timer" class="text-2xl font-black font-mono">07:00</p>
+                </div>
+                <div class="text-right">
+                    <p class="text-[10px] font-black text-indigo-400 uppercase tracking-widest">Điểm số</p>
+                    <p id="score" class="text-3xl font-black text-yellow-400">0</p>
+                </div>
+            </div>
 
-  useEffect(() => {
-    if (view === 'game' && !currentQuestion) {
-      generateQuestion();
-    }
-  }, [view, currentQuestion, generateQuestion]);
+            <div class="card min-h-[420px] flex flex-col items-center justify-center text-center p-8 relative overflow-hidden shadow-2xl">
+                <div id="question-area" class="w-full animate-pop">
+                    <div class="flex justify-center gap-1 mb-6" id="streak-dots">
+                        <div class="h-1.5 w-8 rounded-full bg-white/10"></div>
+                        <div class="h-1.5 w-8 rounded-full bg-white/10"></div>
+                        <div class="h-1.5 w-8 rounded-full bg-white/10"></div>
+                    </div>
+                    <p class="text-indigo-400 text-[10px] font-black uppercase tracking-[0.2em] mb-4 underline decoration-2 underline-offset-4">Chọn giới từ đúng</p>
+                    <h2 id="word-display" class="text-4xl font-black mb-3 tracking-tight">word...</h2>
+                    <p id="meaning-display" class="text-slate-300 italic text-sm mb-12 font-medium"> (nghĩa) </p>
+                    <div id="options-grid" class="grid grid-cols-2 gap-4 w-full"></div>
+                </div>
 
-  const handleConfirmProfile = async (name, className) => {
-    setUserName(name);
-    setUserClass(className);
-    
-    if (mode === 'group') {
-      if (!user) return;
-      setScore(0);
-      setTimeLeft(GROUPTIME);
-      try {
-        await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'online_players', user.uid), {
-          uid: user.uid, name: name.toUpperCase(), class: className.toUpperCase(), score: 0
-        });
-        setView('lobby');
-      } catch (e) { console.error(e); }
-    } else {
-      setIsSavingScore(true);
-      try {
-        await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'online_players', user.uid), {
-          uid: user.uid, name: name.toUpperCase(), class: className.toUpperCase(), score: score
-        });
-        setShowRankAfterSolo(true);
-      } catch (e) { console.error(e); }
-      setIsSavingScore(false);
-    }
-  };
+                <!-- Hệ thống rương -->
+                <div id="chest-area" class="hidden text-center">
+                    <h3 class="text-2xl font-black text-yellow-400 mb-8 uppercase tracking-tighter">CHÍNH XÁC! NHẬN QUÀ</h3>
+                    <div class="flex gap-4 justify-center" id="chest-selection">
+                        <button onclick="openChest()" class="w-24 h-24 bg-indigo-600 rounded-3xl flex items-center justify-center hover:bg-yellow-500 transition-all hover:scale-110 shadow-xl border border-white/20">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12V8H4v4"></path><path d="M2 12h20"></path><path d="M20 12v8H4v-8"></path><circle cx="12" cy="12" r="2"></circle></svg>
+                        </button>
+                        <button onclick="openChest()" class="w-24 h-24 bg-indigo-600 rounded-3xl flex items-center justify-center hover:bg-yellow-500 transition-all hover:scale-110 shadow-xl border border-white/20">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12V8H4v4"></path><path d="M2 12h20"></path><path d="M20 12v8H4v-8"></path><circle cx="12" cy="12" r="2"></circle></svg>
+                        </button>
+                    </div>
+                    <div id="chest-result" class="hidden mt-6 p-10 bg-indigo-600 rounded-[2rem] animate-pop border border-white/20">
+                        <p id="bonus-text" class="text-4xl font-black text-white">+0đ</p>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-  const MainContainer = ({ children }) => (
-    <div className="min-h-screen relative text-white overflow-hidden font-sans">
-      <div 
-        className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat transition-all duration-700"
-        style={{ backgroundImage: `url('https://img.freepik.com/free-vector/flat-design-english-school-background_23-2149487419.jpg?w=2000')` }}
-      >
-        <div className="absolute inset-0 bg-slate-950/75 backdrop-blur-[2px]" />
-      </div>
-      <div className="relative z-10 min-h-screen flex flex-col items-center justify-center p-6 w-full">
-        {children}
-      </div>
+        <!-- MÀN HÌNH KẾT QUẢ -->
+        <div id="view-result" class="relative z-10 w-full max-w-md hidden animate-pop">
+            <div class="text-center bg-slate-900/95 backdrop-blur-xl border border-white/10 p-12 rounded-[3rem] shadow-2xl">
+                <div class="w-20 h-20 bg-yellow-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-yellow-500/30 shadow-2xl">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                </div>
+                <h2 class="text-3xl font-black mb-2 uppercase italic tracking-tighter text-white">KẾT THÚC!</h2>
+                <div class="my-10">
+                    <p class="text-indigo-400 text-[10px] font-black uppercase tracking-widest mb-1">Tổng điểm đạt được</p>
+                    <p id="final-score" class="text-7xl font-black text-white tracking-tighter drop-shadow-lg">0</p>
+                </div>
+                <button onclick="location.reload()" class="w-full bg-white text-indigo-700 py-5 rounded-2xl font-black text-lg hover:bg-indigo-600 hover:text-white transition-all shadow-lg">CHƠI LẠI</button>
+            </div>
+        </div>
     </div>
-  );
 
-  if (view === 'landing') return (
-    <MainContainer>
-      <div className="w-24 h-24 bg-indigo-600 rounded-[2.5rem] flex items-center justify-center mb-8 shadow-2xl shadow-indigo-500/40 animate-bounce">
-        <Trophy size={48} className="text-white" />
-      </div>
-      <h1 className="text-5xl font-black mb-2 uppercase tracking-tighter text-white drop-shadow-lg text-center">Preposition Master</h1>
-      <p className="text-indigo-200 mb-12 tracking-widest text-sm uppercase font-bold drop-shadow-md">Advanced Prep Training • Unit 5 & Beyond</p>
-      <div className="grid gap-5 w-full max-w-sm">
-        <button onClick={() => { startSolo(); setView('game'); }} className="group relative bg-white/95 text-slate-950 p-6 rounded-3xl font-bold flex items-center justify-between hover:scale-105 transition-all shadow-2xl">
-          <div className="flex items-center gap-4">
-            <div className="p-3 bg-indigo-50 rounded-2xl group-hover:bg-indigo-100 transition-colors">
-              <User className="text-indigo-600" />
-            </div>
-            <div className="text-left">
-              <p className="font-black text-lg text-slate-900">TỰ HỌC</p>
-              <p className="text-xs text-slate-500 font-normal">Vào học ngay • 7 phút</p>
-            </div>
-          </div>
-          <Play size={20} className="fill-current text-indigo-600" />
-        </button>
-        <button disabled={!user} onClick={() => { setMode('group'); setView('profile'); }} className="group relative bg-indigo-600 text-white p-6 rounded-3xl font-bold flex items-center justify-between hover:scale-105 transition-all shadow-2xl shadow-indigo-900/40 disabled:opacity-50">
-          <div className="flex items-center gap-4">
-            <div className="p-3 bg-indigo-500 rounded-2xl"><Users /></div>
-            <div className="text-left">
-              <p className="font-black text-lg">HỌC NHÓM</p>
-              <p className="text-xs text-indigo-100 font-normal">{user ? 'Đua top trực tuyến' : 'Đang kết nối...'}</p>
-            </div>
-          </div>
-          <Play size={20} className="fill-current" />
-        </button>
-      </div>
-    </MainContainer>
-  );
+    <script>
+        const WORD_BANK = [
+            { id: 1, word: "ban... ", prep: "from", meaning: "cấm làm điều gì đó" },
+            { id: 2, word: "benefit ", prep: "from", meaning: "có lợi từ thứ gì đó" },
+            { id: 3, word: "believe ", prep: "in", meaning: "tin vào" },
+            { id: 4, word: "specialize ", prep: "in", meaning: "chuyên về" },
+            { id: 5, word: "accuse... ", prep: "of", meaning: "buộc tội vì điều gì" },
+            { id: 6, word: "remind... ", prep: "of", meaning: "nhắc nhở về điều gì" },
+            { id: 7, word: "agree ", prep: "on", meaning: "đồng ý về điều gì" },
+            { id: 8, word: "rely ", prep: "on", meaning: "dựa vào" },
+            { id: 9, word: "belong ", prep: "to", meaning: "thuộc về" },
+            { id: 10, word: "object ", prep: "to", meaning: "phản đối" },
+            { id: 11, word: "satisfied ", prep: "with", meaning: "hài lòng với" },
+            { id: 12, word: "famous ", prep: "for", meaning: "nổi tiếng về" },
+            { id: 13, word: "proud ", prep: "of", meaning: "tự hào về" },
+            { id: 14, word: "anxious ", prep: "about", meaning: "lo lắng về" },
+            { id: 15, word: "succeed ", prep: "in", meaning: "thành công về điều gì" },
+            { id: 16, word: "invest ", prep: "in", meaning: "đầu tư vào" },
+            { id: 17, word: "result ", prep: "in", meaning: "dẫn đến kết quả" },
+            { id: 18, word: "result ", prep: "from", meaning: "do bởi (nguyên nhân)" },
+            { id: 19, word: "recover ", prep: "from", meaning: "hồi phục từ" },
+            { id: 20, word: "prepare ", prep: "for", meaning: "chuẩn bị cho" },
+            { id: 21, word: "wait ", prep: "for", meaning: "chờ đợi" },
+            { id: 22, word: "concentrate ", prep: "on", meaning: "tập trung vào" },
+            { id: 23, word: "insist ", prep: "on", meaning: "khăng khăng làm gì" },
+            { id: 24, word: "congratulate... ", prep: "on", meaning: "chúc mừng ai vì điều gì" },
+            { id: 25, word: "apologize... ", prep: "for", meaning: "xin lỗi về điều gì" },
+            { id: 26, word: "capable ", prep: "of", meaning: "có khả năng làm gì" },
+            { id: 27, word: "keen ", prep: "on", meaning: "say mê điều gì" },
+            { id: 28, word: "accustomed ", prep: "to", meaning: "quen với" },
+            { id: 29, word: "provide... ", prep: "with", meaning: "cung cấp cái gì cho ai" },
+            { id: 30, word: "depend ", prep: "on", meaning: "phụ thuộc vào" },
+            { id: 31, word: "base... ", prep: "on", meaning: "dựa trên" },
+            { id: 32, word: "suffer ", prep: "from", meaning: "chịu đựng (bệnh tật)" },
+            { id: 33, word: "translate... ", prep: "into", meaning: "dịch sang" },
+            { id: 34, word: "divide... ", prep: "into", meaning: "chia thành" },
+            { id: 35, word: "compare... ", prep: "with", meaning: "so sánh với" },
+            { id: 36, word: "afraid ", prep: "of", meaning: "sợ hãi điều gì" },
+            { id: 37, word: "interested ", prep: "in", meaning: "quan tâm đến" },
+            { id: 38, word: "tired ", prep: "of", meaning: "mệt mỏi vì" },
+            { id: 39, word: "worried ", prep: "about", meaning: "lo lắng về" },
+            { id: 40, word: "similar ", prep: "to", meaning: "tương tự với" },
+            { id: 41, word: "absent ", prep: "from", meaning: "vắng mặt khỏi" },
+            { id: 42, word: "addicted ", prep: "to", meaning: "nghiện thứ gì" },
+            { id: 43, word: "crowded ", prep: "with", meaning: "đông đúc với" },
+            { id: 44, word: "engaged ", prep: "in", meaning: "tham gia vào / bận rộn" },
+            { id: 45, word: "opposed ", prep: "to", meaning: "phản đối" },
+            { id: 46, word: "aware ", prep: "of", meaning: "nhận thức về" },
+            { id: 47, word: "full ", prep: "of", meaning: "đầy rẫy" },
+            { id: 48, word: "good ", prep: "at", meaning: "giỏi về" },
+            { id: 49, word: "bad ", prep: "at", meaning: "dở về" },
+            { id: 50, word: "different ", prep: "from", meaning: "khác biệt với" },
+            { id: 51, word: "excited ", prep: "about", meaning: "hào hứng về" },
+            { id: 52, word: "ashamed ", prep: "of", meaning: "hổ thẹn về" },
+            { id: 53, word: "bored ", prep: "with", meaning: "chán nản với" },
+            { id: 54, word: "married ", prep: "to", meaning: "kết hôn với" },
+            { id: 55, word: "responsible ", prep: "for", meaning: "chịu trách nhiệm cho" },
+            { id: 56, word: "late ", prep: "for", meaning: "trễ giờ làm gì" },
+            { id: 57, word: "safe ", prep: "from", meaning: "an toàn khỏi" },
+            { id: 58, word: "terrified ", prep: "of", meaning: "khiếp sợ" },
+            { id: 59, word: "useful ", prep: "for", meaning: "hữu ích cho" },
+            { id: 60, word: "perfect ", prep: "for", meaning: "hoàn hảo cho" }
+        ];
 
-  // ... (Phần UI Profile, Lobby, Game, Result giữ nguyên như bản trước) ...
-  // Lưu ý: Tôi vẫn giữ toàn bộ logic xử lý dữ liệu để đảm bảo game chạy mượt với 60 từ.
-  
-  if (view === 'profile') return (
-    <MainContainer>
-      <ProfileForm 
-        mode={mode}
-        initialName={userName}
-        initialClass={userClass}
-        isSaving={isSavingScore}
-        onConfirm={handleConfirmProfile}
-        onCancel={() => setView('landing')}
-      />
-    </MainContainer>
-  );
+        const PREPS = ["from", "in", "of", "on", "to", "with", "for", "about", "at", "into"];
+        
+        let score = 0;
+        let timeLeft = 420;
+        let currentQ = null;
+        let timerId = null;
+        let streak = 0;
 
-  if (view === 'lobby') return (
-    <MainContainer>
-      <div className="w-full max-w-xl">
-        <div className="flex justify-between items-center mb-10">
-          <button onClick={() => { cleanupUser(); setView('landing'); }} className="p-3 bg-white/10 rounded-2xl hover:bg-white/20 transition"><X /></button>
-          <div className="bg-indigo-600 px-6 py-2 rounded-full text-xs font-black uppercase tracking-tighter text-white shadow-lg">Phòng Chờ Online</div>
-          <div className="w-10" />
-        </div>
-        <div className="bg-slate-900/80 backdrop-blur-xl border border-white/10 rounded-[2.5rem] p-8 mb-8 shadow-2xl">
-          <h2 className="text-xl font-black mb-6 flex items-center gap-3"><Users className="text-indigo-400" /> DANH SÁCH ĐỢI ({lobbyUsers.length}/10)</h2>
-          <div className="grid gap-3 max-h-[40vh] overflow-y-auto pr-2">
-            {lobbyUsers.map(u => (
-              <div key={u.uid} className={`flex justify-between items-center p-5 rounded-2xl transition-all ${u.uid === user?.uid ? 'bg-indigo-600 shadow-xl' : 'bg-white/5 border border-white/5'}`}>
-                <div className="flex items-center gap-4">
-                  <div className="w-2.5 h-2.5 rounded-full bg-green-400 animate-pulse shadow-[0_0_10px_#4ade80]" />
-                  <div>
-                    <p className="font-black text-base uppercase">{u.name}</p>
-                    <p className="text-[10px] opacity-70 font-bold uppercase tracking-widest">{u.class}</p>
-                  </div>
-                </div>
-                <div className="text-[10px] font-black opacity-50 uppercase">Sẵn sàng</div>
-              </div>
-            ))}
-          </div>
-        </div>
-        <button onClick={() => { generateQuestion(); setView('game'); }} className="w-full bg-white text-black py-7 rounded-[2rem] font-black text-xl shadow-2xl hover:bg-indigo-500 hover:text-white transition-all transform active:scale-95">
-          BẮT ĐẦU NGAY
-        </button>
-      </div>
-    </MainContainer>
-  );
+        function startGame() {
+            document.getElementById('view-landing').classList.add('hidden');
+            document.getElementById('view-game').classList.remove('hidden');
+            score = 0;
+            timeLeft = 420;
+            streak = 0;
+            updateScore();
+            nextQuestion();
+            timerId = setInterval(() => {
+                timeLeft--;
+                const m = Math.floor(timeLeft/60);
+                const s = timeLeft%60;
+                document.getElementById('timer').innerText = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+                if(timeLeft <= 0) endGame();
+            }, 1000);
+        }
 
-  if (view === 'game') return (
-    <MainContainer>
-      <div className="w-full max-w-xl flex flex-col gap-5">
-        <div className="flex gap-3">
-           <div className="flex-1 bg-slate-900/80 backdrop-blur-xl border border-white/10 p-5 rounded-3xl flex items-center justify-between shadow-xl">
-              <div>
-                <p className="text-[10px] text-indigo-300 font-black uppercase tracking-widest">Thời gian</p>
-                <div className={`flex items-center gap-2 text-2xl font-black ${timeLeft < 30 ? 'text-red-500 animate-pulse' : 'text-white'}`}>
-                  <span>{Math.floor(timeLeft/60)}:{(timeLeft%60).toString().padStart(2, '0')}</span>
-                </div>
-              </div>
-              <div className="text-center px-2">
-                <p className="text-[10px] text-indigo-300 font-black uppercase tracking-widest">Thành thạo</p>
-                <p className="text-2xl font-black text-green-400">{masteredIds.size}</p>
-              </div>
-              <div className="text-right">
-                <p className="text-[10px] text-indigo-300 font-black uppercase tracking-widest">Điểm</p>
-                <p className="text-3xl font-black text-yellow-400">{score}</p>
-              </div>
-           </div>
-           {mode === 'group' && (
-             <div className="bg-indigo-600 p-5 rounded-3xl flex flex-col items-center justify-center min-w-[90px] shadow-xl">
-                <p className="text-[10px] opacity-80 font-black uppercase">Hạng</p>
-                <p className="text-2xl font-black">#{groupLeaderboard.findIndex(u => u.uid === user?.uid) + 1 || '-'}</p>
-             </div>
-           )}
-        </div>
-        <div className="bg-slate-900/80 backdrop-blur-3xl border border-white/20 rounded-[3rem] p-10 sm:p-16 relative overflow-hidden shadow-2xl min-h-[400px] flex items-center justify-center">
-          {!showChests ? (
-            <div className="text-center relative z-10 w-full">
-              <div className="flex justify-center gap-1 mb-4">
-                 {[...Array(3)].map((_, i) => (
-                   <div key={i} className={`h-1.5 w-8 rounded-full transition-all duration-500 ${i < (consecutiveCorrect[currentQuestion?.id] || 0) ? 'bg-green-400 shadow-[0_0_10px_#4ade80]' : 'bg-white/10'}`} />
-                 ))}
-              </div>
-              <p className="text-indigo-400 text-[10px] font-black uppercase tracking-[0.3em] mb-6">Chọn giới từ phù hợp</p>
-              <h2 className="text-4xl sm:text-5xl font-black mb-4 tracking-tighter leading-tight text-white drop-shadow-md">{currentQuestion?.word}</h2>
-              <p className="text-indigo-200/70 italic mb-12 text-sm font-medium">({currentQuestion?.meaning})</p>
-              <div className="grid grid-cols-2 gap-4">
-                {currentQuestion?.options.map(opt => (
-                  <button key={opt} onClick={() => handleAnswer(opt)} className="bg-white/10 border border-white/10 py-6 rounded-2xl font-black text-xl hover:bg-white hover:text-black transition-all transform active:scale-95 shadow-lg backdrop-blur-sm">
-                    {opt}
-                  </button>
-                ))}
-              </div>
-            </div>
-          ) : (
-            <div className="text-center animate-bounce-in py-5 w-full">
-              <h3 className="text-2xl font-black mb-10 text-yellow-400 uppercase tracking-widest">RƯƠNG MAY MẮN!</h3>
-              {chestMessage ? (
-                <div className="p-12 bg-indigo-600 rounded-[2.5rem] shadow-2xl border border-white/20 scale-110">
-                  <p className="text-[10px] font-black text-indigo-200 mb-2 uppercase tracking-widest">KẾT QUẢ</p>
-                  <p className="text-4xl font-black text-white">{chestMessage}</p>
-                </div>
-              ) : (
-                <div className="grid grid-cols-3 gap-5">
-                  {[1, 2, 3].map(i => (
-                    <button key={i} onClick={openChest} className="aspect-square bg-indigo-500/40 border border-white/10 rounded-3xl flex items-center justify-center hover:bg-yellow-500 hover:text-black transition-all group active:scale-90 shadow-2xl backdrop-blur-sm">
-                      <Gift size={48} className="group-hover:scale-110 transition-transform" />
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-      </div>
-    </MainContainer>
-  );
+        function nextQuestion() {
+            document.getElementById('question-area').classList.remove('hidden');
+            document.getElementById('chest-area').classList.add('hidden');
+            document.getElementById('chest-selection').classList.remove('hidden');
+            document.getElementById('chest-result').classList.add('hidden');
 
-  if (view === 'result') {
-    const allWords = [...INITIAL_WORD_BANK, ...EXTRA_WORD_BANK];
-    const sortedErrors = Object.entries(errorCounts)
-      .map(([id, count]) => ({ ...allWords.find(w => w.id === parseInt(id)), count }))
-      .sort((a, b) => b.count - a.count)
-      .filter(w => w.count > 0)
-      .slice(0, 5);
+            currentQ = WORD_BANK[Math.floor(Math.random() * WORD_BANK.length)];
+            document.getElementById('word-display').innerText = currentQ.word;
+            document.getElementById('meaning-display').innerText = `(${currentQ.meaning})`;
 
-    return (
-      <MainContainer>
-        <div className="w-full max-w-2xl text-center">
-          {!showRankAfterSolo && mode === 'solo' && !userName ? (
-            <div className="space-y-6">
-              <div className="bg-slate-900/90 backdrop-blur-2xl border border-white/10 p-10 rounded-[3rem] shadow-2xl">
-                <div className="flex justify-center mb-6">
-                  <div className="w-20 h-20 bg-indigo-600 rounded-3xl flex items-center justify-center shadow-2xl rotate-3">
-                    <Trophy size={40} />
-                  </div>
-                </div>
-                <h2 className="text-4xl font-black mb-1 text-white uppercase tracking-tighter">KẾT QUẢ CỦA BẠN</h2>
-                <div className="grid grid-cols-2 gap-4 my-8">
-                   <div className="bg-white/5 p-6 rounded-3xl border border-white/5">
-                      <p className="text-[10px] font-black text-indigo-300 uppercase mb-1">Tổng điểm</p>
-                      <p className="text-4xl font-black text-yellow-400">{score}</p>
-                   </div>
-                   <div className="bg-white/5 p-6 rounded-3xl border border-white/5">
-                      <p className="text-[10px] font-black text-indigo-300 uppercase mb-1">Thành thạo</p>
-                      <p className="text-4xl font-black text-green-400">{masteredIds.size}</p>
-                   </div>
-                </div>
+            const opts = [currentQ.prep];
+            while(opts.length < 4) {
+                const r = PREPS[Math.floor(Math.random() * PREPS.length)];
+                if(!opts.includes(r)) opts.push(r);
+            }
+            opts.sort(() => Math.random() - 0.5);
 
-                {sortedErrors.length > 0 && (
-                  <div className="text-left mb-8">
-                    <h3 className="text-xs font-black text-red-400 uppercase tracking-widest mb-4 flex items-center gap-2">
-                      <AlertCircle size={14} /> 5 từ cần lưu ý (Sai nhiều)
-                    </h3>
-                    <div className="space-y-2">
-                      {sortedErrors.map(w => (
-                        <div key={w.id} className="flex justify-between items-center bg-white/5 p-4 rounded-2xl">
-                           <span className="font-bold text-sm uppercase">{w.word} {w.prep}</span>
-                           <span className="text-xs text-red-400 font-black">Lỗi: {w.count}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
+            const grid = document.getElementById('options-grid');
+            grid.innerHTML = '';
+            opts.forEach(o => {
+                const b = document.createElement('button');
+                b.className = 'btn-opt';
+                b.innerText = o;
+                b.onclick = () => check(o);
+                grid.appendChild(b);
+            });
 
-                <div className="grid gap-4">
-                  <button onClick={() => setView('profile')} className="w-full bg-indigo-600 text-white py-6 rounded-2xl font-black text-lg shadow-xl uppercase tracking-tighter hover:bg-white hover:text-black transition-all flex items-center justify-center gap-3">
-                    <Trophy size={20} /> Lưu & Xem Bảng Xếp Hạng
-                  </button>
-                  <button onClick={() => window.location.reload()} className="w-full bg-white/10 text-white py-5 rounded-2xl font-bold hover:bg-white/20 transition-all uppercase">Trang chủ</button>
-                </div>
-              </div>
-            </div>
-          ) : (
-            <div className="w-full">
-              <div className="bg-slate-900/90 backdrop-blur-2xl border border-white/10 p-10 rounded-[3rem] mb-10 shadow-2xl">
-                <h2 className="text-3xl font-black mb-6 text-yellow-400 uppercase">Bảng vàng cao thủ</h2>
-                <div className="space-y-3 mb-8 max-h-[40vh] overflow-y-auto pr-2">
-                  {groupLeaderboard.slice(0, 10).map((u, i) => (
-                    <div key={u.id} className={`flex justify-between items-center p-4 rounded-2xl transition-colors ${u.uid === user?.uid ? 'bg-indigo-600 shadow-md border border-white/20' : 'bg-white/5'}`}>
-                      <div className="flex items-center gap-4">
-                        <span className={`text-sm font-black ${i === 0 ? 'text-yellow-400' : 'text-slate-400'}`}>{i+1 === 1 ? '🥇' : i+1 === 2 ? '🥈' : i+1 === 3 ? '🥉' : i+1}</span>
-                        <div className="text-left">
-                          <p className="text-sm font-black uppercase">{u.name}</p>
-                          <p className="text-[10px] opacity-60 font-bold uppercase">{u.class}</p>
-                        </div>
-                      </div>
-                      <span className="text-lg font-black text-yellow-400">{u.score || 0}</span>
-                    </div>
-                  ))}
-                </div>
-                <p className="text-indigo-300 text-xs font-bold mb-6">Bạn đang xếp hạng: #{groupLeaderboard.findIndex(u => u.uid === user?.uid) + 1 || '-'}</p>
-                <button onClick={() => window.location.reload()} className="w-full bg-white text-black py-6 rounded-2xl font-black text-lg shadow-2xl uppercase hover:bg-indigo-600 hover:text-white transition-all">Chơi lại</button>
-              </div>
-            </div>
-          )}
-        </div>
-      </MainContainer>
-    );
-  }
+            const dots = document.getElementById('streak-dots').children;
+            for(let i=0; i<3; i++) {
+                dots[i].className = `h-1.5 w-8 rounded-full transition-all ${i < streak ? 'bg-green-400 shadow-[0_0_10px_#4ade80]' : 'bg-white/10'}`;
+            }
+        }
 
-  return null;
-}
+        function check(ans) {
+            if(ans === currentQ.prep) {
+                streak++;
+                score += 5;
+                if(streak >= 3) {
+                    streak = 0;
+                    showChest();
+                } else {
+                    nextQuestion();
+                }
+            } else {
+                streak = 0;
+                score = Math.max(0, score - 2);
+                document.getElementById('question-area').classList.add('animate-pulse');
+                setTimeout(() => {
+                    document.getElementById('question-area').classList.remove('animate-pulse');
+                    nextQuestion();
+                }, 400);
+            }
+            updateScore();
+        }
+
+        function showChest() {
+            document.getElementById('question-area').classList.add('hidden');
+            document.getElementById('chest-area').classList.remove('hidden');
+        }
+
+        function openChest() {
+            const bonus = Math.floor(Math.random() * 20) + 10;
+            score += bonus;
+            updateScore();
+            document.getElementById('chest-selection').classList.add('hidden');
+            document.getElementById('chest-result').classList.remove('hidden');
+            document.getElementById('bonus-text').innerText = `+${bonus} ĐIỂM!`;
+            setTimeout(nextQuestion, 1500);
+        }
+
+        function updateScore() {
+            document.getElementById('score').innerText = score;
+        }
+
+        function endGame() {
+            clearInterval(timerId);
+            document.getElementById('view-game').classList.add('hidden');
+            document.getElementById('view-result').classList.remove('hidden');
+            document.getElementById('final-score').innerText = score;
+        }
+    </script>
+</body>
+</html>
