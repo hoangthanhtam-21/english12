@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Preposition Master - Lite Version</title>
-    <!-- Tailwind CSS qua CDN -->
+    <title>Grade 12 - Vocabulary Master</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
@@ -19,14 +18,15 @@
             color: white;
         }
         .hidden { display: none !important; }
-        
-        /* Lớp phủ để làm mờ hình nền và giúp nội dung nổi bật */
         #app {
-            background: rgba(2, 6, 23, 0.75);
-            backdrop-filter: blur(2px);
+            background: rgba(2, 6, 23, 0.8);
+            backdrop-filter: blur(4px);
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
-
         .glow { box-shadow: 0 0 25px rgba(79, 70, 229, 0.5); }
         .card { 
             background: rgba(15, 23, 42, 0.9); 
@@ -34,6 +34,17 @@
             border: 1px solid rgba(255,255,255,0.15); 
             border-radius: 2rem; 
         }
+        .unit-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        .unit-card:not(.locked):hover {
+            background: rgba(79, 70, 229, 0.2);
+            border-color: #4f46e5;
+            transform: translateY(-5px);
+        }
+        .locked { opacity: 0.5; cursor: not-allowed; }
         .btn-opt { 
             background: rgba(255,255,255,0.08); 
             border: 1px solid rgba(255,255,255,0.15); 
@@ -42,32 +53,73 @@
             transition: all 0.2s; 
             font-weight: 800; 
             font-size: 1.1rem; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
         }
         .btn-opt:hover { 
             background: white; 
             color: #4f46e5; 
             transform: scale(1.02); 
-            border-color: white;
         }
         .animate-pop { animation: pop 0.3s ease-out; }
-        @keyframes pop { 
-            0% { transform: scale(0.8); opacity: 0; } 
-            100% { transform: scale(1); opacity: 1; } 
-        }
+        @keyframes pop { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
     </style>
 </head>
 <body>
-    <div id="app" class="flex flex-col items-center justify-center p-6 relative">
+    <div id="app" class="p-6 relative">
         <!-- MÀN HÌNH CHÀO -->
         <div id="view-landing" class="relative z-10 text-center w-full max-w-md animate-pop">
             <div class="w-20 h-20 bg-indigo-600 rounded-[2rem] flex items-center justify-center mx-auto mb-8 glow">
-                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path><path d="M4 22h16"></path><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m16 6 4 14H4L8 6Z"/><path d="M12 2v4"/><path d="m8 2 1 1"/><path d="m16 2-1 1"/></svg>
             </div>
-            <h1 class="text-4xl font-black mb-2 tracking-tighter uppercase italic drop-shadow-lg">Preposition Master</h1>
-            <p class="text-indigo-300 text-[10px] font-black tracking-[0.3em] uppercase mb-12 drop-shadow">Unit 5 Urbanization • Lite Edition</p>
-            <div class="space-y-4">
-                <button onclick="startGame()" class="w-full bg-white text-indigo-700 py-5 rounded-2xl font-black text-lg hover:bg-indigo-500 hover:text-white transition-all shadow-2xl">CHƠI NGAY (7 PHÚT)</button>
+            <h1 class="text-4xl font-black mb-2 tracking-tighter uppercase italic text-white drop-shadow-lg">Grade 12</h1>
+            <h2 class="text-2xl font-bold mb-10 text-indigo-300">Vocabulary Master</h2>
+            <button onclick="showUnitSelection()" class="w-full bg-white text-indigo-700 py-5 rounded-2xl font-black text-lg hover:bg-indigo-600 hover:text-white transition-all shadow-2xl">BẮT ĐẦU</button>
+        </div>
+
+        <!-- MÀN HÌNH CHỌN UNIT -->
+        <div id="view-selection" class="relative z-10 w-full max-w-2xl hidden animate-pop">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl font-black uppercase tracking-tighter">Chọn bài học</h2>
+                <p class="text-indigo-300 text-sm font-bold uppercase tracking-widest mt-2">English 12 - Global Success</p>
             </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div onclick="selectUnit(5)" class="unit-card p-8 rounded-[2rem] cursor-pointer flex flex-col justify-between h-full">
+                    <div>
+                        <span class="bg-green-500/20 text-green-400 text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-widest">Sẵn sàng</span>
+                        <h3 class="text-2xl font-black mt-4 uppercase tracking-tighter">Unit 5</h3>
+                        <p class="text-slate-400 text-sm mt-1">Urbanization</p>
+                    </div>
+                    <div class="mt-10 flex items-center justify-between">
+                        <span class="text-xs font-bold text-indigo-400 uppercase tracking-widest">91 Từ vựng</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                    </div>
+                </div>
+                <div class="unit-card locked p-8 rounded-[2rem] relative overflow-hidden">
+                    <div class="absolute inset-0 bg-slate-950/40 flex items-center justify-center backdrop-blur-[1px]">
+                        <span class="bg-slate-800 text-slate-400 text-[10px] font-black px-4 py-2 rounded-full uppercase tracking-widest border border-white/5">Coming soon</span>
+                    </div>
+                    <h3 class="text-2xl font-black mt-4 uppercase tracking-tighter">Unit 6</h3>
+                    <p class="text-slate-400 text-sm mt-1">Endangered Species</p>
+                </div>
+                <div class="unit-card locked p-8 rounded-[2rem] relative overflow-hidden">
+                    <div class="absolute inset-0 bg-slate-950/40 flex items-center justify-center backdrop-blur-[1px]">
+                        <span class="bg-slate-800 text-slate-400 text-[10px] font-black px-4 py-2 rounded-full uppercase tracking-widest border border-white/5">Coming soon</span>
+                    </div>
+                    <h3 class="text-2xl font-black mt-4 uppercase tracking-tighter">Unit 7</h3>
+                    <p class="text-slate-400 text-sm mt-1">Artificial Intelligence</p>
+                </div>
+                <div class="unit-card locked p-8 rounded-[2rem] relative overflow-hidden">
+                    <div class="absolute inset-0 bg-slate-950/40 flex items-center justify-center backdrop-blur-[1px]">
+                        <span class="bg-slate-800 text-slate-400 text-[10px] font-black px-4 py-2 rounded-full uppercase tracking-widest border border-white/5">Coming soon</span>
+                    </div>
+                    <h3 class="text-2xl font-black mt-4 uppercase tracking-tighter">Unit 8</h3>
+                    <p class="text-slate-400 text-sm mt-1">The World of Work</p>
+                </div>
+            </div>
+            <button onclick="location.reload()" class="mt-12 text-slate-400 text-xs font-black uppercase tracking-[0.2em] hover:text-white transition-colors block mx-auto underline">Quay lại trang chủ</button>
         </div>
 
         <!-- MÀN HÌNH CHƠI GAME -->
@@ -90,21 +142,20 @@
                         <div class="h-1.5 w-8 rounded-full bg-white/10"></div>
                         <div class="h-1.5 w-8 rounded-full bg-white/10"></div>
                     </div>
-                    <p class="text-indigo-400 text-[10px] font-black uppercase tracking-[0.2em] mb-4 underline decoration-2 underline-offset-4">Chọn giới từ đúng</p>
+                    <p id="unit-tag" class="text-indigo-400 text-[10px] font-black uppercase tracking-[0.2em] mb-4">Unit 5: Urbanization</p>
                     <h2 id="word-display" class="text-4xl font-black mb-3 tracking-tight">word...</h2>
                     <p id="meaning-display" class="text-slate-300 italic text-sm mb-12 font-medium"> (nghĩa) </p>
-                    <div id="options-grid" class="grid grid-cols-2 gap-4 w-full"></div>
+                    <div id="options-grid" class="grid grid-cols-1 gap-3 w-full"></div>
                 </div>
 
-                <!-- Hệ thống rương -->
                 <div id="chest-area" class="hidden text-center">
                     <h3 class="text-2xl font-black text-yellow-400 mb-8 uppercase tracking-tighter">CHÍNH XÁC! NHẬN QUÀ</h3>
                     <div class="flex gap-4 justify-center" id="chest-selection">
                         <button onclick="openChest()" class="w-24 h-24 bg-indigo-600 rounded-3xl flex items-center justify-center hover:bg-yellow-500 transition-all hover:scale-110 shadow-xl border border-white/20">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12V8H4v4"></path><path d="M2 12h20"></path><path d="M20 12v8H4v-8"></path><circle cx="12" cy="12" r="2"></circle></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12V8H4v4"/><path d="M2 12h20"/><path d="M20 12v8H4v-8"/><circle cx="12" cy="12" r="2"/></svg>
                         </button>
                         <button onclick="openChest()" class="w-24 h-24 bg-indigo-600 rounded-3xl flex items-center justify-center hover:bg-yellow-500 transition-all hover:scale-110 shadow-xl border border-white/20">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12V8H4v4"></path><path d="M2 12h20"></path><path d="M20 12v8H4v-8"></path><circle cx="12" cy="12" r="2"></circle></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12V8H4v4"/><path d="M2 12h20"/><path d="M20 12v8H4v-8"/><circle cx="12" cy="12" r="2"/></svg>
                         </button>
                     </div>
                     <div id="chest-result" class="hidden mt-6 p-10 bg-indigo-600 rounded-[2rem] animate-pop border border-white/20">
@@ -122,89 +173,147 @@
                 </div>
                 <h2 class="text-3xl font-black mb-2 uppercase italic tracking-tighter text-white">KẾT THÚC!</h2>
                 <div class="my-10">
-                    <p class="text-indigo-400 text-[10px] font-black uppercase tracking-widest mb-1">Tổng điểm đạt được</p>
+                    <p class="text-indigo-400 text-[10px] font-black uppercase tracking-widest mb-1">Tổng điểm Unit 5</p>
                     <p id="final-score" class="text-7xl font-black text-white tracking-tighter drop-shadow-lg">0</p>
                 </div>
-                <button onclick="location.reload()" class="w-full bg-white text-indigo-700 py-5 rounded-2xl font-black text-lg hover:bg-indigo-600 hover:text-white transition-all shadow-lg">CHƠI LẠI</button>
+                <button onclick="location.reload()" class="w-full bg-white text-indigo-700 py-5 rounded-2xl font-black text-lg hover:bg-indigo-600 hover:text-white transition-all shadow-lg">CHỌN BÀI KHÁC</button>
             </div>
         </div>
     </div>
 
     <script>
-        const WORD_BANK = [
-            { id: 1, word: "ban... ", prep: "from", meaning: "cấm làm điều gì đó" },
-            { id: 2, word: "benefit ", prep: "from", meaning: "có lợi từ thứ gì đó" },
-            { id: 3, word: "believe ", prep: "in", meaning: "tin vào" },
-            { id: 4, word: "specialize ", prep: "in", meaning: "chuyên về" },
-            { id: 5, word: "accuse... ", prep: "of", meaning: "buộc tội vì điều gì" },
-            { id: 6, word: "remind... ", prep: "of", meaning: "nhắc nhở về điều gì" },
-            { id: 7, word: "agree ", prep: "on", meaning: "đồng ý về điều gì" },
-            { id: 8, word: "rely ", prep: "on", meaning: "dựa vào" },
-            { id: 9, word: "belong ", prep: "to", meaning: "thuộc về" },
-            { id: 10, word: "object ", prep: "to", meaning: "phản đối" },
-            { id: 11, word: "satisfied ", prep: "with", meaning: "hài lòng với" },
-            { id: 12, word: "famous ", prep: "for", meaning: "nổi tiếng về" },
-            { id: 13, word: "proud ", prep: "of", meaning: "tự hào về" },
-            { id: 14, word: "anxious ", prep: "about", meaning: "lo lắng về" },
-            { id: 15, word: "succeed ", prep: "in", meaning: "thành công về điều gì" },
-            { id: 16, word: "invest ", prep: "in", meaning: "đầu tư vào" },
-            { id: 17, word: "result ", prep: "in", meaning: "dẫn đến kết quả" },
-            { id: 18, word: "result ", prep: "from", meaning: "do bởi (nguyên nhân)" },
-            { id: 19, word: "recover ", prep: "from", meaning: "hồi phục từ" },
-            { id: 20, word: "prepare ", prep: "for", meaning: "chuẩn bị cho" },
-            { id: 21, word: "wait ", prep: "for", meaning: "chờ đợi" },
-            { id: 22, word: "concentrate ", prep: "on", meaning: "tập trung vào" },
-            { id: 23, word: "insist ", prep: "on", meaning: "khăng khăng làm gì" },
-            { id: 24, word: "congratulate... ", prep: "on", meaning: "chúc mừng ai vì điều gì" },
-            { id: 25, word: "apologize... ", prep: "for", meaning: "xin lỗi về điều gì" },
-            { id: 26, word: "capable ", prep: "of", meaning: "có khả năng làm gì" },
-            { id: 27, word: "keen ", prep: "on", meaning: "say mê điều gì" },
-            { id: 28, word: "accustomed ", prep: "to", meaning: "quen với" },
-            { id: 29, word: "provide... ", prep: "with", meaning: "cung cấp cái gì cho ai" },
-            { id: 30, word: "depend ", prep: "on", meaning: "phụ thuộc vào" },
-            { id: 31, word: "base... ", prep: "on", meaning: "dựa trên" },
-            { id: 32, word: "suffer ", prep: "from", meaning: "chịu đựng (bệnh tật)" },
-            { id: 33, word: "translate... ", prep: "into", meaning: "dịch sang" },
-            { id: 34, word: "divide... ", prep: "into", meaning: "chia thành" },
-            { id: 35, word: "compare... ", prep: "with", meaning: "so sánh với" },
-            { id: 36, word: "afraid ", prep: "of", meaning: "sợ hãi điều gì" },
-            { id: 37, word: "interested ", prep: "in", meaning: "quan tâm đến" },
-            { id: 38, word: "tired ", prep: "of", meaning: "mệt mỏi vì" },
-            { id: 39, word: "worried ", prep: "about", meaning: "lo lắng về" },
-            { id: 40, word: "similar ", prep: "to", meaning: "tương tự với" },
-            { id: 41, word: "absent ", prep: "from", meaning: "vắng mặt khỏi" },
-            { id: 42, word: "addicted ", prep: "to", meaning: "nghiện thứ gì" },
-            { id: 43, word: "crowded ", prep: "with", meaning: "đông đúc với" },
-            { id: 44, word: "engaged ", prep: "in", meaning: "tham gia vào / bận rộn" },
-            { id: 45, word: "opposed ", prep: "to", meaning: "phản đối" },
-            { id: 46, word: "aware ", prep: "of", meaning: "nhận thức về" },
-            { id: 47, word: "full ", prep: "of", meaning: "đầy rẫy" },
-            { id: 48, word: "good ", prep: "at", meaning: "giỏi về" },
-            { id: 49, word: "bad ", prep: "at", meaning: "dở về" },
-            { id: 50, word: "different ", prep: "from", meaning: "khác biệt với" },
-            { id: 51, word: "excited ", prep: "about", meaning: "hào hứng về" },
-            { id: 52, word: "ashamed ", prep: "of", meaning: "hổ thẹn về" },
-            { id: 53, word: "bored ", prep: "with", meaning: "chán nản với" },
-            { id: 54, word: "married ", prep: "to", meaning: "kết hôn với" },
-            { id: 55, word: "responsible ", prep: "for", meaning: "chịu trách nhiệm cho" },
-            { id: 56, word: "late ", prep: "for", meaning: "trễ giờ làm gì" },
-            { id: 57, word: "safe ", prep: "from", meaning: "an toàn khỏi" },
-            { id: 58, word: "terrified ", prep: "of", meaning: "khiếp sợ" },
-            { id: 59, word: "useful ", prep: "for", meaning: "hữu ích cho" },
-            { id: 60, word: "perfect ", prep: "for", meaning: "hoàn hảo cho" }
+        // --- Ngân hàng từ vựng ---
+        const PREP_WORDS = [
+            { id: 1, word: "ban... ", prep: "from", meaning: "cấm làm điều gì đó", type: "prep" },
+            { id: 2, word: "benefit ", prep: "from", meaning: "có lợi từ thứ gì đó", type: "prep" },
+            { id: 3, word: "believe ", prep: "in", meaning: "tin vào", type: "prep" },
+            { id: 4, word: "specialize ", prep: "in", meaning: "chuyên về", type: "prep" },
+            { id: 5, word: "accuse... ", prep: "of", meaning: "buộc tội vì điều gì", type: "prep" },
+            { id: 6, word: "remind... ", prep: "of", meaning: "nhắc nhở về điều gì", type: "prep" },
+            { id: 7, word: "agree ", prep: "on", meaning: "đồng ý về điều gì", type: "prep" },
+            { id: 8, word: "rely ", prep: "on", meaning: "dựa vào", type: "prep" },
+            { id: 9, word: "belong ", prep: "to", meaning: "thuộc về", type: "prep" },
+            { id: 10, word: "object ", prep: "to", meaning: "phản đối", type: "prep" },
+            { id: 11, word: "satisfied ", prep: "with", meaning: "hài lòng với", type: "prep" },
+            { id: 12, word: "famous ", prep: "for", meaning: "nổi tiếng về", type: "prep" },
+            { id: 13, word: "proud ", prep: "of", meaning: "tự hào về", type: "prep" },
+            { id: 14, word: "anxious ", prep: "about", meaning: "lo lắng về", type: "prep" },
+            { id: 15, word: "succeed ", prep: "in", meaning: "thành công về điều gì", type: "prep" },
+            { id: 16, word: "invest ", prep: "in", meaning: "đầu tư vào", type: "prep" },
+            { id: 17, word: "result ", prep: "in", meaning: "dẫn đến kết quả", type: "prep" },
+            { id: 18, word: "result ", prep: "from", meaning: "do bởi (nguyên nhân)", type: "prep" },
+            { id: 19, word: "recover ", prep: "from", meaning: "hồi phục từ", type: "prep" },
+            { id: 20, word: "prepare ", prep: "for", meaning: "chuẩn bị cho", type: "prep" },
+            { id: 21, word: "wait ", prep: "for", meaning: "chờ đợi", type: "prep" },
+            { id: 22, word: "concentrate ", prep: "on", meaning: "tập trung vào", type: "prep" },
+            { id: 23, word: "insist ", prep: "on", meaning: "khăng khăng làm gì", type: "prep" },
+            { id: 24, word: "congratulate... ", prep: "on", meaning: "chúc mừng ai vì điều gì", type: "prep" },
+            { id: 25, word: "apologize... ", prep: "for", meaning: "xin lỗi về điều gì", type: "prep" },
+            { id: 26, word: "capable ", prep: "of", meaning: "có khả năng làm gì", type: "prep" },
+            { id: 27, word: "keen ", prep: "on", meaning: "say mê điều gì", type: "prep" },
+            { id: 28, word: "accustomed ", prep: "to", meaning: "quen với", type: "prep" },
+            { id: 29, word: "provide... ", prep: "with", meaning: "cung cấp cái gì cho ai", type: "prep" },
+            { id: 30, word: "depend ", prep: "on", meaning: "phụ thuộc vào", type: "prep" },
+            { id: 31, word: "base... ", prep: "on", meaning: "dựa trên", type: "prep" },
+            { id: 32, word: "suffer ", prep: "from", meaning: "chịu đựng (bệnh tật)", type: "prep" },
+            { id: 33, word: "translate... ", prep: "into", meaning: "dịch sang", type: "prep" },
+            { id: 34, word: "divide... ", prep: "into", meaning: "chia thành", type: "prep" },
+            { id: 35, word: "compare... ", prep: "with", meaning: "so sánh với", type: "prep" },
+            { id: 36, word: "afraid ", prep: "of", meaning: "sợ hãi điều gì", type: "prep" },
+            { id: 37, word: "interested ", prep: "in", meaning: "quan tâm đến", type: "prep" },
+            { id: 38, word: "tired ", prep: "of", meaning: "mệt mỏi vì", type: "prep" },
+            { id: 39, word: "worried ", prep: "about", meaning: "lo lắng về", type: "prep" },
+            { id: 40, word: "similar ", prep: "to", meaning: "tương tự với", type: "prep" },
+            { id: 41, word: "absent ", prep: "from", meaning: "vắng mặt khỏi", type: "prep" },
+            { id: 42, word: "addicted ", prep: "to", meaning: "nghiện thứ gì", type: "prep" },
+            { id: 43, word: "crowded ", prep: "with", meaning: "đông đúc với", type: "prep" },
+            { id: 44, word: "engaged ", prep: "in", meaning: "tham gia vào / bận rộn", type: "prep" },
+            { id: 45, word: "opposed ", prep: "to", meaning: "phản đối", type: "prep" },
+            { id: 46, word: "aware ", prep: "of", meaning: "nhận thức về", type: "prep" },
+            { id: 47, word: "full ", prep: "of", meaning: "đầy rẫy", type: "prep" },
+            { id: 48, word: "good ", prep: "at", meaning: "giỏi về", type: "prep" },
+            { id: 49, word: "bad ", prep: "at", meaning: "dở về", type: "prep" },
+            { id: 50, word: "different ", prep: "from", meaning: "khác biệt với", type: "prep" },
+            { id: 51, word: "excited ", prep: "about", meaning: "hào hứng về", type: "prep" },
+            { id: 52, word: "ashamed ", prep: "of", meaning: "hổ thẹn về", type: "prep" },
+            { id: 53, word: "bored ", prep: "with", meaning: "chán nản với", type: "prep" },
+            { id: 54, word: "married ", prep: "to", meaning: "kết hôn với", type: "prep" },
+            { id: 55, word: "responsible ", prep: "for", meaning: "chịu trách nhiệm cho", type: "prep" },
+            { id: 56, word: "late ", prep: "for", meaning: "trễ giờ làm gì", type: "prep" },
+            { id: 57, word: "safe ", prep: "from", meaning: "an toàn khỏi", type: "prep" },
+            { id: 58, word: "terrified ", prep: "of", meaning: "khiếp sợ", type: "prep" },
+            { id: 59, word: "useful ", prep: "for", meaning: "hữu ích cho", type: "prep" },
+            { id: 60, word: "perfect ", prep: "for", meaning: "hoàn hảo cho", type: "prep" }
         ];
 
+        const VOCAB_WORDS = [
+            { id: 321, word: "high-rise building", viet: "tòa nhà cao tầng", type: "vocab" },
+            { id: 322, word: "industrial area", viet: "khu công nghiệp", type: "vocab" },
+            { id: 323, word: "megacity", viet: "siêu đô thị", type: "vocab" },
+            { id: 324, word: "overpopulation", viet: "quá tải dân số", type: "vocab" },
+            { id: 325, word: "rural migration", viet: "sự di cư nông thôn", type: "vocab" },
+            { id: 326, word: "slum", viet: "khu nhà ổ chuột", type: "vocab" },
+            { id: 327, word: "affordable", viet: "giá cả phải chăng", type: "vocab" },
+            { id: 328, word: "agriculture", viet: "ngành nông nghiệp", type: "vocab" },
+            { id: 329, word: "contribute", viet: "đóng góp, góp phần", type: "vocab" },
+            { id: 330, word: "deforestation", viet: "nạn phá rừng", type: "vocab" },
+            { id: 331, word: "opportunity", viet: "cơ hội", type: "vocab" },
+            { id: 332, word: "policy", viet: "chính sách", type: "vocab" },
+            { id: 333, word: "urbanisation", viet: "đô thị hóa", type: "vocab" },
+            { id: 334, word: "breathtaking", viet: "tuyệt đẹp, kinh ngạc", type: "vocab" },
+            { id: 335, word: "crop failure", viet: "mất mùa", type: "vocab" },
+            { id: 336, word: "infrastructure", viet: "cơ sở hạ tầng", type: "vocab" },
+            { id: 337, word: "mindset", viet: "tư duy, quan điểm", type: "vocab" },
+            { id: 338, word: "prosperous", viet: "thịnh vượng, giàu có", type: "vocab" },
+            { id: 339, word: "sanitation", viet: "hệ thống vệ sinh", type: "vocab" },
+            { id: 340, word: "shortage", viet: "sự thiếu hụt", type: "vocab" },
+            { id: 341, word: "sustainable", viet: "bền vững", type: "vocab" },
+            { id: 342, word: "upmarket", viet: "hạng sang, cao cấp", type: "vocab" },
+            { id: 343, word: "wastewater", viet: "nước thải", type: "vocab" },
+            { id: 344, word: "weather-beaten", viet: "dày dạn sương gió", type: "vocab" },
+            { id: 345, word: "well-off", viet: "giàu có, khá giả", type: "vocab" },
+            { id: 346, word: "cost of living", viet: "chi phí sinh hoạt", type: "vocab" },
+            { id: 347, word: "density", viet: "mật độ", type: "vocab" },
+            { id: 348, word: "employment", viet: "việc làm", type: "vocab" },
+            { id: 349, word: "housing", viet: "nhà ở", type: "vocab" },
+            { id: 350, word: "inhabitant", viet: "cư dân", type: "vocab" },
+            { id: 351, word: "smog", viet: "khói bụi ô nhiễm", type: "vocab" }
+        ];
+
+        const WORD_BANK_U5 = [...PREP_WORDS, ...VOCAB_WORDS];
         const PREPS = ["from", "in", "of", "on", "to", "with", "for", "about", "at", "into"];
         
+        // --- Âm thanh ---
+        const SOUNDS = {
+            correct: 'https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3',
+            wrong: 'https://assets.mixkit.co/active_storage/sfx/2955/2955-preview.mp3',
+            chest: 'https://assets.mixkit.co/active_storage/sfx/2017/2017-preview.mp3'
+        };
+
+        function playSound(type) {
+            const audio = new Audio(SOUNDS[type]);
+            audio.play().catch(() => {});
+        }
+
         let score = 0;
         let timeLeft = 420;
         let currentQ = null;
         let timerId = null;
         let streak = 0;
 
-        function startGame() {
+        function showUnitSelection() {
             document.getElementById('view-landing').classList.add('hidden');
+            document.getElementById('view-selection').classList.remove('hidden');
+        }
+
+        function selectUnit(u) {
+            if (u !== 5) return;
+            document.getElementById('view-selection').classList.add('hidden');
             document.getElementById('view-game').classList.remove('hidden');
+            startGame();
+        }
+
+        function startGame() {
             score = 0;
             timeLeft = 420;
             streak = 0;
@@ -225,26 +334,53 @@
             document.getElementById('chest-selection').classList.remove('hidden');
             document.getElementById('chest-result').classList.add('hidden');
 
-            currentQ = WORD_BANK[Math.floor(Math.random() * WORD_BANK.length)];
+            currentQ = WORD_BANK_U5[Math.floor(Math.random() * WORD_BANK_U5.length)];
             document.getElementById('word-display').innerText = currentQ.word;
-            document.getElementById('meaning-display').innerText = `(${currentQ.meaning})`;
-
-            const opts = [currentQ.prep];
-            while(opts.length < 4) {
-                const r = PREPS[Math.floor(Math.random() * PREPS.length)];
-                if(!opts.includes(r)) opts.push(r);
-            }
-            opts.sort(() => Math.random() - 0.5);
-
+            
+            const isVocab = currentQ.type === 'vocab';
             const grid = document.getElementById('options-grid');
             grid.innerHTML = '';
-            opts.forEach(o => {
-                const b = document.createElement('button');
-                b.className = 'btn-opt';
-                b.innerText = o;
-                b.onclick = () => check(o);
-                grid.appendChild(b);
-            });
+
+            if (isVocab) {
+                document.getElementById('unit-tag').innerText = "Unit 5: Vocabulary Meaning";
+                document.getElementById('meaning-display').innerText = "(Chọn nghĩa đúng của từ)";
+                grid.className = "grid grid-cols-1 gap-2 w-full"; // List view cho nghĩa dài
+
+                let opts = [currentQ.viet];
+                const allViets = VOCAB_WORDS.map(w => w.viet);
+                while(opts.length < 4) {
+                    const r = allViets[Math.floor(Math.random() * allViets.length)];
+                    if(!opts.includes(r)) opts.push(r);
+                }
+                opts.sort(() => Math.random() - 0.5);
+
+                opts.forEach(o => {
+                    const b = document.createElement('button');
+                    b.className = 'btn-opt text-sm py-3';
+                    b.innerText = o;
+                    b.onclick = () => check(o);
+                    grid.appendChild(b);
+                });
+            } else {
+                document.getElementById('unit-tag').innerText = "Unit 5: Urbanization Prepositions";
+                document.getElementById('meaning-display').innerText = `(${currentQ.meaning})`;
+                grid.className = "grid grid-cols-2 gap-4 w-full"; // Grid cho giới từ ngắn
+
+                let opts = [currentQ.prep];
+                while(opts.length < 4) {
+                    const r = PREPS[Math.floor(Math.random() * PREPS.length)];
+                    if(!opts.includes(r)) opts.push(r);
+                }
+                opts.sort(() => Math.random() - 0.5);
+
+                opts.forEach(o => {
+                    const b = document.createElement('button');
+                    b.className = 'btn-opt';
+                    b.innerText = o;
+                    b.onclick = () => check(o);
+                    grid.appendChild(b);
+                });
+            }
 
             const dots = document.getElementById('streak-dots').children;
             for(let i=0; i<3; i++) {
@@ -253,7 +389,9 @@
         }
 
         function check(ans) {
-            if(ans === currentQ.prep) {
+            const correct = currentQ.type === 'vocab' ? currentQ.viet : currentQ.prep;
+            if(ans === correct) {
+                playSound('correct');
                 streak++;
                 score += 5;
                 if(streak >= 3) {
@@ -263,6 +401,7 @@
                     nextQuestion();
                 }
             } else {
+                playSound('wrong');
                 streak = 0;
                 score = Math.max(0, score - 2);
                 document.getElementById('question-area').classList.add('animate-pulse');
@@ -280,6 +419,7 @@
         }
 
         function openChest() {
+            playSound('chest');
             const bonus = Math.floor(Math.random() * 20) + 10;
             score += bonus;
             updateScore();
