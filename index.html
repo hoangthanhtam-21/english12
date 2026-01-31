@@ -86,19 +86,34 @@
             text-align: center;
             width: 100%;
         }
+
+        /* Fallback cho logo khi chưa tải được ảnh */
+        .logo-placeholder {
+            background: linear-gradient(45deg, #4f46e5, #ec4899);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 2rem;
+            color: white;
+        }
     </style>
 </head>
 <body>
     <div id="app" class="p-6 relative">
-        <!-- Thông báo Cảnh báo/Chúc mừng -->
         <div id="status-overlay" class="status-overlay hidden">
             <h2 id="status-text" class="text-5xl font-black italic uppercase tracking-tighter drop-shadow-2xl">MESSAGE</h2>
         </div>
 
-        <!-- MÀN HÌNH CHÀO -->
         <div id="view-landing" class="relative z-10 text-center w-full max-w-md animate-pop">
-            <div class="w-20 h-20 bg-indigo-600 rounded-[2rem] flex items-center justify-center mx-auto mb-8 glow">
-                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m16 6 4 14H4L8 6Z"/><path d="M12 2v4"/><path d="m8 2 1 1"/><path d="m16 2-1 1"/></svg>
+            <div class="mb-8 flex justify-center">
+                <!-- Sử dụng logo.jpg, nếu lỗi sẽ tự ẩn img và hiện placeholder qua JS hoặc CSS -->
+                <div class="w-32 h-32 rounded-full shadow-2xl glow border-4 border-indigo-500/30 overflow-hidden bg-slate-800">
+                    <img id="main-logo" src="logo.jpg" alt="English Logo" 
+                         onerror="this.style.display='none'; document.getElementById('logo-fallback').classList.remove('hidden')"
+                         class="w-full h-full object-cover">
+                    <div id="logo-fallback" class="hidden w-full h-full logo-placeholder">E</div>
+                </div>
             </div>
             <h1 class="text-4xl font-black mb-2 tracking-tighter uppercase italic text-white drop-shadow-lg text-center">Grade 12</h1>
             <h2 class="text-2xl font-bold mb-4 text-indigo-300">Vocabulary Master</h2>
@@ -111,16 +126,12 @@
             <button onclick="showUnitSelection()" class="w-full bg-white text-indigo-700 py-5 rounded-2xl font-black text-lg hover:bg-indigo-600 hover:text-white transition-all shadow-2xl uppercase">Bắt đầu</button>
         </div>
 
-        <!-- MÀN HÌNH CHỌN UNIT -->
         <div id="view-selection" class="relative z-10 w-full max-w-2xl hidden animate-pop text-center">
             <h2 class="text-3xl font-black uppercase tracking-tighter text-white mb-10">Chọn bài học</h2>
-            <div id="unit-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Rendered by JS -->
-            </div>
+            <div id="unit-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
             <button onclick="location.reload()" class="mt-12 text-slate-400 text-xs font-black uppercase tracking-[0.2em] hover:text-white transition-colors underline">Quay lại trang chủ</button>
         </div>
 
-        <!-- MÀN HÌNH CHƠI GAME -->
         <div id="view-game" class="relative z-10 w-full max-w-md hidden">
             <div class="grid grid-cols-2 gap-3 mb-6">
                 <div class="bg-slate-900/90 p-4 rounded-2xl border border-white/10 shadow-xl flex items-center justify-between text-white">
@@ -141,7 +152,6 @@
 
             <div class="card min-h-[440px] flex flex-col items-center justify-center text-center p-8 relative overflow-hidden shadow-2xl">
                 <div id="loading-msg" class="hidden text-indigo-400 font-bold animate-pulse uppercase tracking-widest text-sm">Đang tải dữ liệu...</div>
-                
                 <div id="question-area" class="w-full animate-pop">
                     <div class="flex justify-center gap-1 mb-6" id="streak-dots">
                         <div class="h-1.5 w-6 rounded-full bg-white/10"></div>
@@ -155,7 +165,6 @@
                     <p id="meaning-display" class="text-slate-300 italic text-sm mb-12 font-medium"></p>
                     <div id="options-grid" class="grid grid-cols-1 gap-3 w-full"></div>
                 </div>
-
                 <div id="chest-area" class="hidden text-center">
                     <h3 class="text-2xl font-black text-yellow-400 mb-8 uppercase tracking-tighter">CHÍNH XÁC! NHẬN QUÀ</h3>
                     <div class="flex gap-4 justify-center" id="chest-selection">
@@ -170,7 +179,6 @@
             </div>
         </div>
 
-        <!-- MÀN HÌNH KẾT QUẢ -->
         <div id="view-result" class="relative z-10 w-full max-w-md hidden animate-pop">
             <div class="text-center bg-slate-900/95 backdrop-blur-xl border border-white/10 p-10 rounded-[3rem] shadow-2xl">
                 <div class="w-16 h-16 bg-yellow-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-yellow-500/30 shadow-2xl">
@@ -178,7 +186,6 @@
                 </div>
                 <h2 id="result-status" class="text-2xl font-black mb-1 uppercase italic tracking-tighter text-white">XONG TRẬN!</h2>
                 <p id="rank-display" class="text-indigo-400 font-black uppercase text-[10px] tracking-[0.2em] mb-4"></p>
-                
                 <div class="grid grid-cols-2 gap-3 mb-6">
                     <div class="bg-white/5 p-4 rounded-2xl border border-white/5">
                         <p class="text-[8px] font-black text-indigo-300 uppercase mb-1">Điểm số</p>
@@ -189,14 +196,10 @@
                         <p id="mastered-count" class="text-3xl font-black text-green-400">0</p>
                     </div>
                 </div>
-
                 <div id="missed-words-area" class="text-left mb-6 hidden">
                     <p class="text-[10px] font-black text-red-400 uppercase tracking-widest mb-2 px-2">Top 5 từ sai nhiều nhất:</p>
-                    <div id="missed-words-list" class="space-y-1.5">
-                        <!-- List of missed words -->
-                    </div>
+                    <div id="missed-words-list" class="space-y-1.5"></div>
                 </div>
-
                 <div id="new-record-tag" class="hidden mb-6 bg-red-600/20 text-red-400 py-2 rounded-xl border border-red-500/30 font-black text-xs uppercase tracking-widest">Kỷ lục mới!</div>
                 <button onclick="location.reload()" class="w-full bg-white text-indigo-700 py-4 rounded-2xl font-black text-lg hover:bg-indigo-600 hover:text-white transition-all shadow-lg uppercase">Chơi tiếp</button>
             </div>
@@ -204,7 +207,6 @@
     </div>
 
     <script>
-        // --- CẤU HÌNH ---
         const UNITS = [
             { id: 5, name: "Urbanization", file: "unit5.json", status: "ready" },
             { id: 6, name: "Endangered Species", file: "unit6.json", status: "soon" },
@@ -223,12 +225,10 @@
             fireworks: 'https://assets.mixkit.co/active_storage/sfx/2016/2016-preview.mp3'
         };
 
-        // --- TRẠNG THÁI ---
-        let originalWordBank = []; // Lưu trữ để nạp lại khi cần
-        let currentWordBank = [];  // Danh sách từ đang trong rotation
-        let masteredWords = [];    // Danh sách từ đã thuộc (3 lần liên tiếp)
-        let wordProgress = {};     // { id: { consecutive: 0, errors: 0, word: "", correctAns: "" } }
-
+        let originalWordBank = [];
+        let currentWordBank = [];
+        let masteredWords = [];
+        let wordProgress = {};
         let score = 0, streak = 0, lives = 3, consecutiveWrong = 0, timeLeft = 300;
         let timerId = null, currentQ = null, lastMilestone = 0, isFever = false;
         let isProcessing = false;
@@ -266,22 +266,19 @@
                 if (!response.ok) throw new Error("File not found");
                 originalWordBank = await response.json();
                 currentWordBank = [...originalWordBank];
-                
-                // Khởi tạo tiến trình học tập
                 wordProgress = {};
                 originalWordBank.forEach(w => {
                     wordProgress[w.id] = { 
                         consecutive: 0, 
                         errors: 0, 
                         word: w.word, 
-                        correctAns: w.type === 'vocab' ? w.meaning : w.prep 
+                        correctAns: w.type === 'vocab' ? (w.meaning || w.viet) : w.prep 
                     };
                 });
-                
                 masteredWords = [];
                 startGame();
             } catch (err) {
-                alert(`Lỗi: Không nạp được file ${unit.file}. Đảm bảo file tồn tại trên GitHub.`);
+                alert(`Lỗi: Không nạp được file ${unit.file}. Đảm bảo file tồn tại trên GitHub cùng cấp với index.html.`);
                 location.reload();
             }
         }
@@ -310,38 +307,24 @@
         }
 
         function nextQuestion() {
-            if (currentWordBank.length === 0) {
-                endGame();
-                return;
-            }
-
+            if (currentWordBank.length === 0) { endGame(); return; }
             isProcessing = false;
             document.getElementById('question-area').classList.remove('hidden');
             document.getElementById('chest-area').classList.add('hidden');
-            
-            // Chọn từ (ưu tiên từ chưa mastered)
             currentQ = currentWordBank[Math.floor(Math.random() * currentWordBank.length)];
-            
             const isVocab = currentQ.type === 'vocab';
             document.getElementById('word-display').innerText = currentQ.word;
             document.getElementById('unit-tag').innerText = isVocab ? "Vocabulary Master" : "Prepositions Bank";
-            document.getElementById('meaning-display').innerText = isVocab ? "(Chọn nghĩa tiếng Việt đúng nhất)" : `(${currentQ.meaning})`;
-
+            document.getElementById('meaning-display').innerText = isVocab ? "(Chọn nghĩa đúng nhất)" : `(${currentQ.meaning})`;
             const grid = document.getElementById('options-grid');
             grid.innerHTML = '';
-            
-            let correctAns = isVocab ? currentQ.meaning : currentQ.prep;
+            let correctAns = isVocab ? (currentQ.meaning || currentQ.viet) : currentQ.prep;
             let opts = [correctAns];
-            
-            let pool = isVocab 
-                ? originalWordBank.filter(w => w.type === 'vocab').map(w => w.meaning) 
-                : PREPS_POOL;
-
+            let pool = isVocab ? originalWordBank.filter(w => w.type === 'vocab').map(w => (w.meaning || w.viet)) : PREPS_POOL;
             while(opts.length < 4) {
                 let r = pool[Math.floor(Math.random() * pool.length)];
                 if(!opts.includes(r)) opts.push(r);
             }
-
             opts.sort(() => Math.random() - 0.5).forEach(o => {
                 let b = document.createElement('button');
                 b.className = `btn-opt text-white ${isVocab ? 'text-sm py-3' : 'py-5'}`;
@@ -349,84 +332,53 @@
                 b.onclick = () => check(o, b);
                 grid.appendChild(b);
             });
-
-            // Thanh tiến trình của từ hiện tại (3 chấm nhỏ)
             const prog = wordProgress[currentQ.id].consecutive;
             const dots = document.getElementById('streak-dots').children;
             for(let i=0; i<5; i++) {
                 if (i < 3) {
-                    dots[i].className = `h-1.5 w-6 rounded-full transition-all duration-300 ${i < prog ? 'bg-green-400 shadow-[0_0_5px_#10b981]' : 'bg-white/10'}`;
-                } else {
-                    dots[i].className = 'hidden'; // Chỉ dùng 3 chấm cho Mastery
-                }
+                    dots[i].className = `h-1.5 w-6 rounded-full transition-all duration-300 ${i < prog ? 'bg-green-400 shadow-[0_0_10px_#4ade80]' : 'bg-white/10'}`;
+                } else { dots[i].className = 'hidden'; }
             }
         }
 
         function check(ans, btn) {
             if (isProcessing) return;
             isProcessing = true;
-
-            const correct = currentQ.type === 'vocab' ? currentQ.meaning : currentQ.prep;
+            const correct = currentQ.type === 'vocab' ? (currentQ.meaning || currentQ.viet) : currentQ.prep;
             const isCorrect = ans === correct;
-
-            // Highlight đáp án
             const allBtns = document.querySelectorAll('.btn-opt');
             allBtns.forEach(b => {
                 if (b.innerText === correct) b.classList.add('btn-correct');
                 if (b.innerText === ans && !isCorrect) b.classList.add('btn-wrong');
             });
-
             if(isCorrect) {
-                playSound('correct'); 
-                streak++; 
-                consecutiveWrong = 0;
-                
-                // Cập nhật Mastery Progress
+                playSound('correct'); streak++; consecutiveWrong = 0;
                 wordProgress[currentQ.id].consecutive++;
                 if (wordProgress[currentQ.id].consecutive >= 3) {
-                    // Đã thành thạo từ này
                     masteredWords.push(currentQ.id);
                     currentWordBank = currentWordBank.filter(w => w.id !== currentQ.id);
                     showFlash("MASTERED!", "text-green-400");
                 }
-
                 if(streak % 5 === 0) { isFever = true; document.body.classList.add('fever-mode'); document.getElementById('fever-badge').classList.remove('hidden'); }
                 score += isFever ? 10 : 5;
-                
-                // Milestone
                 if(Math.floor(score/100) > lastMilestone) {
                     lastMilestone = Math.floor(score/100);
                     playSound('milestone');
                     if(lastMilestone % 10 === 0) triggerFireworks();
                 }
-                
-                setTimeout(() => {
-                    if(streak % 4 === 0 && currentWordBank.length > 0) showChest(); 
-                    else nextQuestion();
-                }, 1200);
-
+                setTimeout(() => { if(streak % 4 === 0 && currentWordBank.length > 0) showChest(); else nextQuestion(); }, 1200);
             } else {
-                playSound('wrong'); 
-                streak = 0; 
-                consecutiveWrong++; 
-                isFever = false;
+                playSound('wrong'); streak = 0; consecutiveWrong++; isFever = false;
                 document.body.classList.remove('fever-mode');
                 document.getElementById('fever-badge').classList.add('hidden');
-                
-                // Reset Mastery Progress & Tăng lỗi
                 wordProgress[currentQ.id].consecutive = 0;
                 wordProgress[currentQ.id].errors++;
-
                 if(consecutiveWrong >= 2) {
-                    lives--; 
-                    consecutiveWrong = 0; 
-                    playSound('loseLife'); 
-                    updateLives();
+                    lives--; consecutiveWrong = 0; playSound('loseLife'); updateLives();
                     showFlash("MẤT 1 MẠNG!", "text-red-500");
                     if(lives <= 0) { playSound('gameover'); endGame(); return; }
                 }
-                
-                setTimeout(nextQuestion, 1800); // Chờ lâu hơn chút để HS nhìn đáp án đúng
+                setTimeout(nextQuestion, 1800);
             }
             updateScore();
         }
@@ -448,10 +400,7 @@
         }
 
         function openChest() { 
-            playSound('chest'); 
-            let b = Math.floor(Math.random()*20)+10; 
-            score+=b; 
-            updateScore(); 
+            playSound('chest'); let b = Math.floor(Math.random()*20)+10; score+=b; updateScore(); 
             document.getElementById('chest-selection').classList.add('hidden'); 
             document.getElementById('chest-result').classList.remove('hidden'); 
             document.getElementById('bonus-text').innerText = `+${b} ĐIỂM!`; 
@@ -466,38 +415,22 @@
             clearInterval(timerId);
             const best = localStorage.getItem('grade12_best_score') || 0;
             if(score > best) { localStorage.setItem('grade12_best_score', score); document.getElementById('new-record-tag').classList.remove('hidden'); }
-            
-            let rank = "Tân binh 👶";
-            if(score > 1000) rank = "Huyền thoại 🌌";
-            else if(score >= 501) rank = "Bậc thầy từ vựng 💎";
-            else if(score >= 201) rank = "Thợ săn từ vựng 🏹";
-
+            let rank = score > 1000 ? "Huyền thoại 🌌" : score >= 501 ? "Bậc thầy từ vựng 💎" : score >= 201 ? "Thợ săn từ vựng 🏹" : "Tân binh 👶";
             document.getElementById('rank-display').innerText = "Danh hiệu: " + rank;
             document.getElementById('final-score').innerText = score;
             document.getElementById('mastered-count').innerText = masteredWords.length;
             document.getElementById('result-status').innerText = lives <= 0 ? "BẠN ĐÃ HẾT TIM!" : (currentWordBank.length === 0 ? "HOÀN THÀNH BÀI HỌC!" : "HẾT GIỜ!");
-            
-            // Xử lý 5 từ sai nhiều nhất
-            const sortedMissed = Object.values(wordProgress)
-                .filter(w => w.errors > 0)
-                .sort((a, b) => b.errors - a.errors)
-                .slice(0, 5);
-
+            const sortedMissed = Object.values(wordProgress).filter(w => w.errors > 0).sort((a, b) => b.errors - a.errors).slice(0, 5);
             const missedArea = document.getElementById('missed-words-area');
             const missedList = document.getElementById('missed-words-list');
-            
             if (sortedMissed.length > 0) {
                 missedArea.classList.remove('hidden');
                 missedList.innerHTML = sortedMissed.map(w => `
                     <div class="flex justify-between items-center bg-white/5 p-2 rounded-lg text-[10px] border border-white/5">
                         <span class="font-bold text-slate-200 uppercase">${w.word} -> <span class="text-green-400">${w.correctAns}</span></span>
                         <span class="text-red-400 font-black">Sai: ${w.errors}</span>
-                    </div>
-                `).join('');
-            } else {
-                missedArea.classList.add('hidden');
-            }
-
+                    </div>`).join('');
+            } else { missedArea.classList.add('hidden'); }
             document.getElementById('view-game').classList.add('hidden');
             document.getElementById('view-result').classList.remove('hidden');
             if(score > 1000) triggerFireworks();
