@@ -1,0 +1,2428 @@
+[
+  {
+    "id": "1",
+    "word": "ban sb...",
+    "prep": "from",
+    "meaning": "cấm ai làm gì",
+    "type": "prep"
+  },
+  {
+    "id": "2",
+    "word": "benefit...",
+    "prep": "from",
+    "meaning": "có lợi từ",
+    "type": "prep"
+  },
+  {
+    "id": "3",
+    "word": "believe...",
+    "prep": "in",
+    "meaning": "tin vào",
+    "type": "prep"
+  },
+  {
+    "id": "4",
+    "word": "specialize...",
+    "prep": "in",
+    "meaning": "chuyên về",
+    "type": "prep"
+  },
+  {
+    "id": "5",
+    "word": "accuse sb...",
+    "prep": "of",
+    "meaning": "buộc tội ai về",
+    "type": "prep"
+  },
+  {
+    "id": "6",
+    "word": "remind sb...",
+    "prep": "of",
+    "meaning": "nhắc ai nhớ về",
+    "type": "prep"
+  },
+  {
+    "id": "7",
+    "word": "agree...",
+    "prep": "on",
+    "meaning": "đồng ý về (vấn đề)",
+    "type": "prep"
+  },
+  {
+    "id": "8",
+    "word": "rely...",
+    "prep": "on",
+    "meaning": "dựa vào",
+    "type": "prep"
+  },
+  {
+    "id": "9",
+    "word": "belong...",
+    "prep": "to",
+    "meaning": "thuộc về",
+    "type": "prep"
+  },
+  {
+    "id": "10",
+    "word": "object...",
+    "prep": "to",
+    "meaning": "phản đối",
+    "type": "prep"
+  },
+  {
+    "id": "11",
+    "word": "satisfied...",
+    "prep": "with",
+    "meaning": "hài lòng với",
+    "type": "prep"
+  },
+  {
+    "id": "12",
+    "word": "famous...",
+    "prep": "for",
+    "meaning": "nổi tiếng về",
+    "type": "prep"
+  },
+  {
+    "id": "13",
+    "word": "proud...",
+    "prep": "of",
+    "meaning": "tự hào về",
+    "type": "prep"
+  },
+  {
+    "id": "14",
+    "word": "anxious...",
+    "prep": "about",
+    "meaning": "lo lắng về",
+    "type": "prep"
+  },
+  {
+    "id": "15",
+    "word": "succeed...",
+    "prep": "in",
+    "meaning": "thành công trong",
+    "type": "prep"
+  },
+  {
+    "id": "16",
+    "word": "invest...",
+    "prep": "in",
+    "meaning": "đầu tư vào",
+    "type": "prep"
+  },
+  {
+    "id": "17",
+    "word": "result...",
+    "prep": "in",
+    "meaning": "dẫn đến",
+    "type": "prep"
+  },
+  {
+    "id": "18",
+    "word": "result...",
+    "prep": "from",
+    "meaning": "do bởi (nguyên nhân)",
+    "type": "prep"
+  },
+  {
+    "id": "19",
+    "word": "recover...",
+    "prep": "from",
+    "meaning": "hồi phục từ",
+    "type": "prep"
+  },
+  {
+    "id": "20",
+    "word": "prepare...",
+    "prep": "for",
+    "meaning": "chuẩn bị cho",
+    "type": "prep"
+  },
+  {
+    "id": "21",
+    "word": "wait...",
+    "prep": "for",
+    "meaning": "chờ đợi",
+    "type": "prep"
+  },
+  {
+    "id": "22",
+    "word": "concentrate...",
+    "prep": "on",
+    "meaning": "tập trung vào",
+    "type": "prep"
+  },
+  {
+    "id": "23",
+    "word": "insist...",
+    "prep": "on",
+    "meaning": "khăng khăng",
+    "type": "prep"
+  },
+  {
+    "id": "24",
+    "word": "congratulate sb...",
+    "prep": "on",
+    "meaning": "chúc mừng ai về",
+    "type": "prep"
+  },
+  {
+    "id": "25",
+    "word": "apologize...",
+    "prep": "for",
+    "meaning": "xin lỗi về",
+    "type": "prep"
+  },
+  {
+    "id": "26",
+    "word": "capable...",
+    "prep": "of",
+    "meaning": "có khả năng",
+    "type": "prep"
+  },
+  {
+    "id": "27",
+    "word": "keen...",
+    "prep": "on",
+    "meaning": "say mê",
+    "type": "prep"
+  },
+  {
+    "id": "28",
+    "word": "accustomed...",
+    "prep": "to",
+    "meaning": "quen với",
+    "type": "prep"
+  },
+  {
+    "id": "29",
+    "word": "provide sb...",
+    "prep": "with",
+    "meaning": "cung cấp cho ai cái gì",
+    "type": "prep"
+  },
+  {
+    "id": "30",
+    "word": "depend...",
+    "prep": "on",
+    "meaning": "phụ thuộc vào",
+    "type": "prep"
+  },
+  {
+    "id": "31",
+    "word": "base...",
+    "prep": "on",
+    "meaning": "dựa trên",
+    "type": "prep"
+  },
+  {
+    "id": "32",
+    "word": "suffer...",
+    "prep": "from",
+    "meaning": "chịu đựng",
+    "type": "prep"
+  },
+  {
+    "id": "33",
+    "word": "translate...",
+    "prep": "into",
+    "meaning": "dịch sang",
+    "type": "prep"
+  },
+  {
+    "id": "34",
+    "word": "divide...",
+    "prep": "into",
+    "meaning": "chia thành",
+    "type": "prep"
+  },
+  {
+    "id": "35",
+    "word": "compare...",
+    "prep": "with",
+    "meaning": "so sánh với",
+    "type": "prep"
+  },
+  {
+    "id": "36",
+    "word": "afraid...",
+    "prep": "of",
+    "meaning": "sợ hãi",
+    "type": "prep"
+  },
+  {
+    "id": "37",
+    "word": "interested...",
+    "prep": "in",
+    "meaning": "quan tâm",
+    "type": "prep"
+  },
+  {
+    "id": "38",
+    "word": "tired...",
+    "prep": "of",
+    "meaning": "mệt mỏi",
+    "type": "prep"
+  },
+  {
+    "id": "39",
+    "word": "worried...",
+    "prep": "about",
+    "meaning": "lo lắng về",
+    "type": "prep"
+  },
+  {
+    "id": "40",
+    "word": "similar...",
+    "prep": "to",
+    "meaning": "tương tự",
+    "type": "prep"
+  },
+  {
+    "id": "41",
+    "word": "absent...",
+    "prep": "from",
+    "meaning": "vắng mặt",
+    "type": "prep"
+  },
+  {
+    "id": "42",
+    "word": "addicted...",
+    "prep": "to",
+    "meaning": "nghiện",
+    "type": "prep"
+  },
+  {
+    "id": "43",
+    "word": "crowded...",
+    "prep": "with",
+    "meaning": "đông đúc",
+    "type": "prep"
+  },
+  {
+    "id": "44",
+    "word": "engaged...",
+    "prep": "in",
+    "meaning": "tham gia vào",
+    "type": "prep"
+  },
+  {
+    "id": "45",
+    "word": "opposed...",
+    "prep": "to",
+    "meaning": "phản đối",
+    "type": "prep"
+  },
+  {
+    "id": "46",
+    "word": "aware...",
+    "prep": "of",
+    "meaning": "nhận thức",
+    "type": "prep"
+  },
+  {
+    "id": "47",
+    "word": "full...",
+    "prep": "of",
+    "meaning": "đầy",
+    "type": "prep"
+  },
+  {
+    "id": "48",
+    "word": "good...",
+    "prep": "at",
+    "meaning": "giỏi",
+    "type": "prep"
+  },
+  {
+    "id": "49",
+    "word": "bad...",
+    "prep": "at",
+    "meaning": "tệ",
+    "type": "prep"
+  },
+  {
+    "id": "50",
+    "word": "different...",
+    "prep": "from",
+    "meaning": "khác biệt",
+    "type": "prep"
+  },
+  {
+    "id": "51",
+    "word": "abundance...",
+    "prep": "of",
+    "meaning": "sự phong phú",
+    "type": "prep"
+  },
+  {
+    "id": "52",
+    "word": "access...",
+    "prep": "to",
+    "meaning": "tiếp cận",
+    "type": "prep"
+  },
+  {
+    "id": "53",
+    "word": "admire sb...",
+    "prep": "for",
+    "meaning": "ngưỡng mộ ai vì",
+    "type": "prep"
+  },
+  {
+    "id": "54",
+    "word": "advantage...",
+    "prep": "of",
+    "meaning": "lợi thế của",
+    "type": "prep"
+  },
+  {
+    "id": "55",
+    "word": "advice...",
+    "prep": "on",
+    "meaning": "lời khuyên về",
+    "type": "prep"
+  },
+  {
+    "id": "56",
+    "word": "agree...",
+    "prep": "with",
+    "meaning": "đồng ý với (ai đó)",
+    "type": "prep"
+  },
+  {
+    "id": "57",
+    "word": "aim...",
+    "prep": "at",
+    "meaning": "nhắm vào",
+    "type": "prep"
+  },
+  {
+    "id": "58",
+    "word": "amazed...",
+    "prep": "at",
+    "meaning": "kinh ngạc về",
+    "type": "prep"
+  },
+  {
+    "id": "59",
+    "word": "angry...",
+    "prep": "with",
+    "meaning": "giận dỗi với ai",
+    "type": "prep"
+  },
+  {
+    "id": "60",
+    "word": "annoyed...",
+    "prep": "with",
+    "meaning": "bực mình với ai",
+    "type": "prep"
+  },
+  {
+    "id": "61",
+    "word": "apply...",
+    "prep": "for",
+    "meaning": "nộp đơn xin việc",
+    "type": "prep"
+  },
+  {
+    "id": "62",
+    "word": "arrive...",
+    "prep": "at",
+    "meaning": "đến (địa điểm nhỏ)",
+    "type": "prep"
+  },
+  {
+    "id": "63",
+    "word": "arrive...",
+    "prep": "in",
+    "meaning": "đến (địa điểm lớn)",
+    "type": "prep"
+  },
+  {
+    "id": "64",
+    "word": "ashamed...",
+    "prep": "of",
+    "meaning": "xấu hổ về",
+    "type": "prep"
+  },
+  {
+    "id": "65",
+    "word": "ask...",
+    "prep": "for",
+    "meaning": "hỏi xin",
+    "type": "prep"
+  },
+  {
+    "id": "66",
+    "word": "astonished...",
+    "prep": "by",
+    "meaning": "ngạc nhiên bởi",
+    "type": "prep"
+  },
+  {
+    "id": "67",
+    "word": "attached...",
+    "prep": "to",
+    "meaning": "gắn bó với",
+    "type": "prep"
+  },
+  {
+    "id": "68",
+    "word": "attitude...",
+    "prep": "towards",
+    "meaning": "thái độ đối với",
+    "type": "prep"
+  },
+  {
+    "id": "69",
+    "word": "aware...",
+    "prep": "of",
+    "meaning": "ý thức về",
+    "type": "prep"
+  },
+  {
+    "id": "70",
+    "word": "bad...",
+    "prep": "for",
+    "meaning": "có hại cho",
+    "type": "prep"
+  },
+  {
+    "id": "71",
+    "word": "base...",
+    "prep": "on",
+    "meaning": "dựa trên",
+    "type": "prep"
+  },
+  {
+    "id": "72",
+    "word": "blame sb...",
+    "prep": "for",
+    "meaning": "đổ lỗi cho ai vì",
+    "type": "prep"
+  },
+  {
+    "id": "73",
+    "word": "bored...",
+    "prep": "with",
+    "meaning": "chán nản với",
+    "type": "prep"
+  },
+  {
+    "id": "74",
+    "word": "borrow...",
+    "prep": "from",
+    "meaning": "mượn từ",
+    "type": "prep"
+  },
+  {
+    "id": "75",
+    "word": "brilliant...",
+    "prep": "at",
+    "meaning": "xuất sắc về",
+    "type": "prep"
+  },
+  {
+    "id": "76",
+    "word": "busy...",
+    "prep": "with",
+    "meaning": "bận rộn với",
+    "type": "prep"
+  },
+  {
+    "id": "77",
+    "word": "care...",
+    "prep": "about",
+    "meaning": "quan tâm đến",
+    "type": "prep"
+  },
+  {
+    "id": "78",
+    "word": "care...",
+    "prep": "for",
+    "meaning": "chăm sóc",
+    "type": "prep"
+  },
+  {
+    "id": "79",
+    "word": "cause...",
+    "prep": "of",
+    "meaning": "nguyên nhân của",
+    "type": "prep"
+  },
+  {
+    "id": "80",
+    "word": "change...",
+    "prep": "into",
+    "meaning": "đổi thành",
+    "type": "prep"
+  },
+  {
+    "id": "81",
+    "word": "characteristic...",
+    "prep": "of",
+    "meaning": "đặc điểm của",
+    "type": "prep"
+  },
+  {
+    "id": "82",
+    "word": "charge sb...",
+    "prep": "with",
+    "meaning": "buộc tội ai về",
+    "type": "prep"
+  },
+  {
+    "id": "83",
+    "word": "check...",
+    "prep": "for",
+    "meaning": "kiểm tra về",
+    "type": "prep"
+  },
+  {
+    "id": "84",
+    "word": "choice...",
+    "prep": "between",
+    "meaning": "lựa chọn giữa",
+    "type": "prep"
+  },
+  {
+    "id": "85",
+    "word": "clever...",
+    "prep": "at",
+    "meaning": "khéo léo về",
+    "type": "prep"
+  },
+  {
+    "id": "86",
+    "word": "close...",
+    "prep": "to",
+    "meaning": "gần gũi với",
+    "type": "prep"
+  },
+  {
+    "id": "87",
+    "word": "collide...",
+    "prep": "with",
+    "meaning": "va chạm với",
+    "type": "prep"
+  },
+  {
+    "id": "88",
+    "word": "combine...",
+    "prep": "with",
+    "meaning": "kết hợp với",
+    "type": "prep"
+  },
+  {
+    "id": "89",
+    "word": "comment...",
+    "prep": "on",
+    "meaning": "bình luận về",
+    "type": "prep"
+  },
+  {
+    "id": "90",
+    "word": "communicate...",
+    "prep": "with",
+    "meaning": "giao tiếp với",
+    "type": "prep"
+  },
+  {
+    "id": "91",
+    "word": "compare...",
+    "prep": "to",
+    "meaning": "so sánh với",
+    "type": "prep"
+  },
+  {
+    "id": "92",
+    "word": "complain...",
+    "prep": "about",
+    "meaning": "phàn nàn về",
+    "type": "prep"
+  },
+  {
+    "id": "93",
+    "word": "compliment sb...",
+    "prep": "on",
+    "meaning": "khen ngợi ai về",
+    "type": "prep"
+  },
+  {
+    "id": "94",
+    "word": "comply...",
+    "prep": "with",
+    "meaning": "tuân thủ",
+    "type": "prep"
+  },
+  {
+    "id": "95",
+    "word": "concentrate...",
+    "prep": "on",
+    "meaning": "tập trung vào",
+    "type": "prep"
+  },
+  {
+    "id": "96",
+    "word": "confidence...",
+    "prep": "in",
+    "meaning": "sự tin tưởng vào",
+    "type": "prep"
+  },
+  {
+    "id": "97",
+    "word": "confuse sth...",
+    "prep": "with",
+    "meaning": "nhầm cái gì với",
+    "type": "prep"
+  },
+  {
+    "id": "98",
+    "word": "congratulate sb...",
+    "prep": "on",
+    "meaning": "chúc mừng ai về",
+    "type": "prep"
+  },
+  {
+    "id": "99",
+    "word": "connection...",
+    "prep": "between",
+    "meaning": "sự kết nối giữa",
+    "type": "prep"
+  },
+  {
+    "id": "100",
+    "word": "conscious...",
+    "prep": "of",
+    "meaning": "tỉnh táo/nhận thức",
+    "type": "prep"
+  },
+  {
+    "id": "101",
+    "word": "consist...",
+    "prep": "of",
+    "meaning": "bao gồm",
+    "type": "prep"
+  },
+  {
+    "id": "102",
+    "word": "contrast...",
+    "prep": "with",
+    "meaning": "tương phản với",
+    "type": "prep"
+  },
+  {
+    "id": "103",
+    "word": "contribute...",
+    "prep": "to",
+    "meaning": "đóng góp vào",
+    "type": "prep"
+  },
+  {
+    "id": "104",
+    "word": "control...",
+    "prep": "over",
+    "meaning": "kiểm soát cái gì",
+    "type": "prep"
+  },
+  {
+    "id": "105",
+    "word": "convert...",
+    "prep": "into",
+    "meaning": "chuyển đổi thành",
+    "type": "prep"
+  },
+  {
+    "id": "106",
+    "word": "cope...",
+    "prep": "with",
+    "meaning": "đối mặt/xử lý",
+    "type": "prep"
+  },
+  {
+    "id": "107",
+    "word": "count...",
+    "prep": "on",
+    "meaning": "tin cậy vào",
+    "type": "prep"
+  },
+  {
+    "id": "108",
+    "word": "covered...",
+    "prep": "with",
+    "meaning": "bao phủ bởi",
+    "type": "prep"
+  },
+  {
+    "id": "109",
+    "word": "crash...",
+    "prep": "into",
+    "meaning": "đâm sầm vào",
+    "type": "prep"
+  },
+  {
+    "id": "110",
+    "word": "crazy...",
+    "prep": "about",
+    "meaning": "phát cuồng vì",
+    "type": "prep"
+  },
+  {
+    "id": "111",
+    "word": "cruel...",
+    "prep": "to",
+    "meaning": "độc ác với",
+    "type": "prep"
+  },
+  {
+    "id": "112",
+    "word": "cure...",
+    "prep": "for",
+    "meaning": "cách chữa trị cho",
+    "type": "prep"
+  },
+  {
+    "id": "113",
+    "word": "curious...",
+    "prep": "about",
+    "meaning": "tò mò về",
+    "type": "prep"
+  },
+  {
+    "id": "114",
+    "word": "damage...",
+    "prep": "to",
+    "meaning": "thiệt hại đối với",
+    "type": "prep"
+  },
+  {
+    "id": "115",
+    "word": "deal...",
+    "prep": "with",
+    "meaning": "giải quyết",
+    "type": "prep"
+  },
+  {
+    "id": "116",
+    "word": "decide...",
+    "prep": "on",
+    "meaning": "quyết định về",
+    "type": "prep"
+  },
+  {
+    "id": "117",
+    "word": "decrease...",
+    "prep": "in",
+    "meaning": "sự giảm sút về",
+    "type": "prep"
+  },
+  {
+    "id": "118",
+    "word": "dedicate...",
+    "prep": "to",
+    "meaning": "cống hiến cho",
+    "type": "prep"
+  },
+  {
+    "id": "119",
+    "word": "delighted...",
+    "prep": "with",
+    "meaning": "vui mừng với",
+    "type": "prep"
+  },
+  {
+    "id": "120",
+    "word": "demand...",
+    "prep": "for",
+    "meaning": "nhu cầu về",
+    "type": "prep"
+  },
+  {
+    "id": "121",
+    "word": "depart...",
+    "prep": "from",
+    "meaning": "khởi hành từ",
+    "type": "prep"
+  },
+  {
+    "id": "122",
+    "word": "depend...",
+    "prep": "on",
+    "meaning": "phụ thuộc vào",
+    "type": "prep"
+  },
+  {
+    "id": "123",
+    "word": "deprived...",
+    "prep": "of",
+    "meaning": "bị tước đoạt",
+    "type": "prep"
+  },
+  {
+    "id": "124",
+    "word": "derive...",
+    "prep": "from",
+    "meaning": "bắt nguồn từ",
+    "type": "prep"
+  },
+  {
+    "id": "125",
+    "word": "description...",
+    "prep": "of",
+    "meaning": "sự mô tả về",
+    "type": "prep"
+  },
+  {
+    "id": "126",
+    "word": "die...",
+    "prep": "of",
+    "meaning": "chết vì (bệnh)",
+    "type": "prep"
+  },
+  {
+    "id": "127",
+    "word": "different...",
+    "prep": "from",
+    "meaning": "khác với",
+    "type": "prep"
+  },
+  {
+    "id": "128",
+    "word": "difficulty...",
+    "prep": "in",
+    "meaning": "khó khăn trong việc",
+    "type": "prep"
+  },
+  {
+    "id": "129",
+    "word": "disappointed...",
+    "prep": "with",
+    "meaning": "thất vọng với",
+    "type": "prep"
+  },
+  {
+    "id": "130",
+    "word": "discourage sb...",
+    "prep": "from",
+    "meaning": "ngăn cản ai làm gì",
+    "type": "prep"
+  },
+  {
+    "id": "131",
+    "word": "discuss sth...",
+    "prep": "with",
+    "meaning": "thảo luận với",
+    "type": "prep"
+  },
+  {
+    "id": "132",
+    "word": "dissatisfied...",
+    "prep": "with",
+    "meaning": "không hài lòng với",
+    "type": "prep"
+  },
+  {
+    "id": "133",
+    "word": "distinguish...",
+    "prep": "from",
+    "meaning": "phân biệt với",
+    "type": "prep"
+  },
+  {
+    "id": "134",
+    "word": "divide...",
+    "prep": "by",
+    "meaning": "chia cho (toán học)",
+    "type": "prep"
+  },
+  {
+    "id": "135",
+    "word": "doubtful...",
+    "prep": "about",
+    "meaning": "nghi ngờ về",
+    "type": "prep"
+  },
+  {
+    "id": "136",
+    "word": "dream...",
+    "prep": "of",
+    "meaning": "mơ về",
+    "type": "prep"
+  },
+  {
+    "id": "137",
+    "word": "dressed...",
+    "prep": "in",
+    "meaning": "mặc đồ màu/kiểu",
+    "type": "prep"
+  },
+  {
+    "id": "138",
+    "word": "drink...",
+    "prep": "to",
+    "meaning": "uống mừng cho",
+    "type": "prep"
+  },
+  {
+    "id": "139",
+    "word": "due...",
+    "prep": "to",
+    "meaning": "vì/do bởi",
+    "type": "prep"
+  },
+  {
+    "id": "140",
+    "word": "eager...",
+    "prep": "for",
+    "meaning": "háo hức cho",
+    "type": "prep"
+  },
+  {
+    "id": "141",
+    "word": "efficient...",
+    "prep": "at",
+    "meaning": "hiệu quả trong",
+    "type": "prep"
+  },
+  {
+    "id": "142",
+    "word": "emerge...",
+    "prep": "from",
+    "meaning": "nổi lên từ",
+    "type": "prep"
+  },
+  {
+    "id": "143",
+    "word": "emphasis...",
+    "prep": "on",
+    "meaning": "sự nhấn mạnh vào",
+    "type": "prep"
+  },
+  {
+    "id": "144",
+    "word": "empty...",
+    "prep": "of",
+    "meaning": "trống rỗng",
+    "type": "prep"
+  },
+  {
+    "id": "145",
+    "word": "encounter...",
+    "prep": "with",
+    "meaning": "sự chạm trán với",
+    "type": "prep"
+  },
+  {
+    "id": "146",
+    "word": "encourage sb...",
+    "prep": "in",
+    "meaning": "khuyến khích ai trong",
+    "type": "prep"
+  },
+  {
+    "id": "147",
+    "word": "end...",
+    "prep": "with",
+    "meaning": "kết thúc bằng",
+    "type": "prep"
+  },
+  {
+    "id": "148",
+    "word": "engaged...",
+    "prep": "to",
+    "meaning": "đính hôn với",
+    "type": "prep"
+  },
+  {
+    "id": "149",
+    "word": "enthusiastic...",
+    "prep": "about",
+    "meaning": "nhiệt tình về",
+    "type": "prep"
+  },
+  {
+    "id": "150",
+    "word": "envious...",
+    "prep": "of",
+    "meaning": "ghen tị với",
+    "type": "prep"
+  },
+  {
+    "id": "151",
+    "word": "equal...",
+    "prep": "to",
+    "meaning": "tương đương với",
+    "type": "prep"
+  },
+  {
+    "id": "152",
+    "word": "escape...",
+    "prep": "from",
+    "meaning": "thoát khỏi",
+    "type": "prep"
+  },
+  {
+    "id": "153",
+    "word": "essential...",
+    "prep": "to",
+    "meaning": "thiết yếu cho",
+    "type": "prep"
+  },
+  {
+    "id": "154",
+    "word": "excellent...",
+    "prep": "at",
+    "meaning": "xuất sắc về",
+    "type": "prep"
+  },
+  {
+    "id": "155",
+    "word": "excited...",
+    "prep": "about",
+    "meaning": "hào hứng về",
+    "type": "prep"
+  },
+  {
+    "id": "156",
+    "word": "exclaim...",
+    "prep": "at",
+    "meaning": "thốt lên vì",
+    "type": "prep"
+  },
+  {
+    "id": "157",
+    "word": "excuse...",
+    "prep": "for",
+    "meaning": "lý do cho",
+    "type": "prep"
+  },
+  {
+    "id": "158",
+    "word": "exempt...",
+    "prep": "from",
+    "meaning": "miễn trừ khỏi",
+    "type": "prep"
+  },
+  {
+    "id": "159",
+    "word": "expel sb...",
+    "prep": "from",
+    "meaning": "trục xuất ai khỏi",
+    "type": "prep"
+  },
+  {
+    "id": "160",
+    "word": "experienced...",
+    "prep": "in",
+    "meaning": "có kinh nghiệm trong",
+    "type": "prep"
+  },
+  {
+    "id": "161",
+    "word": "experiment...",
+    "prep": "on",
+    "meaning": "thí nghiệm trên",
+    "type": "prep"
+  },
+  {
+    "id": "162",
+    "word": "expert...",
+    "prep": "at",
+    "meaning": "chuyên gia về",
+    "type": "prep"
+  },
+  {
+    "id": "163",
+    "word": "explain sth...",
+    "prep": "to",
+    "meaning": "giải thích cho ai",
+    "type": "prep"
+  },
+  {
+    "id": "164",
+    "word": "face...",
+    "prep": "with",
+    "meaning": "đối mặt với",
+    "type": "prep"
+  },
+  {
+    "id": "165",
+    "word": "fail...",
+    "prep": "in",
+    "meaning": "thất bại trong",
+    "type": "prep"
+  },
+  {
+    "id": "166",
+    "word": "faithful...",
+    "prep": "to",
+    "meaning": "trung thành với",
+    "type": "prep"
+  },
+  {
+    "id": "167",
+    "word": "familiar...",
+    "prep": "with",
+    "meaning": "quen thuộc với",
+    "type": "prep"
+  },
+  {
+    "id": "168",
+    "word": "famous...",
+    "prep": "for",
+    "meaning": "nổi tiếng vì",
+    "type": "prep"
+  },
+  {
+    "id": "169",
+    "word": "fatal...",
+    "prep": "to",
+    "meaning": "gây tử vong cho",
+    "type": "prep"
+  },
+  {
+    "id": "170",
+    "word": "favorable...",
+    "prep": "to",
+    "meaning": "thuận lợi cho",
+    "type": "prep"
+  },
+  {
+    "id": "171",
+    "word": "fear...",
+    "prep": "of",
+    "meaning": "nỗi sợ về",
+    "type": "prep"
+  },
+  {
+    "id": "172",
+    "word": "fed up...",
+    "prep": "with",
+    "meaning": "chán ngấy với",
+    "type": "prep"
+  },
+  {
+    "id": "173",
+    "word": "feel...",
+    "prep": "like",
+    "meaning": "cảm thấy muốn",
+    "type": "prep"
+  },
+  {
+    "id": "174",
+    "word": "fight...",
+    "prep": "with",
+    "meaning": "chiến đấu với",
+    "type": "prep"
+  },
+  {
+    "id": "175",
+    "word": "fill sth...",
+    "prep": "with",
+    "meaning": "đổ đầy bằng",
+    "type": "prep"
+  },
+  {
+    "id": "176",
+    "word": "fond...",
+    "prep": "of",
+    "meaning": "thích",
+    "type": "prep"
+  },
+  {
+    "id": "177",
+    "word": "forget...",
+    "prep": "about",
+    "meaning": "quên về",
+    "type": "prep"
+  },
+  {
+    "id": "178",
+    "word": "forgive sb...",
+    "prep": "for",
+    "meaning": "tha thứ cho ai vì",
+    "type": "prep"
+  },
+  {
+    "id": "179",
+    "word": "fortunate...",
+    "prep": "in",
+    "meaning": "may mắn trong",
+    "type": "prep"
+  },
+  {
+    "id": "180",
+    "word": "free...",
+    "prep": "from",
+    "meaning": "tự do khỏi",
+    "type": "prep"
+  },
+  {
+    "id": "181",
+    "word": "friendly...",
+    "prep": "with",
+    "meaning": "thân thiện với",
+    "type": "prep"
+  },
+  {
+    "id": "182",
+    "word": "frightened...",
+    "prep": "of",
+    "meaning": "hoảng sợ về",
+    "type": "prep"
+  },
+  {
+    "id": "183",
+    "word": "full...",
+    "prep": "of",
+    "meaning": "đầy cái gì",
+    "type": "prep"
+  },
+  {
+    "id": "184",
+    "word": "furious...",
+    "prep": "with",
+    "meaning": "điên tiết với ai",
+    "type": "prep"
+  },
+  {
+    "id": "185",
+    "word": "generosity...",
+    "prep": "to",
+    "meaning": "sự hào phóng với",
+    "type": "prep"
+  },
+  {
+    "id": "186",
+    "word": "genius...",
+    "prep": "at",
+    "meaning": "thiên tài về",
+    "type": "prep"
+  },
+  {
+    "id": "187",
+    "word": "glance...",
+    "prep": "at",
+    "meaning": "liếc nhìn",
+    "type": "prep"
+  },
+  {
+    "id": "188",
+    "word": "good...",
+    "prep": "at",
+    "meaning": "giỏi về",
+    "type": "prep"
+  },
+  {
+    "id": "189",
+    "word": "grateful...",
+    "prep": "to",
+    "meaning": "biết ơn ai",
+    "type": "prep"
+  },
+  {
+    "id": "190",
+    "word": "guilty...",
+    "prep": "of",
+    "meaning": "có tội về",
+    "type": "prep"
+  },
+  {
+    "id": "191",
+    "word": "happen...",
+    "prep": "to",
+    "meaning": "xảy ra với",
+    "type": "prep"
+  },
+  {
+    "id": "192",
+    "word": "happy...",
+    "prep": "about",
+    "meaning": "hạnh phúc về",
+    "type": "prep"
+  },
+  {
+    "id": "193",
+    "word": "harmful...",
+    "prep": "to",
+    "meaning": "có hại cho",
+    "type": "prep"
+  },
+  {
+    "id": "194",
+    "word": "hear...",
+    "prep": "from",
+    "meaning": "nghe tin từ",
+    "type": "prep"
+  },
+  {
+    "id": "195",
+    "word": "hear...",
+    "prep": "of",
+    "meaning": "nghe nói về",
+    "type": "prep"
+  },
+  {
+    "id": "196",
+    "word": "hesitate...",
+    "prep": "about",
+    "meaning": "do dự về",
+    "type": "prep"
+  },
+  {
+    "id": "197",
+    "word": "hope...",
+    "prep": "for",
+    "meaning": "hy vọng cho",
+    "type": "prep"
+  },
+  {
+    "id": "198",
+    "word": "hopeless...",
+    "prep": "at",
+    "meaning": "vô vọng trong việc",
+    "type": "prep"
+  },
+  {
+    "id": "199",
+    "word": "identical...",
+    "prep": "to",
+    "meaning": "giống hệt với",
+    "type": "prep"
+  },
+  {
+    "id": "200",
+    "word": "ignorant...",
+    "prep": "of",
+    "meaning": "ngu dốt/không biết",
+    "type": "prep"
+  },
+  {
+    "id": "201",
+    "word": "ill...",
+    "prep": "with",
+    "meaning": "bị bệnh",
+    "type": "prep"
+  },
+  {
+    "id": "202",
+    "word": "impact...",
+    "prep": "on",
+    "meaning": "tác động lên",
+    "type": "prep"
+  },
+  {
+    "id": "203",
+    "word": "impressed...",
+    "prep": "by",
+    "meaning": "bị ấn tượng bởi",
+    "type": "prep"
+  },
+  {
+    "id": "204",
+    "word": "improvement...",
+    "prep": "in",
+    "meaning": "sự cải thiện trong",
+    "type": "prep"
+  },
+  {
+    "id": "205",
+    "word": "incapable...",
+    "prep": "of",
+    "meaning": "không có khả năng",
+    "type": "prep"
+  },
+  {
+    "id": "206",
+    "word": "increase...",
+    "prep": "in",
+    "meaning": "sự tăng trưởng về",
+    "type": "prep"
+  },
+  {
+    "id": "207",
+    "word": "independent...",
+    "prep": "of",
+    "meaning": "độc lập khỏi",
+    "type": "prep"
+  },
+  {
+    "id": "208",
+    "word": "indifferent...",
+    "prep": "to",
+    "meaning": "thờ ơ với",
+    "type": "prep"
+  },
+  {
+    "id": "209",
+    "word": "inferior...",
+    "prep": "to",
+    "meaning": "thua kém so với",
+    "type": "prep"
+  },
+  {
+    "id": "210",
+    "word": "influence...",
+    "prep": "on",
+    "meaning": "ảnh hưởng lên",
+    "type": "prep"
+  },
+  {
+    "id": "211",
+    "word": "inform sb...",
+    "prep": "of",
+    "meaning": "thông báo ai về",
+    "type": "prep"
+  },
+  {
+    "id": "212",
+    "word": "inject...",
+    "prep": "into",
+    "meaning": "tiêm vào",
+    "type": "prep"
+  },
+  {
+    "id": "213",
+    "word": "innocent...",
+    "prep": "of",
+    "meaning": "vô tội",
+    "type": "prep"
+  },
+  {
+    "id": "214",
+    "word": "insist...",
+    "prep": "on",
+    "meaning": "khăng khăng",
+    "type": "prep"
+  },
+  {
+    "id": "215",
+    "word": "intent...",
+    "prep": "on",
+    "meaning": "dự định làm gì",
+    "type": "prep"
+  },
+  {
+    "id": "216",
+    "word": "interest...",
+    "prep": "in",
+    "meaning": "sự quan tâm vào",
+    "type": "prep"
+  },
+  {
+    "id": "217",
+    "word": "interfere...",
+    "prep": "with",
+    "meaning": "can thiệp vào",
+    "type": "prep"
+  },
+  {
+    "id": "218",
+    "word": "introduce...",
+    "prep": "to",
+    "meaning": "giới thiệu với",
+    "type": "prep"
+  },
+  {
+    "id": "219",
+    "word": "invest...",
+    "prep": "in",
+    "meaning": "đầu tư vào",
+    "type": "prep"
+  },
+  {
+    "id": "220",
+    "word": "invitation...",
+    "prep": "to",
+    "meaning": "lời mời tới",
+    "type": "prep"
+  },
+  {
+    "id": "221",
+    "word": "involve...",
+    "prep": "in",
+    "meaning": "liên quan tới",
+    "type": "prep"
+  },
+  {
+    "id": "222",
+    "word": "jealous...",
+    "prep": "of",
+    "meaning": "ghen tị với",
+    "type": "prep"
+  },
+  {
+    "id": "223",
+    "word": "join...",
+    "prep": "in",
+    "meaning": "tham gia vào",
+    "type": "prep"
+  },
+  {
+    "id": "224",
+    "word": "joke...",
+    "prep": "about",
+    "meaning": "đùa về",
+    "type": "prep"
+  },
+  {
+    "id": "225",
+    "word": "keen...",
+    "prep": "on",
+    "meaning": "say mê",
+    "type": "prep"
+  },
+  {
+    "id": "226",
+    "word": "keep...",
+    "prep": "from",
+    "meaning": "giữ khỏi",
+    "type": "prep"
+  },
+  {
+    "id": "227",
+    "word": "kind...",
+    "prep": "to",
+    "meaning": "tử tế với",
+    "type": "prep"
+  },
+  {
+    "id": "228",
+    "word": "knock...",
+    "prep": "at",
+    "meaning": "gõ (cửa)",
+    "type": "prep"
+  },
+  {
+    "id": "229",
+    "word": "know...",
+    "prep": "about",
+    "meaning": "biết về",
+    "type": "prep"
+  },
+  {
+    "id": "230",
+    "word": "lack...",
+    "prep": "of",
+    "meaning": "sự thiếu hụt",
+    "type": "prep"
+  },
+  {
+    "id": "231",
+    "word": "laugh...",
+    "prep": "at",
+    "meaning": "cười nhạo",
+    "type": "prep"
+  },
+  {
+    "id": "232",
+    "word": "lead...",
+    "prep": "to",
+    "meaning": "dẫn tới",
+    "type": "prep"
+  },
+  {
+    "id": "233",
+    "word": "lean...",
+    "prep": "against",
+    "meaning": "tựa vào",
+    "type": "prep"
+  },
+  {
+    "id": "234",
+    "word": "learn...",
+    "prep": "about",
+    "meaning": "học về",
+    "type": "prep"
+  },
+  {
+    "id": "235",
+    "word": "leave...",
+    "prep": "for",
+    "meaning": "rời đi để đến",
+    "type": "prep"
+  },
+  {
+    "id": "236",
+    "word": "lend sth...",
+    "prep": "to",
+    "meaning": "cho mượn cái gì",
+    "type": "prep"
+  },
+  {
+    "id": "237",
+    "word": "listen...",
+    "prep": "to",
+    "meaning": "lắng nghe",
+    "type": "prep"
+  },
+  {
+    "id": "238",
+    "word": "live...",
+    "prep": "on",
+    "meaning": "sống bằng",
+    "type": "prep"
+  },
+  {
+    "id": "239",
+    "word": "long...",
+    "prep": "for",
+    "meaning": "khao khát",
+    "type": "prep"
+  },
+  {
+    "id": "240",
+    "word": "look...",
+    "prep": "at",
+    "meaning": "nhìn vào",
+    "type": "prep"
+  },
+  {
+    "id": "241",
+    "word": "look...",
+    "prep": "for",
+    "meaning": "tìm kiếm",
+    "type": "prep"
+  },
+  {
+    "id": "242",
+    "word": "loyal...",
+    "prep": "to",
+    "meaning": "trung thành với",
+    "type": "prep"
+  },
+  {
+    "id": "243",
+    "word": "mad...",
+    "prep": "about",
+    "meaning": "điên cuồng về",
+    "type": "prep"
+  },
+  {
+    "id": "244",
+    "word": "made...",
+    "prep": "of",
+    "meaning": "làm bằng (giữ chất liệu)",
+    "type": "prep"
+  },
+  {
+    "id": "245",
+    "word": "made...",
+    "prep": "from",
+    "meaning": "làm từ (đổi chất liệu)",
+    "type": "prep"
+  },
+  {
+    "id": "246",
+    "word": "married...",
+    "prep": "to",
+    "meaning": "kết hôn với",
+    "type": "prep"
+  },
+  {
+    "id": "247",
+    "word": "marvel...",
+    "prep": "at",
+    "meaning": "kinh ngạc về",
+    "type": "prep"
+  },
+  {
+    "id": "248",
+    "word": "mean...",
+    "prep": "to",
+    "meaning": "có ý nghĩa với",
+    "type": "prep"
+  },
+  {
+    "id": "249",
+    "word": "mention...",
+    "prep": "to",
+    "meaning": "đề cập với",
+    "type": "prep"
+  },
+  {
+    "id": "250",
+    "word": "mistaken...",
+    "prep": "about",
+    "meaning": "sai lầm về",
+    "type": "prep"
+  },
+  {
+    "id": "251",
+    "word": "mix...",
+    "prep": "with",
+    "meaning": "trộn với",
+    "type": "prep"
+  },
+  {
+    "id": "252",
+    "word": "name sth...",
+    "prep": "after",
+    "meaning": "đặt tên theo",
+    "type": "prep"
+  },
+  {
+    "id": "253",
+    "word": "necessary...",
+    "prep": "for",
+    "meaning": "cần thiết cho",
+    "type": "prep"
+  },
+  {
+    "id": "254",
+    "word": "need...",
+    "prep": "for",
+    "meaning": "nhu cầu cho",
+    "type": "prep"
+  },
+  {
+    "id": "255",
+    "word": "nervous...",
+    "prep": "about",
+    "meaning": "lo lắng về",
+    "type": "prep"
+  },
+  {
+    "id": "256",
+    "word": "new...",
+    "prep": "to",
+    "meaning": "mới mẻ đối với",
+    "type": "prep"
+  },
+  {
+    "id": "257",
+    "word": "nice...",
+    "prep": "to",
+    "meaning": "tử tế với",
+    "type": "prep"
+  },
+  {
+    "id": "258",
+    "word": "nod...",
+    "prep": "at",
+    "meaning": "gật đầu với",
+    "type": "prep"
+  },
+  {
+    "id": "259",
+    "word": "notorious...",
+    "prep": "for",
+    "meaning": "tai tiếng về",
+    "type": "prep"
+  },
+  {
+    "id": "260",
+    "word": "object...",
+    "prep": "to",
+    "meaning": "phản đối",
+    "type": "prep"
+  },
+  {
+    "id": "261",
+    "word": "obliged...",
+    "prep": "to",
+    "meaning": "biết ơn/bắt buộc",
+    "type": "prep"
+  },
+  {
+    "id": "262",
+    "word": "obsessed...",
+    "prep": "with",
+    "meaning": "ám ảnh bởi",
+    "type": "prep"
+  },
+  {
+    "id": "263",
+    "word": "obvious...",
+    "prep": "to",
+    "meaning": "hiển nhiên đối với",
+    "type": "prep"
+  },
+  {
+    "id": "264",
+    "word": "occur...",
+    "prep": "to",
+    "meaning": "nảy ra đối với",
+    "type": "prep"
+  },
+  {
+    "id": "265",
+    "word": "offense...",
+    "prep": "against",
+    "meaning": "sự xúc phạm đối với",
+    "type": "prep"
+  },
+  {
+    "id": "266",
+    "word": "operate...",
+    "prep": "on",
+    "meaning": "phẫu thuật cho",
+    "type": "prep"
+  },
+  {
+    "id": "267",
+    "word": "opinion...",
+    "prep": "on",
+    "meaning": "ý kiến về",
+    "type": "prep"
+  },
+  {
+    "id": "268",
+    "word": "opposed...",
+    "prep": "to",
+    "meaning": "phản đối",
+    "type": "prep"
+  },
+  {
+    "id": "269",
+    "word": "optimistic...",
+    "prep": "about",
+    "meaning": "lạc quan về",
+    "type": "prep"
+  },
+  {
+    "id": "270",
+    "word": "participate...",
+    "prep": "in",
+    "meaning": "tham gia vào",
+    "type": "prep"
+  },
+  {
+    "id": "271",
+    "word": "patient...",
+    "prep": "with",
+    "meaning": "kiên nhẫn với",
+    "type": "prep"
+  },
+  {
+    "id": "272",
+    "word": "pay...",
+    "prep": "for",
+    "meaning": "trả tiền cho",
+    "type": "prep"
+  },
+  {
+    "id": "273",
+    "word": "perfect...",
+    "prep": "for",
+    "meaning": "hoàn hảo cho",
+    "type": "prep"
+  },
+  {
+    "id": "274",
+    "word": "persist...",
+    "prep": "in",
+    "meaning": "kiên trì trong",
+    "type": "prep"
+  },
+  {
+    "id": "275",
+    "word": "pessimistic...",
+    "prep": "about",
+    "meaning": "bi quan về",
+    "type": "prep"
+  },
+  {
+    "id": "276",
+    "word": "pleased...",
+    "prep": "with",
+    "meaning": "hài lòng với",
+    "type": "prep"
+  },
+  {
+    "id": "277",
+    "word": "point...",
+    "prep": "at",
+    "meaning": "chỉ vào",
+    "type": "prep"
+  },
+  {
+    "id": "278",
+    "word": "polite...",
+    "prep": "to",
+    "meaning": "lịch sự với",
+    "type": "prep"
+  },
+  {
+    "id": "279",
+    "word": "popular...",
+    "prep": "with",
+    "meaning": "phổ biến với",
+    "type": "prep"
+  },
+  {
+    "id": "280",
+    "word": "positive...",
+    "prep": "about",
+    "meaning": "tích cực về",
+    "type": "prep"
+  },
+  {
+    "id": "281",
+    "word": "prefer...",
+    "prep": "to",
+    "meaning": "thích hơn",
+    "type": "prep"
+  },
+  {
+    "id": "282",
+    "word": "prepare...",
+    "prep": "for",
+    "meaning": "chuẩn bị cho",
+    "type": "prep"
+  },
+  {
+    "id": "283",
+    "word": "present sb...",
+    "prep": "with",
+    "meaning": "trao tặng ai cái gì",
+    "type": "prep"
+  },
+  {
+    "id": "284",
+    "word": "prevent...",
+    "prep": "from",
+    "meaning": "ngăn chặn khỏi",
+    "type": "prep"
+  },
+  {
+    "id": "285",
+    "word": "proud...",
+    "prep": "of",
+    "meaning": "tự hào về",
+    "type": "prep"
+  },
+  {
+    "id": "286",
+    "word": "provide...",
+    "prep": "with",
+    "meaning": "cung cấp bằng",
+    "type": "prep"
+  },
+  {
+    "id": "287",
+    "word": "punish sb...",
+    "prep": "for",
+    "meaning": "phạt ai vì",
+    "type": "prep"
+  },
+  {
+    "id": "288",
+    "word": "qualified...",
+    "prep": "for",
+    "meaning": "đủ điều kiện cho",
+    "type": "prep"
+  },
+  {
+    "id": "289",
+    "word": "quarrel...",
+    "prep": "with",
+    "meaning": "cãi nhau với",
+    "type": "prep"
+  },
+  {
+    "id": "290",
+    "word": "reaction...",
+    "prep": "to",
+    "meaning": "phản ứng đối với",
+    "type": "prep"
+  },
+  {
+    "id": "291",
+    "word": "ready...",
+    "prep": "for",
+    "meaning": "sẵn sàng cho",
+    "type": "prep"
+  },
+  {
+    "id": "292",
+    "word": "reason...",
+    "prep": "for",
+    "meaning": "lý do cho",
+    "type": "prep"
+  },
+  {
+    "id": "293",
+    "word": "recover...",
+    "prep": "from",
+    "meaning": "hồi phục từ",
+    "type": "prep"
+  },
+  {
+    "id": "294",
+    "word": "refer...",
+    "prep": "to",
+    "meaning": "ám chỉ/tham khảo",
+    "type": "prep"
+  },
+  {
+    "id": "295",
+    "word": "relationship...",
+    "prep": "with",
+    "meaning": "mối quan hệ với",
+    "type": "prep"
+  },
+  {
+    "id": "296",
+    "word": "rely...",
+    "prep": "on",
+    "meaning": "dựa dẫm vào",
+    "type": "prep"
+  },
+  {
+    "id": "297",
+    "word": "remind...",
+    "prep": "of",
+    "meaning": "nhắc nhớ về",
+    "type": "prep"
+  },
+  {
+    "id": "298",
+    "word": "reply...",
+    "prep": "to",
+    "meaning": "hồi đáp cho",
+    "type": "prep"
+  },
+  {
+    "id": "299",
+    "word": "responsible...",
+    "prep": "for",
+    "meaning": "chịu trách nhiệm cho",
+    "type": "prep"
+  },
+  {
+    "id": "300",
+    "word": "result...",
+    "prep": "in",
+    "meaning": "dẫn đến",
+    "type": "prep"
+  },
+  {
+    "id": "301",
+    "word": "rich...",
+    "prep": "in",
+    "meaning": "giàu (tài nguyên)",
+    "type": "prep"
+  },
+  {
+    "id": "302",
+    "word": "safe...",
+    "prep": "from",
+    "meaning": "an toàn khỏi",
+    "type": "prep"
+  },
+  {
+    "id": "303",
+    "word": "satisfied...",
+    "prep": "with",
+    "meaning": "hài lòng với",
+    "type": "prep"
+  },
+  {
+    "id": "304",
+    "word": "save sb...",
+    "prep": "from",
+    "meaning": "cứu ai khỏi",
+    "type": "prep"
+  },
+  {
+    "id": "305",
+    "word": "scared...",
+    "prep": "of",
+    "meaning": "sợ hãi về",
+    "type": "prep"
+  },
+  {
+    "id": "306",
+    "word": "search...",
+    "prep": "for",
+    "meaning": "tìm kiếm",
+    "type": "prep"
+  },
+  {
+    "id": "307",
+    "word": "sensible...",
+    "prep": "of",
+    "meaning": "nhận thức được",
+    "type": "prep"
+  },
+  {
+    "id": "308",
+    "word": "sentence sb...",
+    "prep": "to",
+    "meaning": "kết án ai",
+    "type": "prep"
+  },
+  {
+    "id": "309",
+    "word": "separate...",
+    "prep": "from",
+    "meaning": "tách biệt khỏi",
+    "type": "prep"
+  },
+  {
+    "id": "310",
+    "word": "serious...",
+    "prep": "about",
+    "meaning": "nghiêm túc về",
+    "type": "prep"
+  },
+  {
+    "id": "311",
+    "word": "shock...",
+    "prep": "at",
+    "meaning": "cú sốc về",
+    "type": "prep"
+  },
+  {
+    "id": "312",
+    "word": "short...",
+    "prep": "of",
+    "meaning": "thiếu hụt",
+    "type": "prep"
+  },
+  {
+    "id": "313",
+    "word": "shout...",
+    "prep": "at",
+    "meaning": "hét vào mặt",
+    "type": "prep"
+  },
+  {
+    "id": "314",
+    "word": "shy...",
+    "prep": "of",
+    "meaning": "ngại ngùng về",
+    "type": "prep"
+  },
+  {
+    "id": "315",
+    "word": "sick...",
+    "prep": "of",
+    "meaning": "chán ngấy",
+    "type": "prep"
+  },
+  {
+    "id": "316",
+    "word": "similar...",
+    "prep": "to",
+    "meaning": "tương tự với",
+    "type": "prep"
+  },
+  {
+    "id": "317",
+    "word": "smile...",
+    "prep": "at",
+    "meaning": "mỉm cười với",
+    "type": "prep"
+  },
+  {
+    "id": "318",
+    "word": "sorry...",
+    "prep": "for",
+    "meaning": "xin lỗi về",
+    "type": "prep"
+  },
+  {
+    "id": "319",
+    "word": "specialize...",
+    "prep": "in",
+    "meaning": "chuyên môn về",
+    "type": "prep"
+  },
+  {
+    "id": "320",
+    "word": "graduate...",
+    "prep": "from",
+    "meaning": "tốt nghiệp từ",
+    "type": "prep"
+  },
+  {
+    "id": "321",
+    "word": "Rural migration",
+    "meaning": "Di cư nông thôn",
+    "type": "vocab"
+  },
+  {
+    "id": "322",
+    "word": "Overpopulation",
+    "meaning": "Quá tải dân số",
+    "type": "vocab"
+  },
+  {
+    "id": "323",
+    "word": "Populous",
+    "meaning": "Đông dân",
+    "type": "vocab"
+  },
+  {
+    "id": "324",
+    "word": "Slum",
+    "meaning": "Khu ổ chuột",
+    "type": "vocab"
+  },
+  {
+    "id": "325",
+    "word": "Industrial area",
+    "meaning": "Khu công nghiệp",
+    "type": "vocab"
+  },
+  {
+    "id": "326",
+    "word": "Industry",
+    "meaning": "Ngành công nghiệp",
+    "type": "vocab"
+  },
+  {
+    "id": "327",
+    "word": "High-rise building",
+    "meaning": "Tòa nhà cao tầng",
+    "type": "vocab"
+  },
+  {
+    "id": "328",
+    "word": "Megacity",
+    "meaning": "Siêu đô thị",
+    "type": "vocab"
+  },
+  {
+    "id": "329",
+    "word": "Urbanisation",
+    "meaning": "Đô thị hóa",
+    "type": "vocab"
+  },
+  {
+    "id": "330",
+    "word": "Urban",
+    "meaning": "Thuộc về đô thị",
+    "type": "vocab"
+  },
+  {
+    "id": "331",
+    "word": "Urbanise",
+    "meaning": "Đô thị hóa (hành động)",
+    "type": "vocab"
+  },
+  {
+    "id": "332",
+    "word": "Contribute",
+    "meaning": "Đóng góp",
+    "type": "vocab"
+  },
+  {
+    "id": "333",
+    "word": "Contribution",
+    "meaning": "Sự đóng góp",
+    "type": "vocab"
+  },
+  {
+    "id": "334",
+    "word": "Agriculture",
+    "meaning": "Nông nghiệp",
+    "type": "vocab"
+  },
+  {
+    "id": "335",
+    "word": "Agricultural",
+    "meaning": "Thuộc về nông nghiệp",
+    "type": "vocab"
+  },
+  {
+    "id": "336",
+    "word": "Deforestation",
+    "meaning": "Sự phá rừng",
+    "type": "vocab"
+  },
+  {
+    "id": "337",
+    "word": "Deforest",
+    "meaning": "Phá rừng (hành động)",
+    "type": "vocab"
+  },
+  {
+    "id": "338",
+    "word": "Adequate",
+    "meaning": "Đầy đủ, thỏa đáng",
+    "type": "vocab"
+  },
+  {
+    "id": "339",
+    "word": "Adequacy",
+    "meaning": "Sự đầy đủ, sự thỏa đáng",
+    "type": "vocab"
+  },
+  {
+    "id": "340",
+    "word": "Affordable",
+    "meaning": "Giá cả phải chăng",
+    "type": "vocab"
+  },
+  {
+    "id": "341",
+    "word": "Afford",
+    "meaning": "Có đủ khả năng chi trả",
+    "type": "vocab"
+  },
+  {
+    "id": "342",
+    "word": "Affordability",
+    "meaning": "Khả năng chi trả",
+    "type": "vocab"
+  },
+  {
+    "id": "343",
+    "word": "Opportunity",
+    "meaning": "Cơ hội",
+    "type": "vocab"
+  },
+  {
+    "id": "344",
+    "word": "Policy",
+    "meaning": "Chính sách",
+    "type": "vocab"
+  },
+  {
+    "id": "345",
+    "word": "Failure",
+    "meaning": "Sự thất bại",
+    "type": "vocab"
+  },
+  {
+    "id": "346",
+    "word": "Goods",
+    "meaning": "Hàng hóa",
+    "type": "vocab"
+  },
+  {
+    "id": "347",
+    "word": "Recreational",
+    "meaning": "Thuộc về giải trí",
+    "type": "vocab"
+  },
+  {
+    "id": "348",
+    "word": "Infrastructure",
+    "meaning": "Cơ sở hạ tầng",
+    "type": "vocab"
+  },
+  {
+    "id": "349",
+    "word": "Wage",
+    "meaning": "Tiền lương",
+    "type": "vocab"
+  },
+  {
+    "id": "350",
+    "word": "Come up with",
+    "meaning": "Nảy ra (ý tưởng, kế hoạch)",
+    "type": "vocab"
+  },
+  {
+    "id": "351",
+    "word": "Come down with",
+    "meaning": "Bị bệnh (thường là bệnh nhẹ)",
+    "type": "vocab"
+  }
+]
