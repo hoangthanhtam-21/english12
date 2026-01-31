@@ -78,7 +78,7 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            z-index: 50;
+            z-index: 100;
             pointer-events: none;
             text-align: center;
             width: 100%;
@@ -87,10 +87,12 @@
 </head>
 <body>
     <div id="app" class="p-6 relative">
+        <!-- Thông báo Cảnh báo/Chúc mừng -->
         <div id="status-overlay" class="status-overlay hidden">
             <h2 id="status-text" class="text-5xl font-black italic uppercase tracking-tighter drop-shadow-2xl">MESSAGE</h2>
         </div>
 
+        <!-- MÀN HÌNH CHÀO -->
         <div id="view-landing" class="relative z-10 text-center w-full max-w-md animate-pop">
             <div class="w-20 h-20 bg-indigo-600 rounded-[2rem] flex items-center justify-center mx-auto mb-8 glow">
                 <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m16 6 4 14H4L8 6Z"/><path d="M12 2v4"/><path d="m8 2 1 1"/><path d="m16 2-1 1"/></svg>
@@ -103,61 +105,29 @@
                 <p id="best-score-display" class="text-2xl font-black text-yellow-400">0</p>
             </div>
 
-            <button onclick="showUnitSelection()" class="w-full bg-white text-indigo-700 py-5 rounded-2xl font-black text-lg hover:bg-indigo-600 hover:text-white transition-all shadow-2xl">BẮT ĐẦU</button>
+            <button onclick="showUnitSelection()" class="w-full bg-white text-indigo-700 py-5 rounded-2xl font-black text-lg hover:bg-indigo-600 hover:text-white transition-all shadow-2xl uppercase">Bắt đầu</button>
         </div>
 
-        <div id="view-selection" class="relative z-10 w-full max-w-2xl hidden animate-pop">
-            <div class="text-center mb-10">
-                <h2 class="text-3xl font-black uppercase tracking-tighter">Chọn bài học</h2>
-                <p class="text-indigo-300 text-sm font-bold uppercase tracking-widest mt-2">English 12 - Global Success</p>
+        <!-- MÀN HÌNH CHỌN UNIT -->
+        <div id="view-selection" class="relative z-10 w-full max-w-2xl hidden animate-pop text-center">
+            <h2 class="text-3xl font-black uppercase tracking-tighter text-white mb-10">Chọn bài học</h2>
+            <div id="unit-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Rendered by JS -->
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div onclick="selectUnit(5)" class="unit-card p-8 rounded-[2rem] cursor-pointer flex flex-col justify-between h-full">
-                    <div>
-                        <span class="bg-green-500/20 text-green-400 text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-widest">Sẵn sàng</span>
-                        <h3 class="text-2xl font-black mt-4 uppercase tracking-tighter text-white">Unit 5</h3>
-                        <p class="text-slate-400 text-sm mt-1">Urbanization</p>
-                    </div>
-                    <div class="mt-10 flex items-center justify-between">
-                        <span class="text-xs font-bold text-indigo-400 uppercase tracking-widest">130+ Từ vựng</span>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="text-indigo-400"><path d="m9 18 6-6-6-6"/></svg>
-                    </div>
-                </div>
-                <div class="unit-card locked p-8 rounded-[2rem] relative overflow-hidden">
-                    <div class="absolute inset-0 bg-slate-950/40 flex items-center justify-center backdrop-blur-[1px]">
-                        <span class="bg-slate-800 text-slate-400 text-[10px] font-black px-4 py-2 rounded-full uppercase tracking-widest border border-white/5">Coming soon</span>
-                    </div>
-                    <h3 class="text-2xl font-black mt-4 uppercase tracking-tighter">Unit 6</h3>
-                    <p class="text-slate-400 text-sm mt-1">Endangered Species</p>
-                </div>
-                <div class="unit-card locked p-8 rounded-[2rem] relative overflow-hidden">
-                    <div class="absolute inset-0 bg-slate-950/40 flex items-center justify-center backdrop-blur-[1px]">
-                        <span class="bg-slate-800 text-slate-400 text-[10px] font-black px-4 py-2 rounded-full uppercase tracking-widest border border-white/5">Coming soon</span>
-                    </div>
-                    <h3 class="text-2xl font-black mt-4 uppercase tracking-tighter">Unit 7</h3>
-                    <p class="text-slate-400 text-sm mt-1">Artificial Intelligence</p>
-                </div>
-                <div class="unit-card locked p-8 rounded-[2rem] relative overflow-hidden">
-                    <div class="absolute inset-0 bg-slate-950/40 flex items-center justify-center backdrop-blur-[1px]">
-                        <span class="bg-slate-800 text-slate-400 text-[10px] font-black px-4 py-2 rounded-full uppercase tracking-widest border border-white/5">Coming soon</span>
-                    </div>
-                    <h3 class="text-2xl font-black mt-4 uppercase tracking-tighter">Unit 8</h3>
-                    <p class="text-slate-400 text-sm mt-1">The World of Work</p>
-                </div>
-            </div>
-            <button onclick="location.reload()" class="mt-12 text-slate-400 text-xs font-black uppercase tracking-[0.2em] hover:text-white transition-colors block mx-auto underline">Quay lại trang chủ</button>
+            <button onclick="location.reload()" class="mt-12 text-slate-400 text-xs font-black uppercase tracking-[0.2em] hover:text-white transition-colors underline">Quay lại trang chủ</button>
         </div>
 
+        <!-- MÀN HÌNH CHƠI GAME -->
         <div id="view-game" class="relative z-10 w-full max-w-md hidden">
             <div class="grid grid-cols-2 gap-3 mb-6">
-                <div class="bg-slate-900/90 p-4 rounded-2xl border border-white/10 shadow-xl flex items-center justify-between">
+                <div class="bg-slate-900/90 p-4 rounded-2xl border border-white/10 shadow-xl flex items-center justify-between text-white">
                     <div>
                         <p class="text-[8px] font-black text-indigo-400 uppercase tracking-widest">Thời gian</p>
                         <p id="timer" class="text-lg font-black font-mono">05:00</p>
                     </div>
                     <div id="lives-container" class="flex gap-1"></div>
                 </div>
-                <div class="bg-slate-900/90 p-4 rounded-2xl border border-white/10 shadow-xl text-right">
+                <div class="bg-slate-900/90 p-4 rounded-2xl border border-white/10 shadow-xl text-right text-white">
                     <p class="text-[8px] font-black text-indigo-400 uppercase tracking-widest">Điểm số</p>
                     <div class="flex items-center justify-end gap-2">
                         <span id="fever-badge" class="hidden bg-orange-500 text-[8px] px-2 py-0.5 rounded font-black animate-pulse uppercase">x2 Fever</span>
@@ -167,17 +137,19 @@
             </div>
 
             <div class="card min-h-[440px] flex flex-col items-center justify-center text-center p-8 relative overflow-hidden shadow-2xl">
+                <div id="loading-msg" class="hidden text-indigo-400 font-bold animate-pulse uppercase tracking-widest text-sm">Đang tải dữ liệu...</div>
+                
                 <div id="question-area" class="w-full animate-pop">
                     <div class="flex justify-center gap-1 mb-6" id="streak-dots">
-                        <div class="h-1.5 w-8 rounded-full bg-white/10"></div>
-                        <div class="h-1.5 w-8 rounded-full bg-white/10"></div>
-                        <div class="h-1.5 w-8 rounded-full bg-white/10"></div>
-                        <div class="h-1.5 w-8 rounded-full bg-white/10"></div>
-                        <div class="h-1.5 w-8 rounded-full bg-white/10"></div>
+                        <div class="h-1.5 w-6 rounded-full bg-white/10"></div>
+                        <div class="h-1.5 w-6 rounded-full bg-white/10"></div>
+                        <div class="h-1.5 w-6 rounded-full bg-white/10"></div>
+                        <div class="h-1.5 w-6 rounded-full bg-white/10"></div>
+                        <div class="h-1.5 w-6 rounded-full bg-white/10"></div>
                     </div>
-                    <p id="unit-tag" class="text-indigo-400 text-[10px] font-black uppercase tracking-[0.2em] mb-4">Unit 5: Urbanization</p>
-                    <h2 id="word-display" class="text-4xl font-black mb-3 tracking-tight">word...</h2>
-                    <p id="meaning-display" class="text-slate-300 italic text-sm mb-12 font-medium"> (nghĩa) </p>
+                    <p id="unit-tag" class="text-indigo-400 text-[10px] font-black uppercase tracking-[0.2em] mb-4"></p>
+                    <h2 id="word-display" class="text-4xl font-black mb-3 tracking-tight text-white"></h2>
+                    <p id="meaning-display" class="text-slate-300 italic text-sm mb-12 font-medium"></p>
                     <div id="options-grid" class="grid grid-cols-1 gap-3 w-full"></div>
                 </div>
 
@@ -195,165 +167,34 @@
             </div>
         </div>
 
+        <!-- MÀN HÌNH KẾT QUẢ -->
         <div id="view-result" class="relative z-10 w-full max-w-md hidden animate-pop">
             <div class="text-center bg-slate-900/95 backdrop-blur-xl border border-white/10 p-12 rounded-[3rem] shadow-2xl">
                 <div class="w-20 h-20 bg-yellow-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-yellow-500/30 shadow-2xl">
-                    <svg id="trophy-icon" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                 </div>
                 <h2 id="result-status" class="text-2xl font-black mb-1 uppercase italic tracking-tighter text-white">XONG TRẬN!</h2>
-                <p id="rank-display" class="text-indigo-400 font-black uppercase text-xs tracking-[0.2em] mb-8">Danh hiệu: Tân binh</p>
+                <p id="rank-display" class="text-indigo-400 font-black uppercase text-xs tracking-[0.2em] mb-8"></p>
                 <div class="my-8">
                     <p class="text-indigo-400 text-[10px] font-black uppercase tracking-widest mb-1">Điểm đạt được</p>
                     <p id="final-score" class="text-7xl font-black text-white tracking-tighter drop-shadow-lg">0</p>
                 </div>
                 <div id="new-record-tag" class="hidden mb-6 bg-red-600/20 text-red-400 py-2 rounded-xl border border-red-500/30 font-black text-xs uppercase tracking-widest">Kỷ lục mới!</div>
-                <button onclick="location.reload()" class="w-full bg-white text-indigo-700 py-5 rounded-2xl font-black text-lg hover:bg-indigo-600 hover:text-white transition-all shadow-lg">THỬ LẠI</button>
+                <button onclick="location.reload()" class="w-full bg-white text-indigo-700 py-5 rounded-2xl font-black text-lg hover:bg-indigo-600 hover:text-white transition-all shadow-lg uppercase">Chơi tiếp</button>
             </div>
         </div>
     </div>
 
     <script>
-        // --- Ngân hàng từ vựng bổ sung ---
-        const PREP_WORDS = [
-            { id: 1, word: "ban... ", prep: "from", meaning: "cấm làm điều gì đó", type: "prep" },
-            { id: 2, word: "benefit ", prep: "from", meaning: "có lợi từ thứ gì đó", type: "prep" },
-            { id: 3, word: "believe ", prep: "in", meaning: "tin vào", type: "prep" },
-            { id: 4, word: "specialize ", prep: "in", meaning: "chuyên về", type: "prep" },
-            { id: 5, word: "accuse sb... ", prep: "of", meaning: "buộc tội vì điều gì", type: "prep" },
-            { id: 6, word: "remind sb... ", prep: "of", meaning: "nhắc nhở về điều gì", type: "prep" },
-            { id: 7, word: "agree ", prep: "on", meaning: "đồng ý về điều gì", type: "prep" },
-            { id: 8, word: "rely ", prep: "on", meaning: "dựa vào", type: "prep" },
-            { id: 9, word: "belong ", prep: "to", meaning: "thuộc về", type: "prep" },
-            { id: 10, word: "object ", prep: "to", meaning: "phản đối", type: "prep" },
-            { id: 11, word: "satisfied ", prep: "with", meaning: "hài lòng với", type: "prep" },
-            { id: 12, word: "famous ", prep: "for", meaning: "nổi tiếng về", type: "prep" },
-            { id: 13, word: "proud ", prep: "of", meaning: "tự hào về", type: "prep" },
-            { id: 14, word: "anxious ", prep: "about", meaning: "lo lắng về", type: "prep" },
-            { id: 15, word: "succeed ", prep: "in", meaning: "thành công về điều gì", type: "prep" },
-            { id: 16, word: "invest ", prep: "in", meaning: "đầu tư vào", type: "prep" },
-            { id: 17, word: "result ", prep: "in", meaning: "dẫn đến kết quả", type: "prep" },
-            { id: 18, word: "result ", prep: "from", meaning: "do bởi (nguyên nhân)", type: "prep" },
-            { id: 19, word: "recover ", prep: "from", meaning: "hồi phục từ", type: "prep" },
-            { id: 20, word: "prepare ", prep: "for", meaning: "chuẩn bị cho", type: "prep" },
-            { id: 21, word: "wait ", prep: "for", meaning: "chờ đợi", type: "prep" },
-            { id: 22, word: "concentrate ", prep: "on", meaning: "tập trung vào", type: "prep" },
-            { id: 23, word: "insist ", prep: "on", meaning: "khăng khăng làm gì", type: "prep" },
-            { id: 24, word: "congratulate sb... ", prep: "on", meaning: "chúc mừng ai vì điều gì", type: "prep" },
-            { id: 25, word: "apologize to sb... ", prep: "for", meaning: "xin lỗi về điều gì", type: "prep" },
-            { id: 26, word: "capable ", prep: "of", meaning: "có khả năng làm gì", type: "prep" },
-            { id: 27, word: "keen ", prep: "on", meaning: "say mê điều gì", type: "prep" },
-            { id: 28, word: "accustomed ", prep: "to", meaning: "quen với", type: "prep" },
-            { id: 29, word: "provide sb... ", prep: "with", meaning: "cung cấp cái gì cho ai", type: "prep" },
-            { id: 30, word: "depend ", prep: "on", meaning: "phụ thuộc vào", type: "prep" },
-            { id: 31, word: "base... ", prep: "on", meaning: "dựa trên", type: "prep" },
-            { id: 32, word: "suffer ", prep: "from", meaning: "chịu đựng (bệnh tật)", type: "prep" },
-            { id: 33, word: "translate... ", prep: "into", meaning: "dịch sang", type: "prep" },
-            { id: 34, word: "divide... ", prep: "into", meaning: "chia thành", type: "prep" },
-            { id: 35, word: "compare... ", prep: "with", meaning: "so sánh với", type: "prep" },
-            { id: 36, word: "afraid ", prep: "of", meaning: "sợ hãi điều gì", type: "prep" },
-            { id: 37, word: "interested ", prep: "in", meaning: "quan tâm đến", type: "prep" },
-            { id: 38, word: "tired ", prep: "of", meaning: "mệt mỏi vì", type: "prep" },
-            { id: 39, word: "worried ", prep: "about", meaning: "lo lắng về", type: "prep" },
-            { id: 40, word: "similar ", prep: "to", meaning: "tương tự với", type: "prep" },
-            { id: 41, word: "absent ", prep: "from", meaning: "vắng mặt khỏi", type: "prep" },
-            { id: 42, word: "addicted ", prep: "to", meaning: "nghiện thứ gì", type: "prep" },
-            { id: 43, word: "crowded ", prep: "with", meaning: "đông đúc với", type: "prep" },
-            { id: 44, word: "engaged ", prep: "in", meaning: "tham gia vào / bận rộn", type: "prep" },
-            { id: 45, word: "opposed ", prep: "to", meaning: "phản đối", type: "prep" },
-            { id: 46, word: "aware ", prep: "of", meaning: "nhận thức về", type: "prep" },
-            { id: 47, word: "full ", prep: "of", meaning: "đầy rẫy", type: "prep" },
-            { id: 48, word: "good ", prep: "at", meaning: "giỏi về", type: "prep" },
-            { id: 49, word: "bad ", prep: "at", meaning: "tệ về", type: "prep" },
-            { id: 50, word: "different ", prep: "from", meaning: "khác biệt với", type: "prep" },
-            { id: 51, word: "abundance ", prep: "of", meaning: "sự phong phú của", type: "prep" },
-            { id: 52, word: "ambition ", prep: "of", meaning: "tham vọng làm gì", type: "prep" },
-            { id: 53, word: "tendency ", prep: "to", meaning: "có xu hướng làm gì", type: "prep" },
-            { id: 54, word: "influence... ", prep: "on", meaning: "ảnh hưởng lên", type: "prep" },
-            { id: 55, word: "impact... ", prep: "on", meaning: "tác động lên", type: "prep" },
-            { id: 56, word: "access... ", prep: "to", meaning: "tiếp cận với", type: "prep" },
-            { id: 57, word: "solution ", prep: "to", meaning: "giải pháp cho", type: "prep" },
-            { id: 58, word: "reason ", prep: "for", meaning: "lý do cho", type: "prep" },
-            { id: 59, word: "demand ", prep: "for", meaning: "nhu cầu về", type: "prep" },
-            { id: 60, word: "shortage ", prep: "of", meaning: "sự thiếu hụt cái gì", type: "prep" },
-            { id: 61, word: "complain... ", prep: "about", meaning: "phàn nàn về", type: "prep" },
-            { id: 62, word: "dream... ", prep: "of/about", meaning: "mơ về", type: "prep" },
-            { id: 63, word: "hear... ", prep: "from", meaning: "nghe tin từ ai", type: "prep" },
-            { id: 64, word: "search... ", prep: "for", meaning: "tìm kiếm", type: "prep" },
-            { id: 65, word: "suffer... ", prep: "from", meaning: "chịu đựng bệnh tật", type: "prep" },
-            { id: 66, word: "think... ", prep: "about", meaning: "nghĩ về", type: "prep" },
-            { id: 67, word: "think... ", prep: "of", meaning: "có ý kiến về", type: "prep" },
-            { id: 68, word: "warn sb... ", prep: "about", meaning: "cảnh báo ai về", type: "prep" },
-            { id: 69, word: "die... ", prep: "of", meaning: "chết vì (bệnh)", type: "prep" },
-            { id: 70, word: "explain sth... ", prep: "to", meaning: "giải thích cho ai", type: "prep" },
-            { id: 71, word: "listen... ", prep: "to", meaning: "lắng nghe", type: "prep" },
-            { id: 72, word: "happen... ", prep: "to", meaning: "xảy ra với", type: "prep" },
-            { id: 73, word: "invite sb... ", prep: "to", meaning: "mời ai tới", type: "prep" },
-            { id: 74, word: "pay... ", prep: "for", meaning: "trả tiền cho", type: "prep" },
-            { id: 75, word: "thank sb... ", prep: "for", meaning: "cảm ơn ai vì", type: "prep" },
-            { id: 76, word: "leave... ", prep: "for", meaning: "rời đi để tới đâu", type: "prep" },
-            { id: 77, word: "ask sb... ", prep: "for", meaning: "hỏi xin ai cái gì", type: "prep" },
-            { id: 78, word: "blame sb... ", prep: "for", meaning: "đổ lỗi cho ai vì", type: "prep" },
-            { id: 79, word: "borrow sth... ", prep: "from", meaning: "mượn cái gì từ", type: "prep" },
-            { id: 80, word: "protect... ", prep: "from", meaning: "bảo vệ khỏi", type: "prep" },
-            { id: 81, word: "prevent... ", prep: "from", meaning: "ngăn chặn khỏi", type: "prep" },
-            { id: 82, word: "stop... ", prep: "from", meaning: "dừng lại khỏi", type: "prep" },
-            { id: 83, word: "laugh... ", prep: "at", meaning: "cười nhạo", type: "prep" },
-            { id: 84, word: "look... ", prep: "at", meaning: "nhìn vào", type: "prep" },
-            { id: 85, word: "stare... ", prep: "at", meaning: "nhìn chằm chằm", type: "prep" },
-            { id: 86, word: "glance... ", prep: "at", meaning: "liếc nhìn", type: "prep" },
-            { id: 87, word: "point sth... ", prep: "at", meaning: "chỉ cái gì vào", type: "prep" },
-            { id: 88, word: "shout... ", prep: "at", meaning: "hét vào mặt ai", type: "prep" },
-            { id: 89, word: "throw sth... ", prep: "at", meaning: "ném cái gì vào ai (tấn công)", type: "prep" },
-            { id: 90, word: "shout... ", prep: "to", meaning: "gọi to cho ai nghe", type: "prep" },
-            { id: 91, word: "throw sth... ", prep: "to", meaning: "ném cho ai bắt", type: "prep" },
-            { id: 92, word: "depend... ", prep: "on", meaning: "phụ thuộc vào", type: "prep" },
-            { id: 93, word: "base... ", prep: "on", meaning: "dựa trên", type: "prep" },
-            { id: 94, word: "comment... ", prep: "on", meaning: "bình luận về", type: "prep" },
-            { id: 95, word: "work... ", prep: "on", meaning: "làm việc trên (dự án)", type: "prep" },
-            { id: 96, word: "experience... ", prep: "in", meaning: "kinh nghiệm về", type: "prep" },
-            { id: 97, word: "difficulty... ", prep: "in", meaning: "khó khăn trong", type: "prep" },
-            { id: 98, word: "increase... ", prep: "in", meaning: "sự tăng lên về", type: "prep" },
-            { id: 99, word: "decrease... ", prep: "in", meaning: "sự giảm xuống về", type: "prep" },
-            { id: 100, word: "fall... ", prep: "in", meaning: "sự sụt giảm về", type: "prep" }
+        // --- CẤU HÌNH ---
+        const UNITS = [
+            { id: 5, name: "Urbanization", file: "unit5.json", status: "ready" },
+            { id: 6, name: "Endangered Species", file: "unit6.json", status: "soon" },
+            { id: 7, name: "AI", file: "unit7.json", status: "soon" },
+            { id: 8, name: "World of Work", file: "unit8.json", status: "soon" }
         ];
 
-        const VOCAB_WORDS = [
-            { id: 321, word: "high-rise building", viet: "tòa nhà cao tầng", type: "vocab" },
-            { id: 322, word: "industrial area", viet: "khu công nghiệp", type: "vocab" },
-            { id: 323, word: "megacity", viet: "siêu đô thị", type: "vocab" },
-            { id: 324, word: "overpopulation", viet: "quá tải dân số", type: "vocab" },
-            { id: 325, word: "rural migration", viet: "sự di cư nông thôn", type: "vocab" },
-            { id: 326, word: "slum", viet: "khu nhà ổ chuột", type: "vocab" },
-            { id: 327, word: "affordable", viet: "giá cả phải chăng", type: "vocab" },
-            { id: 328, word: "agriculture", viet: "ngành nông nghiệp", type: "vocab" },
-            { id: 329, word: "contribute", viet: "đóng góp, góp phần", type: "vocab" },
-            { id: 330, word: "deforestation", viet: "nạn phá rừng", type: "vocab" },
-            { id: 331, word: "opportunity", viet: "cơ hội", type: "vocab" },
-            { id: 332, word: "policy", viet: "chính sách", type: "vocab" },
-            { id: 333, word: "urbanisation", viet: "đô thị hóa", type: "vocab" },
-            { id: 334, word: "breathtaking", viet: "tuyệt đẹp, kinh ngạc", type: "vocab" },
-            { id: 335, word: "crop failure", viet: "mất mùa", type: "vocab" },
-            { id: 336, word: "infrastructure", viet: "cơ sở hạ tầng", type: "vocab" },
-            { id: 337, word: "mindset", viet: "tư duy, quan điểm", type: "vocab" },
-            { id: 338, word: "prosperous", viet: "thịnh vượng, giàu có", type: "vocab" },
-            { id: 339, word: "sanitation", viet: "hệ thống vệ sinh", type: "vocab" },
-            { id: 340, word: "shortage", viet: "sự thiếu hụt", type: "vocab" },
-            { id: 341, word: "sustainable", viet: "bền vững", type: "vocab" },
-            { id: 342, word: "upmarket", viet: "hạng sang, cao cấp", type: "vocab" },
-            { id: 343, word: "wastewater", viet: "nước thải", type: "vocab" },
-            { id: 344, word: "weather-beaten", viet: "dày dạn sương gió", type: "vocab" },
-            { id: 345, word: "well-off", viet: "giàu có, khá giả", type: "vocab" },
-            { id: 346, word: "cost of living", viet: "chi phí sinh hoạt", type: "vocab" },
-            { id: 347, word: "density", viet: "mật độ", type: "vocab" },
-            { id: 348, word: "employment", viet: "việc làm", type: "vocab" },
-            { id: 349, word: "housing", viet: "nhà ở", type: "vocab" },
-            { id: 350, word: "inhabitant", viet: "cư dân", type: "vocab" },
-            { id: 351, word: "smog", viet: "khói bụi ô nhiễm", type: "vocab" }
-        ];
-
-        const WORD_BANK_U5 = [...PREP_WORDS, ...VOCAB_WORDS];
-        const PREPS = ["from", "in", "of", "on", "to", "with", "for", "about", "at", "into"];
-        
+        const PREPS_POOL = ["from", "in", "of", "on", "to", "with", "for", "about", "at", "into"];
         const SOUNDS = {
             correct: 'https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3',
             wrong: 'https://assets.mixkit.co/active_storage/sfx/2955/2955-preview.mp3',
@@ -364,36 +205,13 @@
             fireworks: 'https://assets.mixkit.co/active_storage/sfx/2016/2016-preview.mp3'
         };
 
-        function playSound(type) {
-            new Audio(SOUNDS[type]).play().catch(() => {});
-        }
-
-        function triggerFireworks() {
-            playSound('fireworks');
-            var duration = 5 * 1000;
-            var animationEnd = Date.now() + duration;
-            var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
-            function randomInRange(min, max) { return Math.random() * (max - min) + min; }
-            var interval = setInterval(function() {
-              var timeLeft = animationEnd - Date.now();
-              if (timeLeft <= 0) return clearInterval(interval);
-              var particleCount = 50 * (timeLeft / duration);
-              confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
-              confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
-            }, 250);
-        }
-
-        let score = 0;
-        let timeLeft = 300; 
-        let currentQ = null;
-        let timerId = null;
-        let streak = 0;
-        let lives = 3;
-        let isFever = false;
-        let consecutiveWrong = 0; 
-        let lastMilestoneReached = 0; 
+        // --- TRẠNG THÁI ---
+        let currentWordBank = [];
+        let score = 0, streak = 0, lives = 3, consecutiveWrong = 0, timeLeft = 300;
+        let timerId = null, currentQ = null, lastMilestone = 0, isFever = false;
 
         window.onload = () => {
+            renderUnitSelection();
             const best = localStorage.getItem('grade12_best_score');
             if(best) {
                 document.getElementById('best-score-container').classList.remove('hidden');
@@ -401,52 +219,56 @@
             }
         };
 
-        function showUnitSelection() {
-            document.getElementById('view-landing').classList.add('hidden');
-            document.getElementById('view-selection').classList.remove('hidden');
+        function renderUnitSelection() {
+            const grid = document.getElementById('unit-grid');
+            grid.innerHTML = UNITS.map(u => `
+                <div onclick="${u.status === 'ready' ? `selectUnit(${u.id})` : ''}" class="unit-card p-8 rounded-[2rem] ${u.status === 'ready' ? 'cursor-pointer' : 'locked relative overflow-hidden'}">
+                    ${u.status === 'soon' ? `<div class="absolute inset-0 bg-slate-950/40 flex items-center justify-center backdrop-blur-[1px]"><span class="bg-slate-800 text-slate-400 text-[10px] font-black px-4 py-2 rounded-full uppercase border border-white/5">Sắp ra mắt</span></div>` : ''}
+                    <span class="bg-indigo-500/20 text-indigo-400 text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-widest">Unit ${u.id}</span>
+                    <h3 class="text-2xl font-black mt-4 uppercase text-white">${u.name}</h3>
+                    <p class="text-slate-400 text-sm mt-1 uppercase tracking-tighter">Bấm để nạp dữ liệu</p>
+                </div>
+            `).join('');
         }
 
-        function selectUnit(u) {
-            if (u !== 5) return;
+        async function selectUnit(id) {
+            const unit = UNITS.find(u => u.id === id);
             document.getElementById('view-selection').classList.add('hidden');
             document.getElementById('view-game').classList.remove('hidden');
-            startGame();
-        }
+            document.getElementById('loading-msg').classList.remove('hidden');
+            document.getElementById('question-area').classList.add('hidden');
 
-        function updateLives() {
-            const container = document.getElementById('lives-container');
-            container.innerHTML = '';
-            for(let i=0; i<3; i++) {
-                const heart = document.createElement('span');
-                heart.className = `heart text-xl transition-all duration-300 ${i < lives ? 'scale-110' : 'opacity-20 grayscale scale-90'}`;
-                heart.innerText = '❤️';
-                container.appendChild(heart);
+            try {
+                // Tải file JSON từ cùng thư mục (GitHub Pages)
+                const response = await fetch(`./${unit.file}`);
+                if (!response.ok) throw new Error("File not found");
+                currentWordBank = await response.json();
+                startGame();
+            } catch (err) {
+                alert(`Lỗi: Không tìm thấy file ${unit.file} trên GitHub. Vui lòng đảm bảo tệp JSON nằm cùng thư mục với index.html!`);
+                location.reload();
             }
         }
 
-        function showFlashMessage(text, colorClass) {
-            const overlay = document.getElementById('status-overlay');
-            const statusText = document.getElementById('status-text');
-            statusText.innerText = text;
-            statusText.className = `text-5xl font-black italic uppercase tracking-tighter drop-shadow-2xl ${colorClass}`;
-            overlay.classList.remove('hidden');
-            overlay.classList.add('animate-pop');
-            setTimeout(() => {
-                overlay.classList.add('hidden');
-                overlay.classList.remove('animate-pop');
-            }, 1200);
+        function playSound(t) { new Audio(SOUNDS[t]).play().catch(()=>{}); }
+
+        function triggerFireworks() {
+            playSound('fireworks');
+            let end = Date.now() + 5000;
+            let interval = setInterval(() => {
+                if (Date.now() > end) return clearInterval(interval);
+                confetti({ startVelocity: 30, spread: 360, ticks: 60, origin: { x: Math.random(), y: Math.random() - 0.2 } });
+            }, 250);
         }
 
         function startGame() {
-            score = 0; streak = 0; lives = 3; consecutiveWrong = 0; lastMilestoneReached = 0; isFever = false;
-            timeLeft = 300;
-            document.body.classList.remove('fever-mode');
+            score = 0; streak = 0; lives = 3; consecutiveWrong = 0; lastMilestone = 0; isFever = false; timeLeft = 300;
+            document.getElementById('loading-msg').classList.add('hidden');
+            document.getElementById('question-area').classList.remove('hidden');
             updateScore(); updateLives(); nextQuestion();
             timerId = setInterval(() => {
                 timeLeft--;
-                const m = Math.floor(timeLeft/60);
-                const s = timeLeft%60;
-                document.getElementById('timer').innerText = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+                document.getElementById('timer').innerText = `${Math.floor(timeLeft/60).toString().padStart(2,'0')}:${(timeLeft%60).toString().padStart(2,'0')}`;
                 if(timeLeft <= 0) endGame();
             }, 1000);
         }
@@ -454,131 +276,99 @@
         function nextQuestion() {
             document.getElementById('question-area').classList.remove('hidden');
             document.getElementById('chest-area').classList.add('hidden');
-            document.getElementById('chest-selection').classList.remove('hidden');
-            document.getElementById('chest-result').classList.add('hidden');
-
-            currentQ = WORD_BANK_U5[Math.floor(Math.random() * WORD_BANK_U5.length)];
-            document.getElementById('word-display').innerText = currentQ.word;
+            
+            // Chọn ngẫu nhiên từ ngân hàng đã tải
+            currentQ = currentWordBank[Math.floor(Math.random() * currentWordBank.length)];
             
             const isVocab = currentQ.type === 'vocab';
+            document.getElementById('word-display').innerText = currentQ.word;
+            document.getElementById('unit-tag').innerText = isVocab ? "Vocabulary Master" : "Prepositions Bank";
+            document.getElementById('meaning-display').innerText = isVocab ? "(Chọn nghĩa tiếng Việt đúng nhất)" : `(${currentQ.meaning})`;
+
             const grid = document.getElementById('options-grid');
             grid.innerHTML = '';
+            
+            // Theo cấu trúc JSON bạn cung cấp:
+            // Type "prep" -> đáp án là trường "prep"
+            // Type "vocab" -> đáp án là trường "meaning"
+            let correctAns = isVocab ? currentQ.meaning : currentQ.prep;
+            let opts = [correctAns];
+            
+            // Tạo pool đáp án nhiễu
+            let pool = isVocab 
+                ? currentWordBank.filter(w => w.type === 'vocab').map(w => w.meaning) 
+                : PREPS_POOL;
 
-            if (isVocab) {
-                document.getElementById('unit-tag').innerText = "Unit 5: Vocabulary Meaning";
-                document.getElementById('meaning-display').innerText = "(Chọn nghĩa đúng của từ)";
-                grid.className = "grid grid-cols-1 gap-2 w-full";
-                let opts = [currentQ.viet];
-                const allViets = VOCAB_WORDS.map(w => w.viet);
-                while(opts.length < 4) {
-                    const r = allViets[Math.floor(Math.random() * allViets.length)];
-                    if(!opts.includes(r)) opts.push(r);
-                }
-                opts.sort(() => Math.random() - 0.5);
-                opts.forEach(o => {
-                    const b = document.createElement('button');
-                    b.className = 'btn-opt text-sm py-3';
-                    b.innerText = o;
-                    b.onclick = () => check(o);
-                    grid.appendChild(b);
-                });
-            } else {
-                document.getElementById('unit-tag').innerText = "Unit 5: Prepositions Bank";
-                document.getElementById('meaning-display').innerText = `(${currentQ.meaning})`;
-                grid.className = "grid grid-cols-2 gap-4 w-full";
-                let opts = [currentQ.prep];
-                while(opts.length < 4) {
-                    const r = PREPS[Math.floor(Math.random() * PREPS.length)];
-                    if(!opts.includes(r)) opts.push(r);
-                }
-                opts.sort(() => Math.random() - 0.5);
-                opts.forEach(o => {
-                    const b = document.createElement('button');
-                    b.className = 'btn-opt';
-                    b.innerText = o;
-                    b.onclick = () => check(o);
-                    grid.appendChild(b);
-                });
+            while(opts.length < 4) {
+                let r = pool[Math.floor(Math.random() * pool.length)];
+                if(!opts.includes(r)) opts.push(r);
             }
+
+            opts.sort(() => Math.random() - 0.5).forEach(o => {
+                let b = document.createElement('button');
+                b.className = `btn-opt text-white ${isVocab ? 'text-sm py-3' : 'py-5'}`;
+                b.innerText = o;
+                b.onclick = () => check(o);
+                grid.appendChild(b);
+            });
+
+            // Streak dots
             const dots = document.getElementById('streak-dots').children;
-            for(let i=0; i<5; i++) {
-                dots[i].className = `h-1.5 w-6 rounded-full transition-all ${i < (streak % 5 === 0 && streak > 0 ? 5 : streak % 5) ? 'bg-green-400 shadow-[0_0_10px_#4ade80]' : 'bg-white/10'}`;
-            }
-        }
-
-        function checkMilestones() {
-            const milestone = Math.floor(score / 100);
-            if (milestone > lastMilestoneReached) {
-                lastMilestoneReached = milestone;
-                playSound('milestone');
-                if (milestone >= 10 && milestone % 10 === 0) {
-                    triggerFireworks();
-                    showFlashMessage(`HUYỀN THOẠI! ĐẠT MỐC ${milestone * 100} ĐIỂM`, 'text-orange-500');
-                } else {
-                    showFlashMessage(`TUYỆT VỜI! ĐẠT MỐC ${milestone * 100} ĐIỂM`, 'text-yellow-400');
-                }
-            }
+            for(let i=0; i<5; i++) dots[i].className = `h-1.5 w-6 rounded-full transition-all duration-500 ${i < (streak % 5 || (streak>0?5:0)) ? 'bg-green-400 shadow-[0_0_10px_#4ade80]' : 'bg-white/10'}`;
         }
 
         function check(ans) {
-            const correct = currentQ.type === 'vocab' ? currentQ.viet : currentQ.prep;
+            const correct = currentQ.type === 'vocab' ? currentQ.meaning : currentQ.prep;
             if(ans === correct) {
-                playSound('correct');
-                streak++; consecutiveWrong = 0; 
-                if(streak % 5 === 0) {
-                    isFever = true;
-                    document.body.classList.add('fever-mode');
-                    document.getElementById('fever-badge').classList.remove('hidden');
-                }
+                playSound('correct'); streak++; consecutiveWrong = 0;
+                if(streak % 5 === 0) { isFever = true; document.body.classList.add('fever-mode'); document.getElementById('fever-badge').classList.remove('hidden'); }
                 score += isFever ? 10 : 5;
-                checkMilestones();
-                if(streak % 3 === 0) showChest();
-                else nextQuestion();
+                
+                // Milestone check (100, 200, 300...)
+                if(Math.floor(score/100) > lastMilestone) {
+                    lastMilestone = Math.floor(score/100);
+                    playSound('milestone');
+                    showFlash(lastMilestone*100 + " ĐIỂM!", lastMilestone>=10?'text-orange-400':'text-yellow-400');
+                    if(lastMilestone % 10 === 0) triggerFireworks();
+                }
+                
+                if(streak % 3 === 0) showChest(); else nextQuestion();
             } else {
-                playSound('wrong');
-                streak = 0; consecutiveWrong++; 
-                isFever = false;
+                playSound('wrong'); streak = 0; consecutiveWrong++; isFever = false;
                 document.body.classList.remove('fever-mode');
                 document.getElementById('fever-badge').classList.add('hidden');
-                if (consecutiveWrong >= 2) {
-                    lives--; consecutiveWrong = 0;
-                    playSound('loseLife'); updateLives();
-                    showFlashMessage("WARNING: BẠN ĐÃ MẤT 1 MẠNG!", "text-red-500");
+                
+                if(consecutiveWrong >= 2) {
+                    lives--; consecutiveWrong = 0; playSound('loseLife'); updateLives();
+                    showFlash("MẤT 1 MẠNG!", "text-red-500");
                     if(lives <= 0) { playSound('gameover'); endGame(); return; }
                 }
+                
                 document.getElementById('question-area').classList.add('animate-pulse');
                 setTimeout(() => { document.getElementById('question-area').classList.remove('animate-pulse'); nextQuestion(); }, 400);
             }
             updateScore();
         }
 
-        function showChest() {
-            document.getElementById('question-area').classList.add('hidden');
-            document.getElementById('chest-area').classList.remove('hidden');
+        function showFlash(txt, cls) {
+            const o = document.getElementById('status-overlay');
+            const t = document.getElementById('status-text');
+            t.innerText = txt; t.className = `text-5xl font-black italic uppercase tracking-tighter drop-shadow-2xl ${cls}`;
+            o.classList.remove('hidden'); o.classList.add('animate-pop');
+            setTimeout(()=>{ o.classList.add('hidden'); o.classList.remove('animate-pop'); }, 1200);
         }
 
-        function openChest() {
-            playSound('chest');
-            const bonus = Math.floor(Math.random() * 20) + 10;
-            score += bonus; updateScore();
-            document.getElementById('chest-selection').classList.add('hidden');
-            document.getElementById('chest-result').classList.remove('hidden');
-            document.getElementById('bonus-text').innerText = `+${bonus} ĐIỂM!`;
-            setTimeout(() => { checkMilestones(); }, 500);
-            setTimeout(nextQuestion, 1500);
-        }
-
+        function showChest() { document.getElementById('question-area').classList.add('hidden'); document.getElementById('chest-area').classList.remove('hidden'); document.getElementById('chest-selection').classList.remove('hidden'); document.getElementById('chest-result').classList.add('hidden'); }
+        function openChest() { playSound('chest'); let b = Math.floor(Math.random()*20)+10; score+=b; updateScore(); document.getElementById('chest-selection').classList.add('hidden'); document.getElementById('chest-result').classList.remove('hidden'); document.getElementById('bonus-text').innerText = `+${b} ĐIỂM!`; setTimeout(nextQuestion, 1200); }
         function updateScore() { document.getElementById('score').innerText = score; }
+        function updateLives() { const c = document.getElementById('lives-container'); c.innerHTML = ''; for(let i=0; i<3; i++) c.innerHTML += `<span class="text-xl ${i<lives?'':'opacity-20 grayscale'}">❤️</span>`; }
+        function showUnitSelection() { document.getElementById('view-landing').classList.add('hidden'); document.getElementById('view-selection').classList.remove('hidden'); }
 
         function endGame() {
             clearInterval(timerId);
             const best = localStorage.getItem('grade12_best_score') || 0;
-            if(score > best) {
-                localStorage.setItem('grade12_best_score', score);
-                document.getElementById('new-record-tag').classList.remove('hidden');
-            } else {
-                document.getElementById('new-record-tag').classList.add('hidden');
-            }
+            if(score > best) { localStorage.setItem('grade12_best_score', score); document.getElementById('new-record-tag').classList.remove('hidden'); }
+            
             let rank = "Tân binh 👶";
             if(score > 1000) rank = "Huyền thoại 🌌";
             else if(score >= 501) rank = "Bậc thầy từ vựng 💎";
