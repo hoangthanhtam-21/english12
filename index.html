@@ -101,10 +101,12 @@
 </head>
 <body>
     <div id="app" class="p-6 relative">
+        <!-- Thông báo Cảnh báo/Chúc mừng -->
         <div id="status-overlay" class="status-overlay hidden">
             <h2 id="status-text" class="text-5xl font-black italic uppercase tracking-tighter drop-shadow-2xl">MESSAGE</h2>
         </div>
 
+        <!-- MÀN HÌNH CHÀO -->
         <div id="view-landing" class="relative z-10 text-center w-full max-w-md animate-pop">
             <div class="mb-8 flex justify-center">
                 <!-- Sử dụng logo.jpg, nếu lỗi sẽ tự ẩn img và hiện placeholder qua JS hoặc CSS -->
@@ -126,12 +128,14 @@
             <button onclick="showUnitSelection()" class="w-full bg-white text-indigo-700 py-5 rounded-2xl font-black text-lg hover:bg-indigo-600 hover:text-white transition-all shadow-2xl uppercase">Bắt đầu</button>
         </div>
 
+        <!-- MÀN HÌNH CHỌN UNIT -->
         <div id="view-selection" class="relative z-10 w-full max-w-2xl hidden animate-pop text-center">
             <h2 class="text-3xl font-black uppercase tracking-tighter text-white mb-10">Chọn bài học</h2>
             <div id="unit-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
             <button onclick="location.reload()" class="mt-12 text-slate-400 text-xs font-black uppercase tracking-[0.2em] hover:text-white transition-colors underline">Quay lại trang chủ</button>
         </div>
 
+        <!-- MÀN HÌNH CHƠI GAME -->
         <div id="view-game" class="relative z-10 w-full max-w-md hidden">
             <div class="grid grid-cols-2 gap-3 mb-6">
                 <div class="bg-slate-900/90 p-4 rounded-2xl border border-white/10 shadow-xl flex items-center justify-between text-white">
@@ -233,6 +237,20 @@
         let timerId = null, currentQ = null, lastMilestone = 0, isFever = false;
         let isProcessing = false;
 
+        // Tính năng phát âm giọng Anh-Mỹ
+        function speak(text) {
+            if ('speechSynthesis' in window) {
+                // Hủy các giọng đọc đang chờ để đọc từ mới ngay lập tức
+                window.speechSynthesis.cancel();
+                // Làm sạch từ (loại bỏ dấu ba chấm để đọc chuẩn hơn)
+                const cleanedText = text.replace(/\.\.\./g, '');
+                const utterance = new SpeechSynthesisUtterance(cleanedText);
+                utterance.lang = 'en-US'; // Thiết lập giọng Anh-Mỹ
+                utterance.rate = 0.9;     // Tốc độ đọc vừa phải
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
         window.onload = () => {
             renderUnitSelection();
             const best = localStorage.getItem('grade12_best_score');
@@ -313,7 +331,11 @@
             document.getElementById('chest-area').classList.add('hidden');
             currentQ = currentWordBank[Math.floor(Math.random() * currentWordBank.length)];
             const isVocab = currentQ.type === 'vocab';
+            
             document.getElementById('word-display').innerText = currentQ.word;
+            // Tự động phát âm từ mới
+            speak(currentQ.word);
+            
             document.getElementById('unit-tag').innerText = isVocab ? "Vocabulary Master" : "Prepositions Bank";
             document.getElementById('meaning-display').innerText = isVocab ? "(Chọn nghĩa đúng nhất)" : `(${currentQ.meaning})`;
             const grid = document.getElementById('options-grid');
